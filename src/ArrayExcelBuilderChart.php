@@ -235,7 +235,7 @@ class ArrayExcelBuilderChart
         );
 
         // Set the series in the plot area
-        $plotArea = new PlotArea(null, [$series]);
+        $plotArea = new PlotArea(null, array($series));
 
         // Set the chart legend
         $legend = $this->_isLegend ? new Legend($this->_legendPosition, null, false) : null;
