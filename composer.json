@@ -1,6 +1,6 @@
 {
   "name": "kebacorp/arrayexcelbuilder",
-  "description": "The extension creates an Excel file from the data array",
+  "description": "The extension creates an Excel file from the data array.",
   "keywords": [
     "spreadsheet",
     "excel",

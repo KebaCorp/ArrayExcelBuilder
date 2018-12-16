@@ -16,7 +16,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 /**
  * Class ArrayExcelBuilder.
  *
- * The component creates an Excel file from the data array.
+ * The extension creates an Excel file from the data array.
  * Read more about the component in README.md
  *
  * @package KebaCorp\ArrayExcelBuilder
