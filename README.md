@@ -58,9 +58,12 @@ $data = [
                     // Cell options
                     'value' => 'Hello world!',
                 ],
+                // Row n...
             ],
+            // Column n...
         ],
     ],
+    // Sheet n...
 ];
 
 // Create excel file from array
@@ -76,6 +79,7 @@ $arrayExcelBuilder->save();
 | Значение | Type | Default | Description |
 | -------- |:----:| ------- | ----------- |
 | autosize | array | true | Авторазмер ячеек. |
+| charts | array | none | Массив данных для создания графиков. Подробнее в [Charts](#charts). |
 | data | array | none | Массив данных. Обязательный параметр. |
 | freezeCell | string | none | Зафиксировать ячейки по координату. Например 'B2' - зафиксирует первую строку и первый столбец. |
 | isRowDirection | bool | false | Заполнять данные построчно, либо по колонкам. По умолчанию заполнение по колонкам. |
@@ -212,9 +216,60 @@ $data = [
                         'quotePrefix' => true,
                     ],
                 ],
+                // Row n...
             ],
+            // Column n...
         ],
+        'charts' => [
+            // Chart 1
+            [
+                'name' => 'Chart name',
+                'title' => 'Chart title',
+                'xLabel' => 'X axis label',
+                'yLabel' => 'Y axis label',
+                'chartType' => 'lineChart',
+                'groupType' => 'stacked',
+                'chartStartPosition' => 'B3',
+                'chartEndPosition' => 'H18',
+                'isLegend' => true,
+                'legendPosition' => 'tr',
+                'labels' => [
+                    // Label 1
+                    [
+                        'dataType' => 'String',
+                        'sheetName' => 'Worksheet',
+                        'column' => 'B',
+                        'row' => 1,
+                    ],
+                    // Label n...
+                ],
+                'xValues' => [
+                    [
+                        'dataType' => 'String',
+                        'sheetName' => 'Worksheet',
+                        'startColumn' => 'A',
+                        'startRow' => 2,
+                        'endColumn' => 'A',
+                        'endRow' => 5,
+                    ],
+                ],
+                'yValues' => [
+                    // Value 1
+                    [
+                        'dataType' => 'String',
+                        'sheetName' => 'Worksheet',
+                        'startColumn' => 'B',
+                        'startRow' => 2,
+                        'endColumn' => 'B',
+                        'endRow' => 5,
+                    ],
+                    // Value n...
+                ],
+            ]
+            // Chart n...
+        ]
     ],
+    // Sheet n...
 ];
 
 // Global cell options
@@ -244,8 +299,7 @@ $params = [
 
 // Create excel file from array
 $arrayExcelBuilder = new ArrayExcelBuilder($data);
-$result = $arrayExcelBuilder->setParams($params)
-    ->save('excel/Document.xlsx');
+$result = $arrayExcelBuilder->setParams($params)->save('excel/Document.xlsx');
 
 ?>
 ```
@@ -294,6 +348,107 @@ $styleArray = [
         ],
     ],
     'quotePrefix' => true,
+];
+
+?>
+```
+
+
+Charts
+-----
+
+### Chart options
+
+| Значение | Type | Default | Description |
+| -------- |:----:| ------- | ----------- |
+| name | string | '' | Имя графика. Не отображается. |
+| title | string | none | Заголовок графика. Отображается сверху посередине. |
+| xLabel | string | none | Заголовок горизонтальной оси. Отображается слева посередине вертикально. |
+| yLabel | string | none | Заголовок вертикальной оси. Отображается снизу посередине. |
+| chartType | string | 'lineChart' | Тип графика: barChart, bar3DChart, lineChart, line3DChart, areaChart, area3DChart, pieChart, pie3DChart, doughnutChart, scatterChart, surfaceChart, surface3DChart, radarChart, bubbleChart, stockChart. |
+| groupType | string | 'stacked' | Группировка данных: clustered, stacked, percentStacked, standard. |
+| chartStartPosition | string | 'B3' | Координаты страницы, где начинается график. Значение в стиле excel - первая часть строки заглавные латинские буквы, вторая часть из натуральных чисел. Например: 'A10'. |
+| chartEndPosition | string | 'H18' | Координаты страницы, где заканчивается график. Значение в стиле excel - первая часть строки заглавные латинские буквы, вторая часть из натуральных чисел. Например: 'BB3'. |
+| isLegend | bool | false | Отобразить легенду. |
+| legendPosition | string | 'r' | Расположение легенды на графике: 'r' - справа, 'b' - снизу, 't' - сверху, 'tr' - сверху справа. |
+| labels | array | none | Лейблы легенды. Подробнее в [Chart labels options](#chart-labels-options). |
+| xValues | array | none | Данные по горизонтальной оси. Подробнее в [Chart xValues and yValues options](#chart-xvalues-and-yvalues-options). |
+| yValues | array | none | Данные по вертикальной оси. Подробнее в [Chart xValues and yValues options](#chart-xvalues-and-yvalues-options). |
+
+
+### Chart labels options
+
+| Значение | Type | Default | Description |
+| -------- |:----:| ------- | ----------- |
+| dataType | string | 'Number' | Не обязательный параметр. Тип данных: 'Number', 'String'. |
+| column | string | none | Обязательный параметр. Имя колонки. Именование колонки ведется в латинских буквах начиная от A и далее. Например: 'B'. |
+| row | integer | none | Обязательный параметр. Номер строки. Именование строки ведется из натуральных чисел начиная с 1. Например: 21 |
+| sheetName | string | none | Обязательный параметр. Название страницы, где находится Label. |
+
+
+### Chart xValues and yValues options
+
+| Значение | Type | Default | Description |
+| -------- |:----:| ------- | ----------- |
+| dataType | string | 'Number' | Не обязательный параметр. Тип данных: 'Number', 'String'. |
+| sheetName | string | none | Обязательный параметр. Название страницы, где находится Label. |
+| startColumn | string | none | Обязательный параметр. Имя колонки, откуда начинаются данные. Именование колонки ведется в латинских буквах начиная от A и далее. Например: 'B'. |
+| startRow | integer | none | Обязательный параметр. Номер строки, откуда начинаются данные. Именование строки ведется из натуральных чисел начиная с 1. Например: 21 |
+| endColumn | string | none | Обязательный параметр. Имя колонки, где заканчиваются данные. Именование колонки ведется в латинских буквах начиная от A и далее. Например: 'B'. |
+| endRow | integer | none | Обязательный параметр. Номер строки, где заканчиваются данные. Именование строки ведется из натуральных чисел начиная с 1. Например: 21 |
+
+
+**Full example:**
+```php
+<?php
+
+$charts = [
+    // Chart 1
+    [
+        'name' => 'Chart name',
+        'title' => 'Chart title',
+        'xLabel' => 'X axis label',
+        'yLabel' => 'Y axis label',
+        'chartType' => 'lineChart',
+        'groupType' => 'stacked',
+        'chartStartPosition' => 'B3',
+        'chartEndPosition' => 'H18',
+        'isLegend' => true,
+        'legendPosition' => 'tr',
+        'labels' => [
+            // Label 1
+            [
+                'dataType' => 'String',
+                'sheetName' => 'Worksheet',
+                'column' => 'B',
+                'row' => 1,
+            ],
+            // Label n...
+        ],
+        'xValues' => [
+            [
+                'dataType' => 'String',
+                'sheetName' => 'Worksheet',
+                'startColumn' => 'A',
+                'startRow' => 2,
+                'endColumn' => 'A',
+                'endRow' => 5,
+            ],
+        ],
+        'yValues' => [
+            // Value 1
+            [
+                'dataType' => 'String',
+                'sheetName' => 'Worksheet',
+                'startColumn' => 'B',
+                'startRow' => 2,
+                'endColumn' => 'B',
+                'endRow' => 5,
+            ],
+            // Value n...
+        ],
+    ]
+    // Chart n...
 ];
 
 ?>

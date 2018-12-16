@@ -166,6 +166,7 @@ class ArrayExcelBuilder
 
         // Saving
         $writer = new Xlsx($this->_spreadsheet);
+        $writer->setIncludeCharts(true); // Enable charts
         try {
             $writer->save($pathToFile);
         } catch (Exception $e) {
@@ -229,6 +230,11 @@ class ArrayExcelBuilder
                 $this->_setAutoSize();
             }
 
+            // Create charts by array data
+            if (!isset($sheetData['charts']) && is_array($sheetData['charts'])) {
+                $this->_setCharts($sheetData['charts']);
+            }
+
             // Create a new worksheet, if sheet index < sheet count
             if ($sheetIndex < $this->_sheetCount) {
                 $this->_spreadsheet->createSheet();
@@ -251,6 +257,32 @@ class ArrayExcelBuilder
 
         foreach ($cellIterator as $cell) {
             $sheet->getColumnDimension($cell->getColumn())->setAutoSize(true);
+        }
+    }
+
+    /**
+     * Create charts by array data.
+     *
+     * @param array $chartsData
+     *
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     */
+    private function _setCharts(array $chartsData)
+    {
+        foreach ($chartsData as $chartData) {
+            if (is_array($chartData)) {
+
+                // Create chart
+                $arrayExcelBuilderChart = new ArrayExcelBuilderChart($chartData);
+                try {
+                    $chart = $arrayExcelBuilderChart->createChart();
+                } catch (\Exception $e) {
+                    continue;
+                }
+
+                // Add the chart to the active worksheet
+                $this->_spreadsheet->getActiveSheet()->addChart($chart);
+            }
         }
     }
 
