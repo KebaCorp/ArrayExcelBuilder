@@ -1,0 +1,40 @@
+{
+  "name": "kebacorp/arrayexcelbuilder",
+  "description": "The extension creates an Excel file from the data array",
+  "keywords": [
+    "spreadsheet",
+    "excel",
+    "libreoffice",
+    "export",
+    "xls",
+    "xlsx"
+  ],
+  "homepage": "https://github.com/KebaCorp/ArrayExcelBuilder",
+  "version": "1.0.0",
+  "type": "extension",
+  "license": "BSD-3-Clause",
+  "authors": [
+    {
+      "name": "Abek Narynov",
+      "homepage": "https://www.facebook.com/abeknarynov"
+    }
+  ],
+  "support": {
+    "source": "https://github.com/KebaCorp/ArrayExcelBuilder"
+  },
+  "minimum-stability": "stable",
+  "require": {
+    "phpoffice/phpspreadsheet": "~1.1"
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://asset-packagist.org"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "KebaCorp\\ArrayExcelBuilder\\": "src"
+    }
+  }
+}
