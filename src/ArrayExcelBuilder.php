@@ -231,7 +231,7 @@ class ArrayExcelBuilder
             }
 
             // Create charts by array data
-            if (!isset($sheetData['charts']) && is_array($sheetData['charts'])) {
+            if (isset($sheetData['charts']) && is_array($sheetData['charts'])) {
                 $this->_setCharts($sheetData['charts']);
             }
 

@@ -2,6 +2,12 @@
 Array Excel Builder extension Change Log
 ========================================
 
+1.2.4, December 16, 2018
+------------------------
+
+- Fix: Fixed a bug that did not allow to create a chart.
+
+
 1.2.3, December 16, 2018
 ------------------------
 
