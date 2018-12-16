@@ -155,7 +155,7 @@ class ArrayExcelBuilderCellDTO
      *
      * @var array
      */
-    private $_styleArray = [];
+    private $_styleArray = array();
 
     /**
      * Column width.
@@ -178,7 +178,7 @@ class ArrayExcelBuilderCellDTO
      *
      * @return bool: true - if the data has been changed, false - if the data has not been changed
      */
-    public function setDataFromArray(array $cellData): bool
+    public function setDataFromArray(array $cellData)
     {
         $isChanged = false;
 
@@ -322,7 +322,7 @@ class ArrayExcelBuilderCellDTO
      *
      * @return string
      */
-    public function getValue(): string
+    public function getValue()
     {
         return $this->_value;
     }
@@ -332,7 +332,7 @@ class ArrayExcelBuilderCellDTO
      *
      * @return string
      */
-    public function getFontColor(): string
+    public function getFontColor()
     {
         return $this->_fontColor;
     }
@@ -342,7 +342,7 @@ class ArrayExcelBuilderCellDTO
      *
      * @return string
      */
-    public function getFillColor(): string
+    public function getFillColor()
     {
         return $this->_fillColor;
     }
@@ -352,7 +352,7 @@ class ArrayExcelBuilderCellDTO
      *
      * @return bool
      */
-    public function isBold(): bool
+    public function isBold()
     {
         return $this->_bold;
     }
@@ -362,7 +362,7 @@ class ArrayExcelBuilderCellDTO
      *
      * @return string
      */
-    public function getHAlignment(): string
+    public function getHAlignment()
     {
         return $this->_hAlignment;
     }
@@ -372,7 +372,7 @@ class ArrayExcelBuilderCellDTO
      *
      * @return string
      */
-    public function getVAlignment(): string
+    public function getVAlignment()
     {
         return $this->_vAlignment;
     }
@@ -382,7 +382,7 @@ class ArrayExcelBuilderCellDTO
      *
      * @return bool
      */
-    public function isWrapText(): bool
+    public function isWrapText()
     {
         return $this->_isWrapText;
     }
@@ -392,7 +392,7 @@ class ArrayExcelBuilderCellDTO
      *
      * @return string
      */
-    public function getComment(): string
+    public function getComment()
     {
         return $this->_comment;
     }
@@ -402,7 +402,7 @@ class ArrayExcelBuilderCellDTO
      *
      * @return int
      */
-    public function getMergeColumns(): int
+    public function getMergeColumns()
     {
         return $this->_mergeColumns;
     }
@@ -412,7 +412,7 @@ class ArrayExcelBuilderCellDTO
      *
      * @return int
      */
-    public function getMergeRows(): int
+    public function getMergeRows()
     {
         return $this->_mergeRows;
     }
@@ -422,7 +422,7 @@ class ArrayExcelBuilderCellDTO
      *
      * @return string
      */
-    public function getAllBorderTop(): string
+    public function getAllBorderTop()
     {
         return $this->_allBorderTop;
     }
@@ -432,7 +432,7 @@ class ArrayExcelBuilderCellDTO
      *
      * @return string
      */
-    public function getAllBorderBottom(): string
+    public function getAllBorderBottom()
     {
         return $this->_allBorderBottom;
     }
@@ -442,7 +442,7 @@ class ArrayExcelBuilderCellDTO
      *
      * @return string
      */
-    public function getAllBorderLeft(): string
+    public function getAllBorderLeft()
     {
         return $this->_allBorderLeft;
     }
@@ -452,7 +452,7 @@ class ArrayExcelBuilderCellDTO
      *
      * @return string
      */
-    public function getAllBorderRight(): string
+    public function getAllBorderRight()
     {
         return $this->_allBorderRight;
     }
@@ -462,7 +462,7 @@ class ArrayExcelBuilderCellDTO
      *
      * @return string
      */
-    public function getBorderTop(): string
+    public function getBorderTop()
     {
         return $this->_borderTop;
     }
@@ -472,7 +472,7 @@ class ArrayExcelBuilderCellDTO
      *
      * @return string
      */
-    public function getBorderBottom(): string
+    public function getBorderBottom()
     {
         return $this->_borderBottom;
     }
@@ -482,7 +482,7 @@ class ArrayExcelBuilderCellDTO
      *
      * @return string
      */
-    public function getBorderLeft(): string
+    public function getBorderLeft()
     {
         return $this->_borderLeft;
     }
@@ -492,7 +492,7 @@ class ArrayExcelBuilderCellDTO
      *
      * @return string
      */
-    public function getBorderRight(): string
+    public function getBorderRight()
     {
         return $this->_borderRight;
     }
@@ -502,7 +502,7 @@ class ArrayExcelBuilderCellDTO
      *
      * @return int
      */
-    public function getFontSize(): int
+    public function getFontSize()
     {
         return $this->_fontSize;
     }
@@ -512,7 +512,7 @@ class ArrayExcelBuilderCellDTO
      *
      * @return array
      */
-    public function getStyleArray(): array
+    public function getStyleArray()
     {
         return $this->_styleArray;
     }
@@ -522,7 +522,7 @@ class ArrayExcelBuilderCellDTO
      *
      * @return int
      */
-    public function getColumnWidth(): int
+    public function getColumnWidth()
     {
         return $this->_columnWidth;
     }
@@ -532,7 +532,7 @@ class ArrayExcelBuilderCellDTO
      *
      * @return int
      */
-    public function getRowHeight(): int
+    public function getRowHeight()
     {
         return $this->_rowHeight;
     }

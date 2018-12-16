@@ -26,7 +26,7 @@ class ArrayExcelBuilder
     /**
      * Default value of "is it row direction"
      */
-    public const IS_ROW_DEFAULT = false;
+    const IS_ROW_DEFAULT = false;
 
     /**
      * PhpOffice\PhpSpreadsheet\Spreadsheet
@@ -54,7 +54,7 @@ class ArrayExcelBuilder
      *
      * @var array
      */
-    private $_params = [];
+    private $_params = array();
 
     /**
      * Is it row direction.
@@ -84,7 +84,7 @@ class ArrayExcelBuilder
      *
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
-    public function setParams(array $params): ArrayExcelBuilder
+    public function setParams(array $params)
     {
         // Set global params
         $this->_params = $params;
@@ -150,7 +150,7 @@ class ArrayExcelBuilder
      *
      * @return bool|\Exception|Exception - true, if successfully saved
      */
-    public function save(string $pathToFile = '')
+    public function save($pathToFile = '')
     {
         // If the file name is not transferred, then set the default value
         $pathToFile = $pathToFile ? $pathToFile : 'Document ' . date('Y-m-d H-i-s') . '.xlsx';
@@ -297,7 +297,7 @@ class ArrayExcelBuilder
      *
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
-    private function _buildColumnOrRow(int $parentIndex, array $parentData)
+    private function _buildColumnOrRow($parentIndex, array $parentData)
     {
         foreach ($parentData as $childIndex => $cellData) {
 
@@ -331,7 +331,7 @@ class ArrayExcelBuilder
      *
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
-    private function _buildCell(int $columnID, int $rowID, array $cellData)
+    private function _buildCell($columnID, $rowID, array $cellData)
     {
         // Set data from params and cell data to cell DTO
         $data = new ArrayExcelBuilderCellDTO();
@@ -419,7 +419,7 @@ class ArrayExcelBuilder
         }
 
         // Set style from array
-        if (!empty($data->getStyleArray())) {
+        if (count($data->getStyleArray()) > 0) {
             $sheet->getStyleByColumnAndRow($columnID, $rowID)
                 ->applyFromArray($data->getStyleArray());
         }
