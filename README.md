@@ -10,6 +10,9 @@ The component creates an Excel file from the data array.
 
 For license information check the [LICENSE](LICENSE.md)-file.
 
+[![Latest Stable Version](https://poser.pugx.org/kebacorp/arrayexcelbuilder/v/stable)](https://packagist.org/packages/kebacorp/arrayexcelbuilder)
+[![Total Downloads](https://poser.pugx.org/kebacorp/arrayexcelbuilder/downloads)](https://packagist.org/packages/kebacorp/arrayexcelbuilder)
+[![Latest Unstable Version](https://poser.pugx.org/kebacorp/arrayexcelbuilder/v/unstable)](https://packagist.org/packages/kebacorp/arrayexcelbuilder)
 
 Installation
 ------------
