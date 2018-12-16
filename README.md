@@ -356,7 +356,7 @@ $styleArray = [
 Charts
 -----
 
-<img src="https://github.com/KebaCorp/ArrayExcelBuilder/tree/master/img/ExcelChartExample.png" height="250px">
+<img src="https://github.com/KebaCorp/ArrayExcelBuilder/blob/master/img/ExcelChartExample.png?raw=true" height="250px">
 
 ### Chart options
 
