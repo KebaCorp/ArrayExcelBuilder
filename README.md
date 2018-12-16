@@ -1,6 +1,6 @@
 <p align="center">
     <a href="https://github.com/KebaCorp" target="_blank">
-        <img src="https://avatars0.githubusercontent.com/u/29224726?s=460&v=4" height="100px">
+        <img src="https://avatars0.githubusercontent.com/u/29224726?s=400&u=ed586fe0e07d9d68d1594e0020d7e8e5fd2ac3d5&v=4" height="100px">
     </a>
     <h1 align="center">ArrayExcelBuilder</h1>
     <br>
