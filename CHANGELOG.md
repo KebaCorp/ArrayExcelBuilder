@@ -2,6 +2,11 @@
 Array Excel Builder extension Change Log
 ========================================
 
+1.2.5, February 19, 2019
+------------------------
+
+- Fix: Fixed incorrect merging of rows and columns.
+
 1.2.4, December 16, 2018
 ------------------------
 

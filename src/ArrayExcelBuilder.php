@@ -403,11 +403,6 @@ class ArrayExcelBuilder
             $sheet->mergeCellsByColumnAndRow($columnID, $rowID, $columnDestinationID, $rowDestinationID);
         }
 
-        // Merge rows
-        if ($data->getMergeRows()) {
-            $sheet->mergeCellsByColumnAndRow($columnID, $rowID, $columnID, $rowID + $data->getMergeRows() - 1);
-        }
-
         // Set the border on the top
         if ($data->getBorderTop()) {
             $sheet->getStyleByColumnAndRow($columnID, $rowID)
