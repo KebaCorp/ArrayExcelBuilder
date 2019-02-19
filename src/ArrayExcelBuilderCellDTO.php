@@ -18,9 +18,9 @@ namespace KebaCorp\ArrayExcelBuilder;
 class ArrayExcelBuilderCellDTO
 {
     /**
-     * Cell text value.
+     * Cell value.
      *
-     * @var string
+     * @var string|number|bool
      */
     private $_value = '';
 
@@ -182,9 +182,15 @@ class ArrayExcelBuilderCellDTO
     {
         $isChanged = false;
 
-        // Set cell text value
-        if (isset($cellData['value']) && is_string($cellData['value'])) {
-            $this->_value = $cellData['value'];
+        // Set cell value
+        if (isset($cellData['value'])) {
+            // If the value is not a string, not a number or not a boolean, then it encodes to json
+            if (is_string($cellData['value']) || is_numeric($cellData['value']) || is_bool($cellData['value'])) {
+                $this->_value = $cellData['value'];
+            } else {
+                $this->_value = json_encode($cellData['value']);
+            }
+
             $isChanged = true;
         }
 

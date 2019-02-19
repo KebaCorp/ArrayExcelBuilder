@@ -108,7 +108,7 @@ $arrayExcelBuilder->save();
 | mergeRows | integer | 0 | Кол-во ячеек снизу, которое необходимо присоединить к текущей ячейке. |
 | styleArray | array | [] | Массив стилей. Смотрите [Style array](#style-array) |
 | vAlignment | string | 'center' | Вертикальное выравнивание текста: bottom, top, center, justify, distributed - Excel2007 only. |
-| value | string | '' | Текст ячейки. |
+| value | string, number, bool | '' | Значение ячейки. Значение может быть строкой, числом, числом с точкой, булевым значением. Остальные типы кодируются в Json. Вы также можете вставить формулу в ячейку. Для этого необходимо вставить формулу в виде строки. Например: '=SUM(B2:C2)' |
 | wrapText | bool | true | Перенос строки. |
 
 
@@ -132,7 +132,7 @@ $arrayExcelBuilder->save();
 | rowHeight | integer | auto | Высота строки. Если параметр передан нескольким ячейкам, значение будет использовано из последней ячейки в данной строке. |
 | styleArray | array | [] | Массив стилей. Смотрите [Style array](#style-array) |
 | vAlignment | string | 'center' | Вертикальное выравнивание текста: bottom, top, center, justify, distributed - Excel2007 only. |
-| value | string | '' | Текст ячейки. |
+| value | string, number, bool | '' | Значение ячейки. Значение может быть строкой, числом, числом с точкой, булевым значением. Остальные типы кодируются в Json. Вы также можете вставить формулу в ячейку. Для этого необходимо вставить формулу в виде строки. Например: '=SUM(B2:C2)' |
 | wrapText | bool | true | Перенос строки. |
 
 
@@ -215,6 +215,31 @@ $data = [
                         'quotePrefix' => true,
                     ],
                 ],
+                
+                // Row 2
+                [
+                    // Cell options
+                    'value' => 100500,
+                ],
+                
+                // Row 3
+                [
+                    // Cell options
+                    'value' => 100.500,
+                ],
+                
+                // Row 4
+                [
+                    // Cell options
+                    'value' => true,
+                ],
+                
+                // Row 5
+                [
+                    // Cell options
+                    'value' => '=SUM(A2:A3)',
+                ],
+                
                 // Row n...
             ],
             // Column n...

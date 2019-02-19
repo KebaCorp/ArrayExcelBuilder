@@ -5,6 +5,8 @@ Array Excel Builder extension Change Log
 1.2.5, February 19, 2019
 ------------------------
 
+- Feat: Added new data types for Value.
+- Docs: Updated description of Value with new data types.
 - Fix: Fixed incorrect merging of rows and columns.
 
 1.2.4, December 16, 2018
