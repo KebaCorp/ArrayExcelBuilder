@@ -103,13 +103,13 @@ $arrayExcelBuilder->save();
 | fillColor | HEX color string | '' | Цвет заливки ячейки HEX без #. Например: 'FFFFFF'. |
 | fontColor | HEX color string | '' | Цвет текста HEX без #. Например: '000000'. |
 | fontSize | integer | excel default size | Размер шрифта. |
-| hAlignment | string | 'left' | Горизонтальное выравнивание текста: general, left, right, center, centerContinuous, justify, fill, distributed - Excel2007 only. |
+| hAlignment | string | 'general' | Горизонтальное выравнивание текста: general, left, right, center, centerContinuous, justify, fill, distributed - Excel2007 only. |
+| vAlignment | string | 'bottom' | Вертикальное выравнивание текста: bottom, top, center, justify, distributed - Excel2007 only. |
 | mergeColumns | integer | 0 | Кол-во ячеек справа, которое необходимо присоединить к текущей ячейке. |
 | mergeRows | integer | 0 | Кол-во ячеек снизу, которое необходимо присоединить к текущей ячейке. |
 | styleArray | array | [] | Массив стилей. Смотрите [Style array](#style-array) |
-| vAlignment | string | 'center' | Вертикальное выравнивание текста: bottom, top, center, justify, distributed - Excel2007 only. |
 | value | string, number, bool | '' | Значение ячейки. Значение может быть строкой, числом, числом с точкой, булевым значением. Остальные типы кодируются в Json. Вы также можете вставить формулу в ячейку. Для этого необходимо вставить формулу в виде строки. Например: '=SUM(B2:C2)' |
-| wrapText | bool | true | Перенос строки. |
+| wrapText | bool | false | Перенос строки. |
 
 
 ### Cell options
@@ -126,14 +126,14 @@ $arrayExcelBuilder->save();
 | fillColor | HEX color string | '' | Цвет заливки ячейки HEX без #. Например: 'FFFFFF'. |
 | fontColor | HEX color string | '' | Цвет текста HEX без #. Например: '000000'. |
 | fontSize | integer | excel default size | Размер шрифта. |
-| hAlignment | string | 'left' | Горизонтальное выравнивание текста: general, left, right, center, centerContinuous, justify, fill, distributed - Excel2007 only. |
+| hAlignment | string | 'general' | Горизонтальное выравнивание текста: general, left, right, center, centerContinuous, justify, fill, distributed - Excel2007 only. |
+| vAlignment | string | 'bottom' | Вертикальное выравнивание текста: bottom, top, center, justify, distributed - Excel2007 only. |
 | mergeColumns | integer | 0 | Кол-во ячеек справа, которое необходимо присоединить к текущей ячейке. |
 | mergeRows | integer | 0 | Кол-во ячеек снизу, которое необходимо присоединить к текущей ячейке. |
 | rowHeight | integer | auto | Высота строки. Если параметр передан нескольким ячейкам, значение будет использовано из последней ячейки в данной строке. |
 | styleArray | array | [] | Массив стилей. Смотрите [Style array](#style-array) |
-| vAlignment | string | 'center' | Вертикальное выравнивание текста: bottom, top, center, justify, distributed - Excel2007 only. |
 | value | string, number, bool | '' | Значение ячейки. Значение может быть строкой, числом, числом с точкой, булевым значением. Остальные типы кодируются в Json. Вы также можете вставить формулу в ячейку. Для этого необходимо вставить формулу в виде строки. Например: '=SUM(B2:C2)' |
-| wrapText | bool | true | Перенос строки. |
+| wrapText | bool | false | Перенос строки. |
 
 
 **Full example:**

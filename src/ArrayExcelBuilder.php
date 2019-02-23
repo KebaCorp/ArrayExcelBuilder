@@ -64,6 +64,13 @@ class ArrayExcelBuilder
     private $_isRowDirection = self::IS_ROW_DEFAULT;
 
     /**
+     * Cell values.
+     *
+     * @var array
+     */
+    private $_values = [];
+
+    /**
      * Create a new ArrayExcelBuilder.
      *
      * @param array $data - must consist of nested arrays and key of the composite array must be an integer
@@ -222,8 +229,14 @@ class ArrayExcelBuilder
                 $this->_spreadsheet->getActiveSheet()->setShowGridlines($sheetData['showGridLines']);
             }
 
+            // Fills values with empty data for the maximum data key
+            $this->_fillEmptyValue($sheetData['data']);
+
             // Build sheet
             $this->_buildSheet($sheetData['data']);
+
+            // Mass set values from array
+            $this->_spreadsheet->getActiveSheet()->fromArray($this->_values, NULL);
 
             // Set current sheet autosize
             if (!isset($sheetData['autosize']) || (isset($sheetData['autosize']) && $sheetData['autosize'])) {
@@ -347,8 +360,16 @@ class ArrayExcelBuilder
             $columnID = $this->_isRowDirection ? $childIndex + 1 : $parentIndex + 1;
             $rowID = $this->_isRowDirection ? $parentIndex + 1 : $childIndex + 1;
 
+            // Set data from params and cell data to cell DTO
+            $data = new ArrayExcelBuilderCellDTO();
+            $data->setDataFromArray($this->_params);
+            $data->setDataFromArray($cellData);
+
+            // Cell value
+            $this->_values[$rowID][$columnID] = $data->getValue();
+
             // Build cell
-            $this->_buildCell($columnID, $rowID, $cellData);
+            $this->_buildCell($columnID, $rowID, $data);
         }
     }
 
@@ -363,18 +384,10 @@ class ArrayExcelBuilder
      *
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
-    private function _buildCell($columnID, $rowID, array $cellData)
+    private function _buildCell($columnID, $rowID, ArrayExcelBuilderCellDTO $data)
     {
-        // Set data from params and cell data to cell DTO
-        $data = new ArrayExcelBuilderCellDTO();
-        $data->setDataFromArray($this->_params);
-        $data->setDataFromArray($cellData);
-
         // Get active sheet
         $sheet = $this->_spreadsheet->getActiveSheet();
-
-        // Cell text
-        $sheet->setCellValueByColumnAndRow($columnID, $rowID, $data->getValue());
 
         // Cell comment
         if ($data->getComment()) {
@@ -446,7 +459,7 @@ class ArrayExcelBuilder
         }
 
         // Set style from array
-        if (count($data->getStyleArray()) > 0) {
+        if (!empty($data->getStyleArray())) {
             $sheet->getStyleByColumnAndRow($columnID, $rowID)
                 ->applyFromArray($data->getStyleArray());
         }
@@ -461,10 +474,44 @@ class ArrayExcelBuilder
             $sheet->getRowDimension($rowID)->setRowHeight($data->getRowHeight());
         }
 
-        // Horizontal and vertical alignment
-        $sheet->getStyleByColumnAndRow($columnID, $rowID)
-            ->getAlignment()
-            ->setHorizontal($data->getHAlignment())
-            ->setVertical($data->getVAlignment());
+        // Horizontal alignment
+        if ($data->getHAlignment()) {
+            $sheet->getStyleByColumnAndRow($columnID, $rowID)
+                ->getAlignment()
+                ->setHorizontal($data->getHAlignment());
+        }
+
+        // Vertical alignment
+        if ($data->getVAlignment()) {
+            $sheet->getStyleByColumnAndRow($columnID, $rowID)
+                ->getAlignment()
+                ->setVertical($data->getVAlignment());
+        }
+    }
+
+    /**
+     * Fills values with empty data for the maximum data key.
+     *
+     * @param $data
+     */
+    private function _fillEmptyValue($data)
+    {
+        $maxColumn = 0;
+        $maxRow = 0;
+
+        foreach ($data as $key => $datum) {
+            if ($key > $maxRow) {
+                $maxRow = $key + 1;
+            }
+
+            $maxKey = max(array_keys($datum));
+            if ($maxKey > $maxColumn) {
+                $maxColumn = $maxKey + 1;
+            }
+        }
+
+        for ($i = 0; $i <= $maxColumn; $i++) {
+            $this->_values[] = array_fill(0, $maxRow, null);
+        }
     }
 }

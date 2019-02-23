@@ -50,21 +50,21 @@ class ArrayExcelBuilderCellDTO
      *
      * @var string
      */
-    private $_hAlignment = 'left';
+    private $_hAlignment = '';
 
     /**
      * Vertical alignment.
      *
      * @var string
      */
-    private $_vAlignment = 'center';
+    private $_vAlignment = '';
 
     /**
      * Is wrap text.
      *
      * @var bool
      */
-    private $_isWrapText = true;
+    private $_isWrapText = false;
 
     /**
      * Cell comment.
@@ -324,9 +324,9 @@ class ArrayExcelBuilderCellDTO
     }
 
     /**
-     * Get cell text value.
+     * Get cell value.
      *
-     * @return string
+     * @return string|number|bool
      */
     public function getValue()
     {
