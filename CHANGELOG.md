@@ -2,6 +2,12 @@
 Array Excel Builder extension Change Log
 ========================================
 
+1.4.0, February 24, 2019
+------------------------
+
+- Feat: Added the ability to output a spreadsheet in XLSX, XLS, ODS, CSV, HTML, PDF to file or to variable.
+- Docs: Added description in the README file of new spreadsheet saving options.
+
 1.3.1, February 24, 2019
 ------------------------
 
