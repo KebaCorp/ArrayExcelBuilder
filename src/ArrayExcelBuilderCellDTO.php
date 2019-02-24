@@ -22,7 +22,7 @@ class ArrayExcelBuilderCellDTO
      *
      * @var string|number|bool
      */
-    private $_value = '';
+    private $_value = NULL;
 
     /**
      * Font color.
@@ -50,21 +50,21 @@ class ArrayExcelBuilderCellDTO
      *
      * @var string
      */
-    private $_hAlignment = 'left';
+    private $_hAlignment = '';
 
     /**
      * Vertical alignment.
      *
      * @var string
      */
-    private $_vAlignment = 'center';
+    private $_vAlignment = '';
 
     /**
      * Is wrap text.
      *
      * @var bool
      */
-    private $_isWrapText = true;
+    private $_isWrapText = false;
 
     /**
      * Cell comment.
@@ -93,6 +93,7 @@ class ArrayExcelBuilderCellDTO
      * @var string
      */
     private $_allBorderTop = '';
+    private $_allBorderTopColor = '000000';
 
     /**
      * Border on the bottom of all cells on the page.
@@ -100,6 +101,7 @@ class ArrayExcelBuilderCellDTO
      * @var string
      */
     private $_allBorderBottom = '';
+    private $_allBorderBottomColor = '000000';
 
     /**
      * Border on the left of all cells on the page.
@@ -107,6 +109,7 @@ class ArrayExcelBuilderCellDTO
      * @var string
      */
     private $_allBorderLeft = '';
+    private $_allBorderLeftColor = '000000';
 
     /**
      * Border on the right of all cells on the page.
@@ -114,6 +117,7 @@ class ArrayExcelBuilderCellDTO
      * @var string
      */
     private $_allBorderRight = '';
+    private $_allBorderRightColor = '000000';
 
     /**
      * Border on top of the cell.
@@ -121,6 +125,7 @@ class ArrayExcelBuilderCellDTO
      * @var string
      */
     private $_borderTop = '';
+    private $_borderTopColor = '000000';
 
     /**
      * Border on bottom of the cell.
@@ -128,6 +133,7 @@ class ArrayExcelBuilderCellDTO
      * @var string
      */
     private $_borderBottom = '';
+    private $_borderBottomColor = '000000';
 
     /**
      * Border on left of the cell.
@@ -135,6 +141,7 @@ class ArrayExcelBuilderCellDTO
      * @var string
      */
     private $_borderLeft = '';
+    private $_borderLeftColor = '000000';
 
     /**
      * Border on right of the cell.
@@ -142,6 +149,23 @@ class ArrayExcelBuilderCellDTO
      * @var string
      */
     private $_borderRight = '';
+    private $_borderRightColor = '000000';
+
+    /**
+     * Vertical border of the cell.
+     *
+     * @var string
+     */
+    private $_borderVertical = '';
+    private $_borderVerticalColor = '000000';
+
+    /**
+     * Horizontal border of the cell.
+     *
+     * @var string
+     */
+    private $_borderHorizontal = '';
+    private $_borderHorizontalColor = '000000';
 
     /**
      * Font size.
@@ -272,6 +296,66 @@ class ArrayExcelBuilderCellDTO
             $isChanged = true;
         }
 
+        // Border color on the top of all cells on the page
+        if (isset($cellData['allBorderTopColor']) && is_string($cellData['allBorderTopColor'])) {
+            $this->_allBorderTopColor = $cellData['allBorderTopColor'];
+            $isChanged = true;
+        }
+
+        // Border color on the bottom of all cells on the page
+        if (isset($cellData['allBorderBottomColor']) && is_string($cellData['allBorderBottomColor'])) {
+            $this->_allBorderBottomColor = $cellData['allBorderBottomColor'];
+            $isChanged = true;
+        }
+
+        // Border color on the left of all cells on the page
+        if (isset($cellData['allBorderLeftColor']) && is_string($cellData['allBorderLeftColor'])) {
+            $this->_allBorderLeftColor = $cellData['allBorderLeftColor'];
+            $isChanged = true;
+        }
+
+        // Border color on the right of all cells on the page
+        if (isset($cellData['allBorderRightColor']) && is_string($cellData['allBorderRightColor'])) {
+            $this->_allBorderRightColor = $cellData['allBorderRightColor'];
+            $isChanged = true;
+        }
+
+        // Border color on top of the cell
+        if (isset($cellData['borderTopColor']) && is_string($cellData['borderTopColor'])) {
+            $this->_borderTopColor = $cellData['borderTopColor'];
+            $isChanged = true;
+        }
+
+        // Border color on bottom of the cell
+        if (isset($cellData['borderBottomColor']) && is_string($cellData['borderBottomColor'])) {
+            $this->_borderBottomColor = $cellData['borderBottomColor'];
+            $isChanged = true;
+        }
+
+        // Border color on left of the cell
+        if (isset($cellData['borderLeftColor']) && is_string($cellData['borderLeftColor'])) {
+            $this->_borderLeftColor = $cellData['borderLeftColor'];
+            $isChanged = true;
+        }
+
+        // Border color on right of the cell
+        if (isset($cellData['borderRightColor']) && is_string($cellData['borderRightColor'])) {
+            $this->_borderRightColor = $cellData['borderRightColor'];
+            $isChanged = true;
+        }
+
+        // Vertical border color of the cell
+        if (isset($cellData['borderVerticalColor']) && is_string($cellData['borderVerticalColor'])) {
+            $this->_borderVerticalColor = $cellData['borderVerticalColor'];
+            $isChanged = true;
+        }
+
+        // Horizontal border color of the cell
+        if (isset($cellData['borderHorizontalColor']) && is_string($cellData['borderHorizontalColor'])) {
+            $this->_borderHorizontalColor = $cellData['borderHorizontalColor'];
+            $isChanged = true;
+        }
+
         // Border on top of the cell
         if (isset($cellData['borderTop']) && is_string($cellData['borderTop'])) {
             $this->_borderTop = $cellData['borderTop'];
@@ -293,6 +377,18 @@ class ArrayExcelBuilderCellDTO
         // Border on right of the cell
         if (isset($cellData['borderRight']) && is_string($cellData['borderRight'])) {
             $this->_borderRight = $cellData['borderRight'];
+            $isChanged = true;
+        }
+
+        // Vertical border of the cell
+        if (isset($cellData['borderVertical']) && is_string($cellData['borderVertical'])) {
+            $this->_borderVertical = $cellData['borderVertical'];
+            $isChanged = true;
+        }
+
+        // Horizontal border  of the cell
+        if (isset($cellData['borderHorizontal']) && is_string($cellData['borderHorizontal'])) {
+            $this->_borderHorizontal = $cellData['borderHorizontal'];
             $isChanged = true;
         }
 
@@ -324,9 +420,49 @@ class ArrayExcelBuilderCellDTO
     }
 
     /**
-     * Get cell text value.
+     * Get vertical border of the cell.
      *
      * @return string
+     */
+    public function getBorderVertical()
+    {
+        return $this->_borderVertical;
+    }
+
+    /**
+     * Get vertical border color of the cell.
+     *
+     * @return string
+     */
+    public function getBorderVerticalColor()
+    {
+        return $this->_borderVerticalColor;
+    }
+
+    /**
+     * Get horizontal border of the cell.
+     *
+     * @return string
+     */
+    public function getBorderHorizontal()
+    {
+        return $this->_borderHorizontal;
+    }
+
+    /**
+     * Get horizontal border color of the cell.
+     *
+     * @return string
+     */
+    public function getBorderHorizontalColor()
+    {
+        return $this->_borderHorizontalColor;
+    }
+
+    /**
+     * Get cell value.
+     *
+     * @return string|number|bool
      */
     public function getValue()
     {
@@ -431,6 +567,86 @@ class ArrayExcelBuilderCellDTO
     public function getAllBorderTop()
     {
         return $this->_allBorderTop;
+    }
+
+    /**
+     * Get border color on the top of all cells on the page.
+     *
+     * @return string
+     */
+    public function getAllBorderTopColor()
+    {
+        return $this->_allBorderTopColor;
+    }
+
+    /**
+     * Get border color on the bottom of all cells on the page.
+     *
+     * @return string
+     */
+    public function getAllBorderBottomColor()
+    {
+        return $this->_allBorderBottomColor;
+    }
+
+    /**
+     * Get border color on the left of all cells on the page.
+     *
+     * @return string
+     */
+    public function getAllBorderLeftColor()
+    {
+        return $this->_allBorderLeftColor;
+    }
+
+    /**
+     * Get border color on the right of all cells on the page.
+     *
+     * @return string
+     */
+    public function getAllBorderRightColor()
+    {
+        return $this->_allBorderRightColor;
+    }
+
+    /**
+     * Get border color on top of the cell.
+     *
+     * @return string
+     */
+    public function getBorderTopColor()
+    {
+        return $this->_borderTopColor;
+    }
+
+    /**
+     * Get border color on bottom of the cell.
+     *
+     * @return string
+     */
+    public function getBorderBottomColor()
+    {
+        return $this->_borderBottomColor;
+    }
+
+    /**
+     * Get border color on left of the cell.
+     *
+     * @return string
+     */
+    public function getBorderLeftColor()
+    {
+        return $this->_borderLeftColor;
+    }
+
+    /**
+     * Get border color on right of the cell.
+     *
+     * @return string
+     */
+    public function getBorderRightColor()
+    {
+        return $this->_borderRightColor;
     }
 
     /**

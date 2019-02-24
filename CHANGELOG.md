@@ -2,6 +2,14 @@
 Array Excel Builder extension Change Log
 ========================================
 
+1.3.0, February 24, 2019
+------------------------
+
+- Feat: In the global parameters added border vertically and horizontally.
+- Feat: Added the ability to change the color of cell's border.
+- Feat: Improved application performance.
+- Docs: README file updated.
+
 1.2.6, February 19, 2019
 ------------------------
 
