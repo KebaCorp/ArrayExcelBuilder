@@ -77,7 +77,7 @@ $arrayExcelBuilder->save();
 
 | Значение | Type | Default | Description |
 | -------- |:----:| ------- | ----------- |
-| autoSize | bool | false | Авторазмер ячеек. При этом ширина колонок, заданная в параметрах будет проигнорирована. |
+| autoSize | bool | false | Авторазмер ячеек. Если у ячейки задана ширина, то "autoSize" будет проигнорирован. |
 | charts | array | none | Массив данных для создания графиков. Подробнее в [Charts](#charts). |
 | data | array | none | Массив данных. Обязательный параметр. |
 | freezeCell | string | none | Зафиксировать ячейки по координату. Например 'B2' - зафиксирует первую строку и первый столбец. |
@@ -93,7 +93,7 @@ $arrayExcelBuilder->save();
 если необходимо настроить все или большинство ячеек одинаково.
 > - Каждый параметр увеличивает время создания файла.
  Поэтому один параметр "styleArray" (массив с настройками стиля ячейки) будет исполняться существенно быстрее,
-  чем аналогичные параметры (borderBottom, bold, fontColor и т. д.) по отдельности.
+  чем аналогичные параметры (borderBottom, bold, fontColor, fontSize и т. д.) по отдельности.
 >
 > Все эти действия уменьшат время создания файла.
 
@@ -112,11 +112,15 @@ $arrayExcelBuilder->save();
 | borderRight | string | 'none' | Рамка у ячейки справа: none, dashDot, dashDotDot, dashed, dotted, double, hair, medium, mediumDashDot, mediumDashDotDot, mediumDashed, slantDashDot, thick, thin. |
 | borderLeft | string | 'none' | Рамка у ячейки слева: none, dashDot, dashDotDot, dashed, dotted, double, hair, medium, mediumDashDot, mediumDashDotDot, mediumDashed, slantDashDot, thick, thin. |
 | borderTop | string | 'none' | Рамка у ячейки сверху: none, dashDot, dashDotDot, dashed, dotted, double, hair, medium, mediumDashDot, mediumDashDotDot, mediumDashed, slantDashDot, thick, thin. |
+| borderVertical | string | 'none' | Вертикальная рамка у ячейки: none, dashDot, dashDotDot, dashed, dotted, double, hair, medium, mediumDashDot, mediumDashDotDot, mediumDashed, slantDashDot, thick, thin. |
+| borderHorizontal | string | 'none' | Горизонтальная рамка у ячейки: none, dashDot, dashDotDot, dashed, dotted, double, hair, medium, mediumDashDot, mediumDashDotDot, mediumDashed, slantDashDot, thick, thin. |
 | borderBottomColor | HEX color string | '000000' | ВНИМАНИЕ! Необходимо установить "borderBottom". Цвет заливки рамки у ячейки снизу. HEX без #. Например: 'FFFFFF'. |
 | borderRightColor | HEX color string | '000000' | ВНИМАНИЕ! Необходимо установить "borderRight". Цвет заливки рамки у ячейки справа. HEX без #. Например: 'FFFFFF'. |
 | borderLeftColor | HEX color string | '000000' | ВНИМАНИЕ! Необходимо установить "borderLeft". Цвет заливки рамки у ячейки слева. HEX без #. Например: 'FFFFFF'. |
 | borderTopColor | HEX color string | '000000' | ВНИМАНИЕ! Необходимо установить "borderTop". Цвет заливки рамки у ячейки сверху. HEX без #. Например: 'FFFFFF'. |
-| columnWidth | integer | auto | ВНИМАНИЕ! Игнорирйется, если "autoSize" у страницы равен "true". Ширина колонки. Если параметр передан нескольким ячейкам, значение будет использовано из последней ячейки в данной колонке. |
+| borderVerticalColor | HEX color string | '000000' | ВНИМАНИЕ! Необходимо установить "borderVertical". Цвет заливки вертикальной рамки у ячейки. HEX без #. Например: 'FFFFFF'. |
+| borderHorizontalColor | HEX color string | '000000' | ВНИМАНИЕ! Необходимо установить "borderHorizontal". Цвет заливки горизонтальной рамки у ячейки. HEX без #. Например: 'FFFFFF'. |
+| columnWidth | integer | auto | Ширина колонки. Если параметр передан нескольким ячейкам, значение будет использовано из последней ячейки в данной колонке. |
 | fillColor | HEX color string | '' | Цвет заливки ячейки HEX без #. Например: 'FFFFFF'. |
 | fontColor | HEX color string | '' | Цвет текста HEX без #. Например: '000000'. |
 | fontSize | integer | excel default size | Размер шрифта. |
@@ -130,6 +134,25 @@ $arrayExcelBuilder->save();
 
 ### Cell options
 
+**Полезно знать:**
+> Если массив с данными мудет ассоциативным и ключи будут в виде цифр, то позиция ячейки будет исчисляться относительно ключа.
+> Отсчет начинается с нуля.
+>
+> Например:
+ ```php
+ <?php
+ 
+ $data = [
+     1 => [
+         8 => ['value' => 'Hello, World!']
+     ]
+ ];
+ ```
+ > В данном примере текст "Hello, World!" будет расположен в ячейке "B9".
+  
+ 
+ **Все параметры ячейки:**
+
 | Значение | Type | Default | Description |
 | -------- |:----:| ------- | ----------- |
 | bold | bool | false | Жирный шрифт. |
@@ -141,15 +164,15 @@ $arrayExcelBuilder->save();
 | borderRightColor | HEX color string | '000000' | ВНИМАНИЕ! Необходимо установить "borderRight". Цвет заливки рамки у ячейки справа. HEX без #. Например: 'FFFFFF'. |
 | borderLeftColor | HEX color string | '000000' | ВНИМАНИЕ! Необходимо установить "borderLeft". Цвет заливки рамки у ячейки слева. HEX без #. Например: 'FFFFFF'. |
 | borderTopColor | HEX color string | '000000' | ВНИМАНИЕ! Необходимо установить "borderTop". Цвет заливки рамки у ячейки сверху. HEX без #. Например: 'FFFFFF'. |
-| columnWidth | integer | auto | ВНИМАНИЕ! Игнорирйется, если "autoSize" у страницы равен "true". Ширина колонки. Если параметр передан нескольким ячейкам, значение будет использовано из последней ячейки в данной колонке. |
+| columnWidth | integer | auto | Ширина колонки. Если параметр передан нескольким ячейкам, значение будет использовано из последней ячейки в данной колонке. |
 | comment | string | '' | Комментарий ячейки. Если передать пустую строку, то комментарий не будет создан. |
 | fillColor | HEX color string | '' | Цвет заливки ячейки HEX без #. Например: 'FFFFFF'. |
 | fontColor | HEX color string | '' | Цвет текста HEX без #. Например: '000000'. |
 | fontSize | integer | excel default size | Размер шрифта. |
 | hAlignment | string | 'general' | Горизонтальное выравнивание текста: general, left, right, center, centerContinuous, justify, fill, distributed - Excel2007 only. |
 | vAlignment | string | 'bottom' | Вертикальное выравнивание текста: bottom, top, center, justify, distributed - Excel2007 only. |
-| mergeColumns | integer | 0 | Кол-во ячеек справа, которое необходимо присоединить к текущей ячейке. |
-| mergeRows | integer | 0 | Кол-во ячеек снизу, которое необходимо присоединить к текущей ячейке. |
+| mergeColumns | integer | 0 | Кол-во ячеек справа, которое необходимо присоединить к текущей ячейке. ВНИМАНИЕ! Сделует избегать пересечения слияния с соседними ячейками! |
+| mergeRows | integer | 0 | Кол-во ячеек снизу, которое необходимо присоединить к текущей ячейке. ВНИМАНИЕ! Сделует избегать пересечения слияния с соседними ячейками! |
 | rowHeight | integer | auto | Высота строки. Если параметр передан нескольким ячейкам, значение будет использовано из последней ячейки в данной строке. |
 | styleArray | array | [] | Массив стилей. Смотрите [Style array](#style-array) |
 | value | string, number, bool | NULL | Значение ячейки. Значение может быть строкой, числом, числом с точкой, булевым значением. Остальные типы кодируются в Json. Вы также можете вставить формулу в ячейку. Для этого необходимо вставить формулу в виде строки. Например: '=SUM(B2:C2)' |
@@ -206,9 +229,14 @@ $data = [
                             'italic' => false,
                             'underline' => 'double', // none, double, doubleAccounting, single, singleAccounting
                             'strikethrough' => false,
+                            'size'  => 15,
                             'color' => [
                                 'rgb' => '808080'
                             ]
+                        ],
+                        'alignment' => [
+                            'horizontal' => 'center', // general, left, right, center, centerContinuous, justify, fill, distributed - Excel2007 only
+                            'vertical' => 'center', // bottom, top, center, justify, distributed - Excel2007 only
                         ],
                         'borders' => [
                             'bottom' => [
@@ -230,6 +258,18 @@ $data = [
                                 ]
                             ],
                             'right' => [
+                                'borderStyle' => 'mediumDashed',
+                                'color' => [
+                                    'rgb' => '808080'
+                                ]
+                            ],
+                            'vertical' => [
+                                'borderStyle' => 'mediumDashed',
+                                'color' => [
+                                    'rgb' => '808080'
+                                ]
+                            ],
+                            'horizontal' => [
                                 'borderStyle' => 'mediumDashed',
                                 'color' => [
                                     'rgb' => '808080'
@@ -334,10 +374,14 @@ $params = [
     'borderTop' => 'dotted',
     'borderLeft' => 'mediumDashDotDot',
     'borderRight' => 'hair',
+    'borderVertical' => 'dashDot',
+    'borderHorizontal' => 'dotted',
     'borderBottomColor' => '000000',
     'borderTopColor' => '000000',
     'borderLeftColor' => '000000',
     'borderRightColor' => '000000',
+    'borderVerticalColor' => '000000',
+    'borderHorizontalColor' => '000000',
     'value' => 'none',
     'fontColor' => '',
     'fillColor' => '',
@@ -355,9 +399,14 @@ $params = [
             'italic' => false,
             'underline' => 'double', // none, double, doubleAccounting, single, singleAccounting
             'strikethrough' => false,
+            'size'  => 15,
             'color' => [
                 'rgb' => '808080'
             ]
+        ],
+        'alignment' => [
+            'horizontal' => 'center', // general, left, right, center, centerContinuous, justify, fill, distributed - Excel2007 only
+            'vertical' => 'center', // bottom, top, center, justify, distributed - Excel2007 only
         ],
         'borders' => [
             'bottom' => [
@@ -379,6 +428,18 @@ $params = [
                 ]
             ],
             'right' => [
+                'borderStyle' => 'mediumDashed',
+                'color' => [
+                    'rgb' => '808080'
+                ]
+            ],
+            'vertical' => [
+                'borderStyle' => 'mediumDashed',
+                'color' => [
+                    'rgb' => '808080'
+                ]
+            ],
+            'horizontal' => [
                 'borderStyle' => 'mediumDashed',
                 'color' => [
                     'rgb' => '808080'
@@ -409,9 +470,14 @@ $styleArray = [
         'italic' => false,
         'underline' => 'double', // none, double, doubleAccounting, single, singleAccounting
         'strikethrough' => false,
+        'size'  => 15,
         'color' => [
             'rgb' => '808080'
         ]
+    ],
+    'alignment' => [
+        'horizontal' => 'center', // general, left, right, center, centerContinuous, justify, fill, distributed - Excel2007 only
+        'vertical' => 'center', // bottom, top, center, justify, distributed - Excel2007 only
     ],
     'borders' => [
         'bottom' => [
@@ -433,6 +499,18 @@ $styleArray = [
             ]
         ],
         'right' => [
+            'borderStyle' => 'mediumDashed',
+            'color' => [
+                'rgb' => '808080'
+            ]
+        ],
+        'vertical' => [
+            'borderStyle' => 'mediumDashed',
+            'color' => [
+                'rgb' => '808080'
+            ]
+        ],
+        'horizontal' => [
             'borderStyle' => 'mediumDashed',
             'color' => [
                 'rgb' => '808080'

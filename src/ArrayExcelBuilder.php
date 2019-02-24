@@ -52,9 +52,9 @@ class ArrayExcelBuilder
     private $_sheetCount;
 
     /**
-     * Global params.
+     * Global ArrayExcelBuilderCellDTO params.
      *
-     * @var array
+     * @var ArrayExcelBuilderCellDTO
      */
     private $_params = array();
 
@@ -70,7 +70,7 @@ class ArrayExcelBuilder
      *
      * @var array
      */
-    private $_values = [];
+    private $_values = array();
 
     /**
      * Max column coordinate.
@@ -94,6 +94,13 @@ class ArrayExcelBuilder
     private $_maxCellCoordinate = 'A1';
 
     /**
+     * Columns that should not be involved in the auto size.
+     *
+     * @var array
+     */
+    private $_notAutoSizeColumns = array();
+
+    /**
      * Create a new ArrayExcelBuilder.
      *
      * @param array $data - must consist of nested arrays and key of the composite array must be an integer
@@ -106,18 +113,17 @@ class ArrayExcelBuilder
     }
 
     /**
-     * Set global params.
+     * Set global params from params and cell data to cell DTO.
      *
-     * @param array $params - global params
-     *
-     * @return ArrayExcelBuilder
-     *
-     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @param array $params
+     * @return $this
      */
     public function setParams(array $params)
     {
-        // Set global params
-        $this->_params = $params;
+        $defaultData = new ArrayExcelBuilderCellDTO();
+        $defaultData->setDataFromArray($params);
+
+        $this->_params = $defaultData;
 
         return $this;
     }
@@ -214,8 +220,8 @@ class ArrayExcelBuilder
             // Mass set values from array
             $this->_spreadsheet->getActiveSheet()->fromArray($this->_values, NULL);
 
-            // Set current sheet autosize
-            if (isset($sheetData['autosize']) && $sheetData['autosize']) {
+            // Set current sheet auto size
+            if (!$this->_params->getColumnWidth() && isset($sheetData['autoSize']) && $sheetData['autoSize']) {
                 $this->_setAutoSize();
             }
 
@@ -245,7 +251,11 @@ class ArrayExcelBuilder
         $cellIterator->setIterateOnlyExistingCells(false);
 
         foreach ($cellIterator as $cell) {
-            $sheet->getColumnDimension($cell->getColumn())->setAutoSize(true);
+            $cellIndex = $cell->getColumn();
+
+            if (!isset($this->_notAutoSizeColumns[$cellIndex])) {
+                $sheet->getColumnDimension($cell->getColumn())->setAutoSize(true);
+            }
         }
     }
 
@@ -365,6 +375,9 @@ class ArrayExcelBuilder
         ++$columnID;
         ++$rowID;
 
+        // Get column index
+        $columnIndex = Coordinate::stringFromColumnIndex($columnID);
+
         // Get active sheet
         $sheet = $this->_spreadsheet->getActiveSheet();
 
@@ -403,22 +416,30 @@ class ArrayExcelBuilder
 
         // Set the border on the top
         if ($data->getBorderTop()) {
-            $style->getBorders()->getTop()->setBorderStyle($data->getBorderTop());
+            $phpColor = new Color();
+            $phpColor->setRGB($data->getBorderTop());
+            $style->getBorders()->getTop()->setBorderStyle($data->getBorderTop())->setColor($phpColor);
         }
 
         // Set the border on the bottom
         if ($data->getBorderBottom()) {
-            $style->getBorders()->getBottom()->setBorderStyle($data->getBorderBottom());
+            $phpColor = new Color();
+            $phpColor->setRGB($data->getBorderBottom());
+            $style->getBorders()->getBottom()->setBorderStyle($data->getBorderBottom())->setColor($phpColor);
         }
 
         // Set the border on the left
         if ($data->getBorderLeft()) {
-            $style->getBorders()->getLeft()->setBorderStyle($data->getBorderLeft());
+            $phpColor = new Color();
+            $phpColor->setRGB($data->getBorderLeft());
+            $style->getBorders()->getLeft()->setBorderStyle($data->getBorderLeft())->setColor($phpColor);
         }
 
         // Set the border on the right
         if ($data->getBorderRight()) {
-            $style->getBorders()->getRight()->setBorderStyle($data->getBorderRight());
+            $phpColor = new Color();
+            $phpColor->setRGB($data->getBorderRight());
+            $style->getBorders()->getRight()->setBorderStyle($data->getBorderRight())->setColor($phpColor);
         }
 
         // Set font size
@@ -436,9 +457,20 @@ class ArrayExcelBuilder
             $style->applyFromArray($data->getStyleArray());
         }
 
+        // Set global column width
+        if ($this->_params->getColumnWidth() && !$data->getColumnWidth()) {
+            $sheet->getColumnDimensionByColumn($columnID)->setWidth($this->_params->getColumnWidth());
+
+            // If the column has a width, then we include it in the auto size exceptions
+            $this->_notAutoSizeColumns[$columnIndex] = true;
+        }
+
         // Set column width
         if ($data->getColumnWidth()) {
             $sheet->getColumnDimensionByColumn($columnID)->setWidth($data->getColumnWidth());
+
+            // If the column has a width, then we include it in the auto size exceptions
+            $this->_notAutoSizeColumns[$columnIndex] = true;
         }
 
         // Set row height
@@ -465,9 +497,8 @@ class ArrayExcelBuilder
      */
     private function _setGlobalParams($sheetData)
     {
-        // Set data from params and cell data to cell DTO
-        $data = new ArrayExcelBuilderCellDTO();
-        $data->setDataFromArray($this->_params);
+        // Set data from global params DTO
+        $data = $this->_params;
 
         // Fills values with default data for the maximum data key
         $this->_fillSheetEmptyValue($sheetData, $data->getValue());
@@ -526,32 +557,46 @@ class ArrayExcelBuilder
             $style->getFont()->setBold($data->isBold());
         }
 
-        // Set the borders on the top
+        // Set borders on the top
         if ($data->getBorderTop()) {
             $phpColor = new Color();
             $phpColor->setRGB($data->getBorderTopColor());
             $style->getBorders()->getTop()->setBorderStyle($data->getBorderTop())->setColor($phpColor);
         }
 
-        // Set the borders on the bottom
+        // Set borders on the bottom
         if ($data->getBorderBottom()) {
             $phpColor = new Color();
             $phpColor->setRGB($data->getBorderBottomColor());
             $style->getBorders()->getBottom()->setBorderStyle($data->getBorderBottom())->setColor($phpColor);
         }
 
-        // Set the borders on the left
+        // Set borders on the left
         if ($data->getBorderLeft()) {
             $phpColor = new Color();
             $phpColor->setRGB($data->getBorderLeftColor());
             $style->getBorders()->getLeft()->setBorderStyle($data->getBorderLeft())->setColor($phpColor);
         }
 
-        // Set the borders on the right
+        // Set borders on the right
         if ($data->getBorderRight()) {
             $phpColor = new Color();
             $phpColor->setRGB($data->getBorderRightColor());
             $style->getBorders()->getRight()->setBorderStyle($data->getBorderRight())->setColor($phpColor);
+        }
+
+        // Set vertical borders
+        if ($data->getBorderVertical()) {
+            $phpColor = new Color();
+            $phpColor->setRGB($data->getBorderVerticalColor());
+            $style->getBorders()->getVertical()->setBorderStyle($data->getBorderVertical())->setColor($phpColor);
+        }
+
+        // Set horizontal borders
+        if ($data->getBorderHorizontal()) {
+            $phpColor = new Color();
+            $phpColor->setRGB($data->getBorderHorizontalColor());
+            $style->getBorders()->getHorizontal()->setBorderStyle($data->getBorderHorizontal())->setColor($phpColor);
         }
 
         // Set font sizes
@@ -570,14 +615,18 @@ class ArrayExcelBuilder
         }
 
         // Set columns width
-//        if ($data->getColumnWidth()) {
-//            $sheet->getColumnDimensionByColumn($columnID)->setWidth($data->getColumnWidth());
-//        }
+        if ($data->getColumnWidth()) {
+            for ($columnID = 1; $columnID <= $this->_maxColumn; $columnID++) {
+                $sheet->getColumnDimensionByColumn($columnID)->setWidth($data->getColumnWidth());
+            }
+        }
 
         // Set rows height
-//        if ($data->getRowHeight()) {
-//            $sheet->getRowDimension($rowID)->setRowHeight($data->getRowHeight());
-//        }
+        if ($data->getRowHeight()) {
+            for ($rowID = 1; $rowID <= $this->_maxRow; $rowID++) {
+                $sheet->getRowDimension($rowID)->setRowHeight($data->getRowHeight());
+            }
+        }
 
         // Horizontal alignments
         if ($data->getHAlignment()) {

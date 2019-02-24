@@ -152,6 +152,22 @@ class ArrayExcelBuilderCellDTO
     private $_borderRightColor = '000000';
 
     /**
+     * Vertical border of the cell.
+     *
+     * @var string
+     */
+    private $_borderVertical = '';
+    private $_borderVerticalColor = '000000';
+
+    /**
+     * Horizontal border of the cell.
+     *
+     * @var string
+     */
+    private $_borderHorizontal = '';
+    private $_borderHorizontalColor = '000000';
+
+    /**
      * Font size.
      *
      * @var int
@@ -328,6 +344,18 @@ class ArrayExcelBuilderCellDTO
             $isChanged = true;
         }
 
+        // Vertical border color of the cell
+        if (isset($cellData['borderVerticalColor']) && is_string($cellData['borderVerticalColor'])) {
+            $this->_borderVerticalColor = $cellData['borderVerticalColor'];
+            $isChanged = true;
+        }
+
+        // Horizontal border color of the cell
+        if (isset($cellData['borderHorizontalColor']) && is_string($cellData['borderHorizontalColor'])) {
+            $this->_borderHorizontalColor = $cellData['borderHorizontalColor'];
+            $isChanged = true;
+        }
+
         // Border on top of the cell
         if (isset($cellData['borderTop']) && is_string($cellData['borderTop'])) {
             $this->_borderTop = $cellData['borderTop'];
@@ -349,6 +377,18 @@ class ArrayExcelBuilderCellDTO
         // Border on right of the cell
         if (isset($cellData['borderRight']) && is_string($cellData['borderRight'])) {
             $this->_borderRight = $cellData['borderRight'];
+            $isChanged = true;
+        }
+
+        // Vertical border of the cell
+        if (isset($cellData['borderVertical']) && is_string($cellData['borderVertical'])) {
+            $this->_borderVertical = $cellData['borderVertical'];
+            $isChanged = true;
+        }
+
+        // Horizontal border  of the cell
+        if (isset($cellData['borderHorizontal']) && is_string($cellData['borderHorizontal'])) {
+            $this->_borderHorizontal = $cellData['borderHorizontal'];
             $isChanged = true;
         }
 
@@ -377,6 +417,46 @@ class ArrayExcelBuilderCellDTO
         }
 
         return $isChanged;
+    }
+
+    /**
+     * Get vertical border of the cell.
+     *
+     * @return string
+     */
+    public function getBorderVertical()
+    {
+        return $this->_borderVertical;
+    }
+
+    /**
+     * Get vertical border color of the cell.
+     *
+     * @return string
+     */
+    public function getBorderVerticalColor()
+    {
+        return $this->_borderVerticalColor;
+    }
+
+    /**
+     * Get horizontal border of the cell.
+     *
+     * @return string
+     */
+    public function getBorderHorizontal()
+    {
+        return $this->_borderHorizontal;
+    }
+
+    /**
+     * Get horizontal border color of the cell.
+     *
+     * @return string
+     */
+    public function getBorderHorizontalColor()
+    {
+        return $this->_borderHorizontalColor;
     }
 
     /**
