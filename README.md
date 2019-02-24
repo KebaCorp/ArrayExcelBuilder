@@ -179,6 +179,19 @@ $arrayExcelBuilder->save();
 | wrapText | bool | false | Перенос строки. |
 
 
+### Save params
+```php
+$result = $arrayExcelBuilder->save($pathToFile, $saveOptions, $saveToVariable);
+```
+
+| Значение | Type | Default | Description |
+| -------- |:----:| ------- | ----------- |
+| pathToFile | string | 'Document_<Y-m-d_H-i-s>' | Путь и название файла для сохранения без расширения. |
+| saveOptions | array | [] | Массив параметров сохранения файла. Смотрите [Save options](#save-options). |
+| saveToVariable | bool | false | Не сохранять файл на диск, а вернуть его в переменную. В примере выше файл вернется в переменную $result. |
+
+
+
 **Full example:**
 ```php
 <?php
@@ -452,7 +465,44 @@ $params = [
 
 // Create excel file from array
 $arrayExcelBuilder = new ArrayExcelBuilder($data);
-$result = $arrayExcelBuilder->setParams($params)->save('excel/Document.xlsx');
+$result = $arrayExcelBuilder->setParams($params)->save('excel/Document', ['format' => 'xlsx'], false);
+
+?>
+```
+
+
+### Save options
+
+| Значение | Type | Default | Description |
+| -------- |:----:| ------- | ----------- |
+| includeCharts | bool | true | Включить отрисовку графиков. Параметр для форматов: XLSX, XLS, ODS. |
+| office2003Compatibility | bool | false | Включить совместимость с Office 2003. Параметр для форматов: XLSX. |
+| calculateFormulas | bool | true | Рассчитать значения формул. Параметр для форматов: XLSX, XLS, ODS, CSV, HTML, PDF. |
+| useBOM | bool | true | Внести метку BOM кодировки UTF-8. Параметр для форматов: CSV. |
+| enclosure | string (one character only) | '' | Защитный символ, которым будет обрамлена каждая ячейка. Параметр для форматов: CSV. |
+| lineEnding | string | "\r\n" | Символ(ы) окончания строки. Передавать необходимо в двойных кавычках. Параметр для форматов: CSV. |
+| delimiter | string (one character only) | ';' | Разделитель ячеек. Параметр для форматов: CSV. |
+| allSheets | bool | true | Сохранить все страницы. Игнорирует параметр "sheetIndex". Параметр для форматов: PDF. |
+| sheetIndex | integer | 0 | Индекс страницы (отсчет с нуля), который необходимо сохранить. Игнорируется, если параметр "allSheets" равен "true". Параметр для форматов: CSV, PDF. |
+| imagesRoot | string | '' | Корневой путь до изображений. Параметр для форматов: HTML. |
+| pdfBuilder | string | 'mpdf' | Класс генератора PDF-файла. Есть три варианта: mpdf, dompdf, tcpdf. Каждый из них отличается скоростью генерирования, поддержкой различных параметров отображения и размером выходного файла. Параметр для форматов: PDF. |
+
+```php
+<?php
+
+$saveOptions = [
+    'includeCharts' => true,
+    'office2003Compatibility' => false,
+    'calculateFormulas' => true,
+    'useBOM' => true,
+    'enclosure' => '',
+    'lineEnding' => "\r\n",
+    'delimiter' => ';',
+    'sheetIndex' => 0,
+    'imagesRoot' => '',
+    'pdfBuilder' => 'mpdf',
+    'allSheets' => true,
+];
 
 ?>
 ```

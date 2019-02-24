@@ -13,7 +13,6 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Color;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Writer\Exception;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 /**
  * Class ArrayExcelBuilder.
@@ -129,20 +128,17 @@ class ArrayExcelBuilder
     }
 
     /**
-     * Save to file.
+     * Save spreadsheet to file or variable.
      *
-     * For example:
-     *  - 'home/fileName.xlsx'
-     *  - 'fileName.xlsx'
-     *
-     * @param string $pathToFile - path to file with filename
-     *
-     * @return bool|\Exception|Exception - true, if successfully saved
+     * @param string $pathToFile
+     * @param array $options
+     * @param bool $saveToVariable
+     * @return bool|\Exception|null|\PhpOffice\PhpSpreadsheet\Exception|Exception
      */
-    public function save($pathToFile = '')
+    public function save($pathToFile = '', array $options = [], $saveToVariable = false)
     {
         // If the file name is not transferred, then set the default value
-        $pathToFile = $pathToFile ? $pathToFile : 'Document ' . date('Y-m-d H-i-s') . '.xlsx';
+        $pathToFile = $pathToFile ? (string)$pathToFile : 'Document_' . date('Y-m-d_H-i-s');
 
         // Build excel
         try {
@@ -153,16 +149,66 @@ class ArrayExcelBuilder
             return $e;
         }
 
-        // Saving
-        $writer = new Xlsx($this->_spreadsheet);
-        $writer->setIncludeCharts(true); // Enable charts
-        try {
-            $writer->save($pathToFile);
-        } catch (Exception $e) {
-            return $e;
+        // Creates ArrayExcelBuilderWriter
+        $writer = new ArrayExcelBuilderWriter($this->_spreadsheet);
+        $writer->setOptionsFromArray($options);
+
+        // Gets file format
+        $format = isset($options['format']) ? strtolower((string)$options['format']) : 'xlsx';
+        $extension = 'xlsx';
+
+        // Gets file writer
+        switch ($format) {
+            case 'xls':
+                $writer = $writer->getXLSWriter();
+                $extension = 'xls';
+                break;
+
+            case 'ods':
+                $writer = $writer->getODSWriter();
+                $extension = 'ods';
+                break;
+
+            case 'csv':
+                $writer = $writer->getCSVWriter();
+                $extension = 'csv';
+                break;
+
+            case 'html':
+                $writer = $writer->getHTMLWriter();
+                $extension = 'html';
+                break;
+
+            case 'pdf':
+                $writer = $writer->getPDFWriter();
+                $extension = 'pdf';
+                break;
+
+            default:
+                $writer = $writer->getXLSXWriter();
         }
 
-        return true;
+        // Save spreadsheet to file or return to variable
+        if ($saveToVariable) {
+            try {
+                ob_start();
+                $writer->save('php://output');
+
+                return ob_get_clean();
+            } catch (Exception $e) {
+                return $e;
+            }
+        } else {
+            try {
+                $writer->save($pathToFile . '.' . $extension);
+
+                return true;
+            } catch (Exception $e) {
+                return $e;
+            }
+        }
+
+        return false;
     }
 
     /**
