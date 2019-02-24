@@ -237,13 +237,13 @@ class ArrayExcelBuilderCellDTO
         }
 
         // Set horizontal alignment
-        if (isset($cellData['hAlignment']) && is_string($cellData['hAlignment'])) {
+        if (isset($cellData['hAlignment']) && is_string($cellData['hAlignment']) && $cellData['hAlignment'] !== 'general') {
             $this->_hAlignment = $cellData['hAlignment'];
             $isChanged = true;
         }
 
         // Set vertical alignment
-        if (isset($cellData['vAlignment']) && is_string($cellData['vAlignment'])) {
+        if (isset($cellData['vAlignment']) && is_string($cellData['vAlignment']) && $cellData['vAlignment'] !== 'bottom') {
             $this->_vAlignment = $cellData['vAlignment'];
             $isChanged = true;
         }
@@ -273,25 +273,25 @@ class ArrayExcelBuilderCellDTO
         }
 
         // Border on the top of all cells on the page
-        if (isset($cellData['allBorderTop']) && is_string($cellData['allBorderTop'])) {
+        if (isset($cellData['allBorderTop']) && is_string($cellData['allBorderTop']) && $cellData['allBorderTop'] !== 'none') {
             $this->_allBorderTop = $cellData['allBorderTop'];
             $isChanged = true;
         }
 
         // Border on the bottom of all cells on the page
-        if (isset($cellData['allBorderBottom']) && is_string($cellData['allBorderBottom'])) {
+        if (isset($cellData['allBorderBottom']) && is_string($cellData['allBorderBottom']) && $cellData['allBorderBottom'] !== 'none') {
             $this->_allBorderBottom = $cellData['allBorderBottom'];
             $isChanged = true;
         }
 
         // Border on the left of all cells on the page
-        if (isset($cellData['allBorderLeft']) && is_string($cellData['allBorderLeft'])) {
+        if (isset($cellData['allBorderLeft']) && is_string($cellData['allBorderLeft']) && $cellData['allBorderLeft'] !== 'none') {
             $this->_allBorderLeft = $cellData['allBorderLeft'];
             $isChanged = true;
         }
 
         // Border on the right of all cells on the page
-        if (isset($cellData['allBorderRight']) && is_string($cellData['allBorderRight'])) {
+        if (isset($cellData['allBorderRight']) && is_string($cellData['allBorderRight']) && $cellData['allBorderRight'] !== 'none') {
             $this->_allBorderRight = $cellData['allBorderRight'];
             $isChanged = true;
         }
@@ -357,37 +357,37 @@ class ArrayExcelBuilderCellDTO
         }
 
         // Border on top of the cell
-        if (isset($cellData['borderTop']) && is_string($cellData['borderTop'])) {
+        if (isset($cellData['borderTop']) && is_string($cellData['borderTop']) && $cellData['borderTop'] !== 'none') {
             $this->_borderTop = $cellData['borderTop'];
             $isChanged = true;
         }
 
         // Border on bottom of the cell
-        if (isset($cellData['borderBottom']) && is_string($cellData['borderBottom'])) {
+        if (isset($cellData['borderBottom']) && is_string($cellData['borderBottom']) && $cellData['borderBottom'] !== 'none') {
             $this->_borderBottom = $cellData['borderBottom'];
             $isChanged = true;
         }
 
         // Border on left of the cell
-        if (isset($cellData['borderLeft']) && is_string($cellData['borderLeft'])) {
+        if (isset($cellData['borderLeft']) && is_string($cellData['borderLeft']) && $cellData['borderLeft'] !== 'none') {
             $this->_borderLeft = $cellData['borderLeft'];
             $isChanged = true;
         }
 
         // Border on right of the cell
-        if (isset($cellData['borderRight']) && is_string($cellData['borderRight'])) {
+        if (isset($cellData['borderRight']) && is_string($cellData['borderRight']) && $cellData['borderRight'] !== 'none') {
             $this->_borderRight = $cellData['borderRight'];
             $isChanged = true;
         }
 
         // Vertical border of the cell
-        if (isset($cellData['borderVertical']) && is_string($cellData['borderVertical'])) {
+        if (isset($cellData['borderVertical']) && is_string($cellData['borderVertical']) && $cellData['borderVertical'] !== 'none') {
             $this->_borderVertical = $cellData['borderVertical'];
             $isChanged = true;
         }
 
         // Horizontal border  of the cell
-        if (isset($cellData['borderHorizontal']) && is_string($cellData['borderHorizontal'])) {
+        if (isset($cellData['borderHorizontal']) && is_string($cellData['borderHorizontal']) && $cellData['borderHorizontal'] !== 'none') {
             $this->_borderHorizontal = $cellData['borderHorizontal'];
             $isChanged = true;
         }

@@ -2,6 +2,11 @@
 Array Excel Builder extension Change Log
 ========================================
 
+1.3.1, February 24, 2019
+------------------------
+
+- Feat: Now, when inserted default params, the file creation time does not increase.
+
 1.3.0, February 24, 2019
 ------------------------
 

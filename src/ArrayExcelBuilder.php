@@ -207,7 +207,7 @@ class ArrayExcelBuilder
             }
 
             // Is show grid lines
-            if (isset($sheetData['showGridLines']) && is_bool($sheetData['showGridLines'])) {
+            if (isset($sheetData['showGridLines']) && is_bool($sheetData['showGridLines']) && !$sheetData['showGridLines']) {
                 $this->_spreadsheet->getActiveSheet()->setShowGridlines($sheetData['showGridLines']);
             }
 
