@@ -196,10 +196,16 @@ class ArrayExcelBuilderCellDTO
     private $_rowHeight = 0;
 
     /**
+     * Image DTO.
+     *
+     * @var ArrayExcelBuilderImageDTO
+     */
+    private $_image = null;
+
+    /**
      * Set data from array.
      *
      * @param array $cellData
-     *
      * @return bool: true - if the data has been changed, false - if the data has not been changed
      */
     public function setDataFromArray(array $cellData)
@@ -414,6 +420,19 @@ class ArrayExcelBuilderCellDTO
         if (isset($cellData['rowHeight']) && is_int($cellData['rowHeight']) && $cellData['rowHeight'] > 0) {
             $this->_rowHeight = $cellData['rowHeight'];
             $isChanged = true;
+        }
+
+        // Image DTO
+        if (isset($cellData['image'])) {
+            // Creates image DTO
+            $image = new ArrayExcelBuilderImageDTO();
+
+            if ($image->setData($cellData['image'])) {
+                $this->_image = $image;
+                $isChanged = true;
+            } else {
+                $isChanged = false;
+            }
         }
 
         return $isChanged;
@@ -757,5 +776,15 @@ class ArrayExcelBuilderCellDTO
     public function getRowHeight()
     {
         return $this->_rowHeight;
+    }
+
+    /**
+     * Get image DTO.
+     *
+     * @return ArrayExcelBuilderImageDTO
+     */
+    public function getImage()
+    {
+        return $this->_image;
     }
 }
