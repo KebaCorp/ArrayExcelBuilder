@@ -127,7 +127,7 @@ $arrayExcelBuilder->save();
 | hAlignment | string | 'general' | Горизонтальное выравнивание текста: general, left, right, center, centerContinuous, justify, fill, distributed - Excel2007 only. |
 | vAlignment | string | 'bottom' | Вертикальное выравнивание текста: bottom, top, center, justify, distributed - Excel2007 only. |
 | rowHeight | integer | auto | Высота строки. Если параметр передан нескольким ячейкам, значение будет использовано из последней ячейки в данной строке. |
-| styleArray | array | [] | Массив стилей. Смотрите [Style array](#style-array) |
+| styleArray | array | [] | Массив стилей. Смотрите [Style array](#style-array). |
 | value | string, number, bool | NULL | Значение ячейки. Значение может быть строкой, числом, числом с точкой, булевым значением. Остальные типы кодируются в Json. Вы также можете вставить формулу в ячейку. Для этого необходимо вставить формулу в виде строки. Например: '=SUM(B2:C2)' |
 | wrapText | bool | false | Перенос строки. |
 
@@ -171,10 +171,11 @@ $arrayExcelBuilder->save();
 | fontSize | integer | excel default size | Размер шрифта. |
 | hAlignment | string | 'general' | Горизонтальное выравнивание текста: general, left, right, center, centerContinuous, justify, fill, distributed - Excel2007 only. |
 | vAlignment | string | 'bottom' | Вертикальное выравнивание текста: bottom, top, center, justify, distributed - Excel2007 only. |
+| image | string, array | none | Если передать строку, то значение запишется как путь к изображению. Путь может быть как относительным, так и абсолютным. Например: 'img/example.jpg'. Либо можно передать массив параметров. Смотрите [Image array data](#image-array-data). |
 | mergeColumns | integer | 0 | Кол-во ячеек справа, которое необходимо присоединить к текущей ячейке. ВНИМАНИЕ! Сделует избегать пересечения слияния с соседними ячейками! |
 | mergeRows | integer | 0 | Кол-во ячеек снизу, которое необходимо присоединить к текущей ячейке. ВНИМАНИЕ! Сделует избегать пересечения слияния с соседними ячейками! |
 | rowHeight | integer | auto | Высота строки. Если параметр передан нескольким ячейкам, значение будет использовано из последней ячейки в данной строке. |
-| styleArray | array | [] | Массив стилей. Смотрите [Style array](#style-array) |
+| styleArray | array | [] | Массив стилей. Смотрите [Style array](#style-array). |
 | value | string, number, bool | NULL | Значение ячейки. Значение может быть строкой, числом, числом с точкой, булевым значением. Остальные типы кодируются в Json. Вы также можете вставить формулу в ячейку. Для этого необходимо вставить формулу в виде строки. Например: '=SUM(B2:C2)' |
 | wrapText | bool | false | Перенос строки. |
 
@@ -235,6 +236,21 @@ $data = [
                     'borderRightColor' => '000000',
                     'columnWidth' => 100,
                     'rowHeight' => 20,
+                    'image' => [ // or 'image' => 'img/example.jpg',
+                        'path' => 'img/example.jpg',
+                        'name' => 'Example',
+                        'description' => 'Example image',
+                        'offsetX' => 10,
+                        'offsetY' => 15,
+                        'width' => 200,
+                        'height' => 300,
+                        'resizeProportional' => true,
+                        'rotation' => 70,
+                        'hyperLink' => [ // or 'hyperLink' => 'www.example.com',
+                            'url' => 'www.example.com',
+                            'tooltip' => 'Example site',
+                        ],                      
+                    ],
                     'styleArray' => [
                         'font' => [
                             'name' => 'Arial',
@@ -568,6 +584,44 @@ $styleArray = [
         ],
     ],
     'quotePrefix' => true,
+];
+
+?>
+```
+
+
+### Image array data
+
+| Значение | Type | Default | Description |
+| -------- |:----:| ------- | ----------- |
+| description | string | '' | Описание изображения. |
+| height | integer | 20 | Высота изображения. |
+| hyperLink | string, array | none | Ссылка на сайт при нажатии на изображение. Может быть как строкой, тогда значение будет записано как ссылка на ресур. Например: 'www.example.com'. Либо можно передать массив параметров. У массива есть два значения - "url" (ссылка на ресурс) и "tooltip" (всплывающая подсказка). Например: ['url' => 'www.example.com', 'tooltip' => 'Это всплывающая подсказка']. |
+| name | string | '' | Название изображения. |
+| offsetX | integer | 0 | Сдвиг изображения по оси X относительно ячейки. |
+| offsetY | integer | 0 | Сдвиг изображения по оси Y относительно ячейки. |
+| path | string | '' | Путь к изображению с расширением. Путь может быть как относительным, так и абсолютным. Например: 'img/example.jpg'. |
+| resizeProportional | bool | true | Сохранять пропорции изображения при изменении размера. |
+| rotation | integer | 0 | Вращение изображения. |
+| width | integer | 20 | Ширина изображения. |
+
+```php
+<?php
+
+$image = [
+    'path' => 'img/example.jpg',
+    'name' => 'Example',
+    'description' => 'Example image',
+    'offsetX' => 10,
+    'offsetY' => 15,
+    'width' => 200,
+    'height' => 300,
+    'resizeProportional' => true,
+    'rotation' => 70,
+    'hyperLink' => [ // or 'hyperLink' => 'www.example.com',
+        'url' => 'www.example.com',
+        'tooltip' => 'Example site',
+    ],
 ];
 
 ?>

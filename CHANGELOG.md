@@ -2,6 +2,12 @@
 Array Excel Builder extension Change Log
 ========================================
 
+1.5.0, February 28, 2019
+------------------------
+
+- Feat: Added the ability to insert an image into a spreadsheet.
+- Docs: Added description in the README file of how to insert an image into a spreadsheet.
+
 1.4.0, February 24, 2019
 ------------------------
 

@@ -12,6 +12,7 @@ use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Color;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use PhpOffice\PhpSpreadsheet\Writer\Exception;
 
 /**
@@ -108,6 +109,7 @@ class ArrayExcelBuilder
     {
         $this->_spreadsheet = new Spreadsheet();
         $this->_data = $data;
+        $this->_params = new ArrayExcelBuilderCellDTO();
         $this->_sheetCount = count($data);
     }
 
@@ -119,10 +121,7 @@ class ArrayExcelBuilder
      */
     public function setParams(array $params)
     {
-        $defaultData = new ArrayExcelBuilderCellDTO();
-        $defaultData->setDataFromArray($params);
-
-        $this->_params = $defaultData;
+        $this->_params->setDataFromArray($params);
 
         return $this;
     }
@@ -533,6 +532,33 @@ class ArrayExcelBuilder
         if ($data->getVAlignment()) {
             $style->getAlignment()->setVertical($data->getVAlignment());
         }
+
+        // Sets image
+        if (($image = $data->getImage())) {
+            $objDrawing = new Drawing();
+            $objDrawing->setName($image->getName());
+            $objDrawing->setDescription($image->getDescription());
+            $objDrawing->setPath($image->getPath());
+            $objDrawing->setOffsetX($image->getOffsetX());
+            $objDrawing->setOffsetY($image->getOffsetY());
+            $objDrawing->setWidth($image->getWidth());
+            $objDrawing->setHeight($image->getHeight());
+            $objDrawing->setResizeProportional($image->isResizeProportional());
+            $objDrawing->setRotation($image->getRotation());
+
+            // Sets image shadow
+            if ($image->getShadow()) {
+                $objDrawing->setShadow($image->getShadow());
+            }
+
+            // Sets image hyper link
+            if ($image->getHyperlink()) {
+                $objDrawing->setHyperlink($image->getHyperlink());
+            }
+
+            $objDrawing->setWorksheet($sheet);
+            $objDrawing->setCoordinates($columnIndex . $rowID);
+        }
     }
 
     /**
@@ -683,7 +709,6 @@ class ArrayExcelBuilder
         if ($data->getVAlignment()) {
             $style->getAlignment()->setVertical($data->getVAlignment());
         }
-
     }
 
     /**
