@@ -214,14 +214,9 @@ class ArrayExcelBuilderCellDTO
 
         // Set cell value
         if (isset($cellData['value'])) {
-            // If the value is not a string, not a number or not a boolean, then it encodes to json
-            if (is_string($cellData['value']) || is_numeric($cellData['value']) || is_bool($cellData['value'])) {
-                $this->_value = $cellData['value'];
-            } else {
-                $this->_value = json_encode($cellData['value']);
+            if ($this->setValue($cellData['value'])) {
+                $isChanged = true;
             }
-
-            $isChanged = true;
         }
 
         // Set font color
@@ -436,6 +431,20 @@ class ArrayExcelBuilderCellDTO
         }
 
         return $isChanged;
+    }
+
+    /**
+     * Sets value.
+     *
+     * @param $value
+     * @return bool
+     */
+    public function setValue($value)
+    {
+        // If the value is not a string, not a number or not a boolean, then it encodes to json
+        $this->_value = (is_string($value) || is_numeric($value) || is_bool($value)) ? $value : json_encode($value);
+
+        return true;
     }
 
     /**

@@ -38,9 +38,9 @@ class ArrayExcelBuilder
     private $_spreadsheet;
 
     /**
-     * Array data.
+     * Cells array data.
      *
-     * @var array - must consist of nested arrays and key of the composite array must be an integer
+     * @var array
      */
     private $_data;
 
@@ -101,27 +101,49 @@ class ArrayExcelBuilder
     private $_notAutoSizeColumns = array();
 
     /**
-     * Create a new ArrayExcelBuilder.
+     * ArrayExcelBuilder constructor.
      *
-     * @param array $data - must consist of nested arrays and key of the composite array must be an integer
+     * @param array $data - cells array data
+     * @param array $params - global params
      */
-    public function __construct(array $data)
+    public function __construct(array $data = [], array $params = [])
     {
+        // Sets new Spreadsheet
         $this->_spreadsheet = new Spreadsheet();
-        $this->_data = $data;
-        $this->_params = new ArrayExcelBuilderCellDTO();
-        $this->_sheetCount = count($data);
+
+        // Sets cells array data
+        $this->setData($data);
+
+        // Sets global params from array to cell DTO
+        $this->setParams($params);
     }
 
     /**
-     * Set global params from params and cell data to cell DTO.
+     * Sets cells array data.
+     *
+     * @param array $data
+     * @return $this
+     */
+    public function setData(array $data)
+    {
+        $this->_data = $data;
+        $this->_sheetCount = count($data);
+
+        return $this;
+    }
+
+    /**
+     * Sets global params from array to cell DTO.
      *
      * @param array $params
      * @return $this
      */
     public function setParams(array $params)
     {
-        $this->_params->setDataFromArray($params);
+        $paramsDTO = new ArrayExcelBuilderCellDTO();
+        $paramsDTO->setDataFromArray($params);
+
+        $this->_params = $paramsDTO;
 
         return $this;
     }
@@ -331,29 +353,27 @@ class ArrayExcelBuilder
     }
 
     /**
-     * Build sheet.
+     * Builds sheet.
      *
      * @param array $sheetData
-     *
-     * @return ArrayExcelBuilder
-     *
-     * @throws Exception
-     *
+     * @return $this
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     private function _buildSheet(array $sheetData)
     {
-        foreach ($sheetData as $parentIndex => $parentData) {
+        $counter = 0;
 
-            // if $parentIndex is not integer
-            if (!is_int($parentIndex)) {
-                throw new Exception('The key of the composite array must be an integer.');
-            }
+        foreach ($sheetData as $key => $parentData) {
 
             // If $parentData is not array
             if (!is_array($parentData)) {
-                throw new Exception('The data array must consist of nested arrays.');
+                continue;
             }
+
+            // If the array key is a number, then use it
+            // Otherwise the value of the counter
+            $parentIndex = is_int($key) ? $key : $counter;
+            ++$counter;
 
             // Build column or row
             $this->_buildColumnOrRow($parentIndex, $parentData);
@@ -363,31 +383,24 @@ class ArrayExcelBuilder
     }
 
     /**
-     * Build column or row.
+     * Builds column or row.
      *
-     * @param int $parentIndex
-     *
+     * @param $parentIndex
      * @param array $parentData
-     *
-     * @throws Exception
-     *
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     private function _buildColumnOrRow($parentIndex, array $parentData)
     {
-        foreach ($parentData as $childIndex => $cellData) {
+        $counter = 0;
 
-            // if $childIndex is not integer
-            if (!is_int($childIndex)) {
-                throw new Exception('The key of the composite array must be an integer.');
-            }
+        foreach ($parentData as $key => $cellData) {
 
-            // If $cellData is not array
-            if (!is_array($cellData)) {
-                throw new Exception('The data array must consist of nested arrays.');
-            }
+            // If the array key is a number, then use it
+            // Otherwise the value of the counter
+            $childIndex = is_int($key) ? $key : $counter;
+            ++$counter;
 
-            // Determine the row id and column id
+            // Determine the row id and column id by sheet's "isRowDirection" parameter
             $columnID = $this->_isRowDirection ? $childIndex : $parentIndex;
             $rowID = $this->_isRowDirection ? $parentIndex : $childIndex;
 
@@ -397,20 +410,32 @@ class ArrayExcelBuilder
     }
 
     /**
-     * Build cell.
+     * Builds cell.
      *
-     * @param int $columnID - column id start with 1 for column A
+     * If "$cellData" an array, then it is an array of cell parameters.
+     * If not an array, then this is the value of the cell.
      *
-     * @param int $rowID - row id start with 1 for first row
-     *
-     * @param array $cellData
-     *
+     * @param int $columnID - column id start with 0 for column A
+     * @param int $rowID - row id start with 0 for first row
+     * @param array|string|number|bool|mixed $cellData
+     * @return bool
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     private function _buildCell($columnID, $rowID, $cellData)
     {
-        // Set data from params and cell data to cell DTO
         $data = new ArrayExcelBuilderCellDTO();
+
+        if (!is_array($cellData)) {
+            // Sets cell value to DTO
+            $data->setValue($cellData);
+
+            // Sets cell value
+            $this->_values[$rowID][$columnID] = $data->getValue();
+
+            return true;
+        }
+
+        // Set data from params and cell data to cell DTO
         $data->setDataFromArray($cellData);
 
         // Cell value
@@ -559,6 +584,8 @@ class ArrayExcelBuilder
             $objDrawing->setWorksheet($sheet);
             $objDrawing->setCoordinates($columnIndex . $rowID);
         }
+
+        return true;
     }
 
     /**
@@ -724,12 +751,12 @@ class ArrayExcelBuilder
 
         foreach ($data as $key => $datum) {
             if ($key > $maxColumn) {
-                $maxColumn = $key + 1;
+                $maxColumn = $key;
             }
 
             $maxKey = max(array_keys($datum));
             if ($maxKey > $maxRow) {
-                $maxRow = $maxKey + 1;
+                $maxRow = $maxKey;
             }
         }
 
@@ -739,9 +766,11 @@ class ArrayExcelBuilder
         }
 
         // Sets null values
-        for ($i = 0; $i < $maxRow; $i++) {
-            $this->_values[] = array_fill(0, $maxColumn, $defaultValue);
+        $values = [];
+        for ($i = 0; $i <= $maxRow; $i++) {
+            $values[] = array_fill(0, $maxColumn + 1, $defaultValue);
         }
+        $this->_values = $values;
 
         // Sets max column coordinate
         $this->_maxColumn = $maxColumn;
