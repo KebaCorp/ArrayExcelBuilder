@@ -8,13 +8,26 @@
 
 The component creates an Excel file from the data array.
 
+> Based on [PHPOffice/PhpSpreadsheet](https://github.com/PHPOffice/PhpSpreadsheet)
+
 For license information check the [LICENSE](LICENSE.md)-file.
 
 [![Latest Stable Version](https://poser.pugx.org/kebacorp/arrayexcelbuilder/v/stable)](https://packagist.org/packages/kebacorp/arrayexcelbuilder)
 [![Total Downloads](https://poser.pugx.org/kebacorp/arrayexcelbuilder/downloads)](https://packagist.org/packages/kebacorp/arrayexcelbuilder)
 
+
+
+Requirements
+------------
+
+
+- PHP 5.3 and higher.
+
+
+
 Installation
 ------------
+
 
 The preferred way to install this extension is through [composer](http://getcomposer.org/download/).
 
@@ -33,8 +46,10 @@ or add
 to the require section of your composer.json.
 
 
+
 Usage
 -----
+
 
 ### "Hello world!" example
 
@@ -73,6 +88,143 @@ $arrayExcelBuilder->save();
 ```
 
 
+### Matrix data example
+
+```php
+<?php
+
+use KebaCorp\ArrayExcelBuilder\ArrayExcelBuilder;
+
+// Array data
+$data = [
+    // Sheet 1
+    [
+        // Sheet options
+        'sheetName' => 'Hello world page',
+        'data' => [
+            // Column 1
+            [
+                'Hello world!', // Row 1
+                true,           // Row 2
+                100500,         // Row 3
+                'Other value',  // Row 4
+                [               // Row 4
+                    'value' => 'I can configure the cell in more detail',
+                    // Other cell options...
+                ],
+                // Row n...
+            ],
+            // Column 2
+            [
+                'Hello world!',         // Row 1
+                true,                   // Row 2
+                100500,                 // Row 3
+                10 => 'Other value',    // Row 9
+                // Row n...
+            ],
+            // Column n...
+        ],
+    ],
+    // Sheet n...
+];
+
+// Create excel file from array
+$arrayExcelBuilder = new ArrayExcelBuilder($data);
+$arrayExcelBuilder->save();
+
+?>
+```
+
+
+### Sheet parameter "isRowDirection" example
+
+```php
+<?php
+
+use KebaCorp\ArrayExcelBuilder\ArrayExcelBuilder;
+
+// Array data
+$data = [
+    // Sheet 1
+    [
+        // Sheet options
+        'sheetName' => 'Hello world page',
+        'isRowDirection' => true,
+        'data' => [
+            // Row 1
+            [
+                'Hello world!', // Column 1
+                 true,          // Column 2
+                 100500,        // Column 3
+                'Other value',  // Column 4
+                 // Column n...
+            ],
+            // Row 2
+            [
+                'Hello world!', // Column 1
+                 true,          // Column 2
+                 100500,        // Column 3
+                'Other value',  // Column 4
+                 // Column n...
+            ],
+            // Row n...
+        ],
+    ],
+    // Sheet n...
+];
+
+// Global cell params
+$globalParams = [];
+
+// Create excel file from array
+$arrayExcelBuilder = new ArrayExcelBuilder($data, $globalParams);
+$arrayExcelBuilder->save();
+
+?>
+```
+
+
+
+Рекомендации:
+-------------
+
+- Рекомендуется использовать глобальные параметры, вместо одинаковых параметров у каждой ячейки,
+если необходимо настроить все или большинство ячеек одинаково.
+
+- Каждый параметр увеличивает время создания файла.
+Поэтому один параметр "styleArray" (массив с настройками стиля ячейки) будет исполняться существенно быстрее,
+чем аналогичные параметры (borderBottom, bold, fontColor, fontSize и т. д.) по отдельности.
+
+- Не рекомендуется использовать в качестве ключей массивов колонок и строк не числа.
+Позиция следующей ячейки в таком случае может сбиться!
+
+
+
+Полезно знать:
+-------------
+
+- Позиция ячейки относительно ключа массива:
+> Если массив с данными будет ассоциативным, и ключи будут в виде цифр, то ячейка будет расположена относительно ключа.
+> Отсчет начинается с нуля.
+>
+> Например:
+ ```php
+ <?php
+ 
+ $data = [
+     1 => [
+         8 => ['value' => 'Hello, World!']
+     ]
+ ];
+ ```
+ > В данном примере текст "Hello, World!" будет расположен в ячейке "B9".
+
+
+
+Params:
+-------
+
+
 ### Sheet options
 
 | Значение | Type | Default | Description |
@@ -87,15 +239,6 @@ $arrayExcelBuilder->save();
 
 
 ### Global cell options (params)
-
-> **ВНИМАНИЕ!**
-> - Рекомендуется использовать глобальные параметры, вместо одинаковых параметров у каждой ячейки,
-если необходимо настроить все или большинство ячеек одинаково.
-> - Каждый параметр увеличивает время создания файла.
- Поэтому один параметр "styleArray" (массив с настройками стиля ячейки) будет исполняться существенно быстрее,
-  чем аналогичные параметры (borderBottom, bold, fontColor, fontSize и т. д.) по отдельности.
->
-> Все эти действия уменьшат время создания файла.
 
 | Значение | Type | Default | Description |
 | -------- |:----:| ------- | ----------- |
@@ -133,23 +276,6 @@ $arrayExcelBuilder->save();
 
 
 ### Cell options
-
-**Полезно знать:**
-> Если массив с данными будет ассоциативным, и ключи будут в виде цифр, то ячейка будет расположена относительно ключа.
-> Отсчет начинается с нуля.
->
-> Например:
- ```php
- <?php
- 
- $data = [
-     1 => [
-         8 => ['value' => 'Hello, World!']
-     ]
- ];
- ```
- > В данном примере текст "Hello, World!" будет расположен в ячейке "B9".
-  
  
  **Все параметры ячейки:**
 
@@ -181,6 +307,7 @@ $arrayExcelBuilder->save();
 
 
 ### Save params
+
 ```php
 $result = $arrayExcelBuilder->save($pathToFile, $saveOptions, $saveToVariable);
 ```
@@ -480,8 +607,24 @@ $params = [
 ];
 
 // Create excel file from array
-$arrayExcelBuilder = new ArrayExcelBuilder($data);
-$result = $arrayExcelBuilder->setParams($params)->save('excel/Document', ['format' => 'xlsx'], false);
+$arrayExcelBuilder = new ArrayExcelBuilder($data, $params);
+$result = $arrayExcelBuilder->save('excel/Document', ['format' => 'xlsx'], false);
+
+// --- or --- //
+
+// Create excel file from array
+$arrayExcelBuilder = new ArrayExcelBuilder($data, $params);
+$arrayExcelBuilder->setData($data);
+$arrayExcelBuilder->setParams($params);
+$result = $arrayExcelBuilder->save('excel/Document', ['format' => 'xlsx'], false);
+
+// --- or --- //
+
+// Create excel file from array
+$arrayExcelBuilder = new ArrayExcelBuilder();
+$result = $arrayExcelBuilder->setData($data)
+                ->setParams($params)
+                ->save('excel/Document', ['format' => 'xlsx'], false);
 
 ?>
 ```
@@ -525,6 +668,11 @@ $saveOptions = [
 
 
 ### Style array
+
+> StyleArray - массив стилей ячейки.
+Доступны все параметры, которые есть у
+[StyleArray](https://phpspreadsheet.readthedocs.io/en/latest/topics/recipes/#formatting-cells)
+в [Phpspreadsheet](https://github.com/PHPOffice/PhpSpreadsheet).
 
 ```php
 <?php
@@ -626,6 +774,7 @@ $image = [
 
 ?>
 ```
+
 
 
 Charts

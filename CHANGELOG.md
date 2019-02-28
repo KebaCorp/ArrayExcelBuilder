@@ -2,6 +2,14 @@
 Array Excel Builder extension Change Log
 ========================================
 
+1.6.0, March 01, 2019
+------------------------
+
+- Feat: Global parameters can be entered through the second parameter of the ArrayExcelBuilder constructor.
+- Feat: Data setter added.
+- Feat: Added the ability to enter data from the matrix of values.
+- Docs: Updated README file.
+
 1.5.0, February 28, 2019
 ------------------------
 
