@@ -285,7 +285,7 @@ class ArrayExcelBuilder
             $this->_buildSheet($sheetData['data']);
 
             // Mass set values from array
-            $this->_spreadsheet->getActiveSheet()->fromArray($this->_values, NULL);
+            $this->_spreadsheet->getActiveSheet()->fromArray($this->_values, NULL, 'A1', true);
 
             // Set current sheet auto size
             if (!$this->_params->getColumnWidth() && isset($sheetData['autoSize']) && $sheetData['autoSize']) {
