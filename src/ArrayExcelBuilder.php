@@ -799,6 +799,14 @@ class ArrayExcelBuilder
             // Apply callback results
             $this->_spreadsheet = $data['spreadsheet'];
         }
+
+        // Protect from editing
+        if ($data->isProtect()) {
+            $sheet->getProtection()->setSheet(true);
+            $sheet->getProtection()->setSort(true);
+            $sheet->getProtection()->setInsertRows(true);
+            $sheet->getProtection()->setFormatCells(true);
+        }
     }
 
     /**
