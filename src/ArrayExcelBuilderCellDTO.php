@@ -22,7 +22,7 @@ class ArrayExcelBuilderCellDTO
      *
      * @var string|number|bool
      */
-    private $_value = NULL;
+    private $_value = null;
 
     /**
      * Font color.
@@ -201,6 +201,13 @@ class ArrayExcelBuilderCellDTO
      * @var ArrayExcelBuilderImageDTO
      */
     private $_image = null;
+
+    /**
+     * Callback function.
+     *
+     * @var null|callable
+     */
+    private $_callback = null;
 
     /**
      * Set data from array.
@@ -428,6 +435,12 @@ class ArrayExcelBuilderCellDTO
             } else {
                 $isChanged = false;
             }
+        }
+
+        // Callback function
+        if (isset($cellData['callback']) && is_callable($cellData['callback'])) {
+            $this->_callback = $cellData['callback'];
+            $isChanged = true;
         }
 
         return $isChanged;
@@ -795,5 +808,15 @@ class ArrayExcelBuilderCellDTO
     public function getImage()
     {
         return $this->_image;
+    }
+
+    /**
+     * Get callback function.
+     *
+     * @return callable|null
+     */
+    public function getCallback()
+    {
+        return $this->_callback;
     }
 }

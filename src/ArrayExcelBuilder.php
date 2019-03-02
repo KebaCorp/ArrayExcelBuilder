@@ -91,7 +91,7 @@ class ArrayExcelBuilder
      *
      * @var string
      */
-    private $_maxCellCoordinate = 'A1';
+    private $_maxCellCoordinates = 'A1';
 
     /**
      * Columns that should not be involved in the auto size.
@@ -101,15 +101,26 @@ class ArrayExcelBuilder
     private $_notAutoSizeColumns = array();
 
     /**
+     * Allow callback function.
+     *
+     * @var bool
+     */
+    private $_allowCallback = true;
+
+    /**
      * ArrayExcelBuilder constructor.
      *
      * @param array $data - cells array data
      * @param array $params - global params
+     * @param bool $allowCallback - allow callback param
      */
-    public function __construct(array $data = [], array $params = [])
+    public function __construct(array $data = [], array $params = [], $allowCallback = true)
     {
         // Sets new Spreadsheet
         $this->_spreadsheet = new Spreadsheet();
+
+        // Sets allow callback param
+        $this->setAllowCallback($allowCallback);
 
         // Sets cells array data
         $this->setData($data);
@@ -144,6 +155,19 @@ class ArrayExcelBuilder
         $paramsDTO->setDataFromArray($params);
 
         $this->_params = $paramsDTO;
+
+        return $this;
+    }
+
+    /**
+     * Sets allow callback param.
+     *
+     * @param $allowCallback
+     * @return $this
+     */
+    public function setAllowCallback($allowCallback)
+    {
+        $this->_allowCallback = (bool)$allowCallback;
 
         return $this;
     }
@@ -285,7 +309,7 @@ class ArrayExcelBuilder
             $this->_buildSheet($sheetData['data']);
 
             // Mass set values from array
-            $this->_spreadsheet->getActiveSheet()->fromArray($this->_values, NULL, 'A1', true);
+            $this->_spreadsheet->getActiveSheet()->fromArray($this->_values, null, 'A1', true);
 
             // Set current sheet auto size
             if (!$this->_params->getColumnWidth() && isset($sheetData['autoSize']) && $sheetData['autoSize']) {
@@ -401,11 +425,11 @@ class ArrayExcelBuilder
             ++$counter;
 
             // Determine the row id and column id by sheet's "isRowDirection" parameter
-            $columnID = $this->_isRowDirection ? $childIndex : $parentIndex;
-            $rowID = $this->_isRowDirection ? $parentIndex : $childIndex;
+            $columnId = $this->_isRowDirection ? $childIndex : $parentIndex;
+            $rowId = $this->_isRowDirection ? $parentIndex : $childIndex;
 
             // Build cell
-            $this->_buildCell($columnID, $rowID, $cellData);
+            $this->_buildCell($columnId, $rowId, $cellData);
         }
     }
 
@@ -415,13 +439,13 @@ class ArrayExcelBuilder
      * If "$cellData" an array, then it is an array of cell parameters.
      * If not an array, then this is the value of the cell.
      *
-     * @param int $columnID - column id start with 0 for column A
-     * @param int $rowID - row id start with 0 for first row
+     * @param int $columnId - column id start with 0 for column A
+     * @param int $rowId - row id start with 0 for first row
      * @param array|string|number|bool|mixed $cellData
      * @return bool
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
-    private function _buildCell($columnID, $rowID, $cellData)
+    private function _buildCell($columnId, $rowId, $cellData)
     {
         $data = new ArrayExcelBuilderCellDTO();
 
@@ -430,7 +454,7 @@ class ArrayExcelBuilder
             $data->setValue($cellData);
 
             // Sets cell value
-            $this->_values[$rowID][$columnID] = $data->getValue();
+            $this->_values[$rowId][$columnId] = $data->getValue();
 
             return true;
         }
@@ -439,24 +463,26 @@ class ArrayExcelBuilder
         $data->setDataFromArray($cellData);
 
         // Cell value
-        $this->_values[$rowID][$columnID] = $data->getValue();
+        if ($data->getValue() !== null) {
+            $this->_values[$rowId][$columnId] = $data->getValue();
+        }
 
         // Cell counting starts from one
-        ++$columnID;
-        ++$rowID;
+        ++$columnId;
+        ++$rowId;
 
         // Get column index
-        $columnIndex = Coordinate::stringFromColumnIndex($columnID);
+        $columnIndex = Coordinate::stringFromColumnIndex($columnId);
 
         // Get active sheet
         $sheet = $this->_spreadsheet->getActiveSheet();
 
         // Get active sheet cell style
-        $style = $sheet->getStyleByColumnAndRow($columnID, $rowID);
+        $style = $sheet->getStyleByColumnAndRow($columnId, $rowId);
 
         // Cell comment
         if ($data->getComment()) {
-            $sheet->getCommentByColumnAndRow($columnID, $rowID)->getText()->createTextRun($data->getComment());
+            $sheet->getCommentByColumnAndRow($columnId, $rowId)->getText()->createTextRun($data->getComment());
         }
 
         // Cell font color
@@ -478,10 +504,10 @@ class ArrayExcelBuilder
 
         // Merge columns and rows
         if ($data->getMergeColumns() || $data->getMergeRows()) {
-            $columnDestinationID = $data->getMergeColumns() > 0 ? $columnID + $data->getMergeColumns() : $columnID;
-            $rowDestinationID = $data->getMergeRows() > 0 ? $rowID + $data->getMergeRows() : $rowID;
+            $columnDestinationID = $data->getMergeColumns() > 0 ? $columnId + $data->getMergeColumns() : $columnId;
+            $rowDestinationID = $data->getMergeRows() > 0 ? $rowId + $data->getMergeRows() : $rowId;
 
-            $sheet->mergeCellsByColumnAndRow($columnID, $rowID, $columnDestinationID, $rowDestinationID);
+            $sheet->mergeCellsByColumnAndRow($columnId, $rowId, $columnDestinationID, $rowDestinationID);
         }
 
         // Set the border on the top
@@ -529,7 +555,7 @@ class ArrayExcelBuilder
 
         // Set global column width
         if ($this->_params->getColumnWidth() && !$data->getColumnWidth()) {
-            $sheet->getColumnDimensionByColumn($columnID)->setWidth($this->_params->getColumnWidth());
+            $sheet->getColumnDimensionByColumn($columnId)->setWidth($this->_params->getColumnWidth());
 
             // If the column has a width, then we include it in the auto size exceptions
             $this->_notAutoSizeColumns[$columnIndex] = true;
@@ -537,7 +563,7 @@ class ArrayExcelBuilder
 
         // Set column width
         if ($data->getColumnWidth()) {
-            $sheet->getColumnDimensionByColumn($columnID)->setWidth($data->getColumnWidth());
+            $sheet->getColumnDimensionByColumn($columnId)->setWidth($data->getColumnWidth());
 
             // If the column has a width, then we include it in the auto size exceptions
             $this->_notAutoSizeColumns[$columnIndex] = true;
@@ -545,7 +571,7 @@ class ArrayExcelBuilder
 
         // Set row height
         if ($data->getRowHeight()) {
-            $sheet->getRowDimension($rowID)->setRowHeight($data->getRowHeight());
+            $sheet->getRowDimension($rowId)->setRowHeight($data->getRowHeight());
         }
 
         // Horizontal alignment
@@ -582,7 +608,28 @@ class ArrayExcelBuilder
             }
 
             $objDrawing->setWorksheet($sheet);
-            $objDrawing->setCoordinates($columnIndex . $rowID);
+            $objDrawing->setCoordinates($columnIndex . $rowId);
+        }
+
+        // Runs callback function
+        if ($this->_allowCallback && $callback = $data->getCallback()) {
+            $data = $callback([
+                'spreadsheet' => $this->_spreadsheet,
+                'columnId' => $columnId,
+                'rowId' => $rowId,
+                'cellData' => $cellData,
+                'dataDto' => $data,
+                'paramsDto' => $this->_params,
+                'columnName' => $columnIndex,
+                'cell' => $columnIndex . $rowId,
+                'sheetsNumber' => $this->_sheetCount,
+                'maxRow' => $this->_maxRow,
+                'maxColumn' => $this->_maxColumn,
+                'maxCellCoordinates' => $this->_maxCellCoordinates,
+            ]);
+
+            // Apply callback results
+            $this->_spreadsheet = $data['spreadsheet'];
         }
 
         return true;
@@ -609,7 +656,7 @@ class ArrayExcelBuilder
         $sheet = $this->_spreadsheet->getActiveSheet();
 
         // Get active sheet cells style
-        $style = $sheet->getStyle('A1:' . $this->_maxCellCoordinate);
+        $style = $sheet->getStyle('A1:' . $this->_maxCellCoordinates);
 
         // Set the border on the top of all cells on the page
         if ($data->getAllBorderTop()) {
@@ -715,15 +762,15 @@ class ArrayExcelBuilder
 
         // Set columns width
         if ($data->getColumnWidth()) {
-            for ($columnID = 1; $columnID <= $this->_maxColumn; $columnID++) {
-                $sheet->getColumnDimensionByColumn($columnID)->setWidth($data->getColumnWidth());
+            for ($columnId = 1; $columnId <= $this->_maxColumn; $columnId++) {
+                $sheet->getColumnDimensionByColumn($columnId)->setWidth($data->getColumnWidth());
             }
         }
 
         // Set rows height
         if ($data->getRowHeight()) {
-            for ($rowID = 1; $rowID <= $this->_maxRow; $rowID++) {
-                $sheet->getRowDimension($rowID)->setRowHeight($data->getRowHeight());
+            for ($rowId = 1; $rowId <= $this->_maxRow; $rowId++) {
+                $sheet->getRowDimension($rowId)->setRowHeight($data->getRowHeight());
             }
         }
 
@@ -779,6 +826,6 @@ class ArrayExcelBuilder
         $this->_maxRow = $maxRow;
 
         // Sets max cell coordinate
-        $this->_maxCellCoordinate = Coordinate::stringFromColumnIndex($this->_maxColumn) . $this->_maxRow;
+        $this->_maxCellCoordinates = Coordinate::stringFromColumnIndex($this->_maxColumn) . $this->_maxRow;
     }
 }
