@@ -481,29 +481,29 @@ class ArrayExcelBuilder
         $style = $sheet->getStyleByColumnAndRow($columnId, $rowId);
 
         // Cell comment
-        if ($data->getComment()) {
-            $sheet->getCommentByColumnAndRow($columnId, $rowId)->getText()->createTextRun($data->getComment());
+        if ($comment = $data->getComment()) {
+            $sheet->getCommentByColumnAndRow($columnId, $rowId)->getText()->createTextRun($comment);
         }
 
         // Cell font color
-        if ($data->getFontColor()) {
+        if ($fontColor = $data->getFontColor()) {
             $phpColor = new Color();
-            $phpColor->setRGB($data->getFontColor());
+            $phpColor->setRGB($fontColor);
             $style->getFont()->setColor($phpColor);
         }
 
         // Cell background
-        if ($data->getFillColor()) {
-            $style->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB($data->getFillColor());
+        if ($fillColor = $data->getFillColor()) {
+            $style->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB($fillColor);
         }
 
         // Is cell value bold
-        if ($data->isBold()) {
-            $style->getFont()->setBold($data->isBold());
+        if ($isBold = $data->isBold()) {
+            $style->getFont()->setBold($isBold);
         }
 
         // Merge columns and rows
-        if ($data->getMergeColumns() || $data->getMergeRows()) {
+        if ($mergeColumns = $data->getMergeColumns() || $mergeRows = $data->getMergeRows()) {
             $columnDestinationID = $data->getMergeColumns() > 0 ? $columnId + $data->getMergeColumns() : $columnId;
             $rowDestinationID = $data->getMergeRows() > 0 ? $rowId + $data->getMergeRows() : $rowId;
 
@@ -511,41 +511,41 @@ class ArrayExcelBuilder
         }
 
         // Set the border on the top
-        if ($data->getBorderTop()) {
+        if ($borderTop = $data->getBorderTop()) {
             $phpColor = new Color();
-            $phpColor->setRGB($data->getBorderTop());
-            $style->getBorders()->getTop()->setBorderStyle($data->getBorderTop())->setColor($phpColor);
+            $phpColor->setRGB($data->getBorderTopColor());
+            $style->getBorders()->getTop()->setBorderStyle($borderTop)->setColor($phpColor);
         }
 
         // Set the border on the bottom
-        if ($data->getBorderBottom()) {
+        if ($borderBottom = $data->getBorderBottom()) {
             $phpColor = new Color();
-            $phpColor->setRGB($data->getBorderBottom());
-            $style->getBorders()->getBottom()->setBorderStyle($data->getBorderBottom())->setColor($phpColor);
+            $phpColor->setRGB($data->getBorderBottomColor());
+            $style->getBorders()->getBottom()->setBorderStyle($borderBottom)->setColor($phpColor);
         }
 
         // Set the border on the left
-        if ($data->getBorderLeft()) {
+        if ($borderLeft = $data->getBorderLeft()) {
             $phpColor = new Color();
-            $phpColor->setRGB($data->getBorderLeft());
-            $style->getBorders()->getLeft()->setBorderStyle($data->getBorderLeft())->setColor($phpColor);
+            $phpColor->setRGB($data->getBorderLeftColor());
+            $style->getBorders()->getLeft()->setBorderStyle($borderLeft)->setColor($phpColor);
         }
 
         // Set the border on the right
-        if ($data->getBorderRight()) {
+        if ($orderRight = $data->getBorderRight()) {
             $phpColor = new Color();
-            $phpColor->setRGB($data->getBorderRight());
-            $style->getBorders()->getRight()->setBorderStyle($data->getBorderRight())->setColor($phpColor);
+            $phpColor->setRGB($data->getBorderRightColor());
+            $style->getBorders()->getRight()->setBorderStyle($orderRight)->setColor($phpColor);
         }
 
         // Set font size
-        if ($data->getFontSize()) {
-            $style->getFont()->setSize($data->getFontSize());
+        if ($fontSize = $data->getFontSize()) {
+            $style->getFont()->setSize($fontSize);
         }
 
         // Text wrap
-        if ($data->isWrapText()) {
-            $style->getAlignment()->setWrapText($data->isWrapText());
+        if ($isWrapText = $data->isWrapText()) {
+            $style->getAlignment()->setWrapText($isWrapText);
         }
 
         // Set style from array
@@ -562,30 +562,30 @@ class ArrayExcelBuilder
         }
 
         // Set column width
-        if ($data->getColumnWidth()) {
-            $sheet->getColumnDimensionByColumn($columnId)->setWidth($data->getColumnWidth());
+        if ($columnWidth = $data->getColumnWidth()) {
+            $sheet->getColumnDimensionByColumn($columnId)->setWidth($columnWidth);
 
             // If the column has a width, then we include it in the auto size exceptions
             $this->_notAutoSizeColumns[$columnIndex] = true;
         }
 
         // Set row height
-        if ($data->getRowHeight()) {
-            $sheet->getRowDimension($rowId)->setRowHeight($data->getRowHeight());
+        if ($rowHeight = $data->getRowHeight()) {
+            $sheet->getRowDimension($rowId)->setRowHeight($rowHeight);
         }
 
         // Horizontal alignment
-        if ($data->getHAlignment()) {
-            $style->getAlignment()->setHorizontal($data->getHAlignment());
+        if ($hAlignment = $data->getHAlignment()) {
+            $style->getAlignment()->setHorizontal($hAlignment);
         }
 
         // Vertical alignment
-        if ($data->getVAlignment()) {
-            $style->getAlignment()->setVertical($data->getVAlignment());
+        if ($vAlignment = $data->getVAlignment()) {
+            $style->getAlignment()->setVertical($vAlignment);
         }
 
         // Sets image
-        if (($image = $data->getImage())) {
+        if ($image = $data->getImage()) {
             $objDrawing = new Drawing();
             $objDrawing->setName($image->getName());
             $objDrawing->setDescription($image->getDescription());
@@ -598,13 +598,13 @@ class ArrayExcelBuilder
             $objDrawing->setRotation($image->getRotation());
 
             // Sets image shadow
-            if ($image->getShadow()) {
-                $objDrawing->setShadow($image->getShadow());
+            if ($shadow = $image->getShadow()) {
+                $objDrawing->setShadow($shadow);
             }
 
             // Sets image hyper link
-            if ($image->getHyperlink()) {
-                $objDrawing->setHyperlink($image->getHyperlink());
+            if ($hyperlink = $image->getHyperlink()) {
+                $objDrawing->setHyperlink($hyperlink);
             }
 
             $objDrawing->setWorksheet($sheet);
@@ -659,100 +659,100 @@ class ArrayExcelBuilder
         $style = $sheet->getStyle('A1:' . $this->_maxCellCoordinates);
 
         // Set the border on the top of all cells on the page
-        if ($data->getAllBorderTop()) {
+        if ($allBorderTop = $data->getAllBorderTop()) {
             $phpColor = new Color();
             $phpColor->setRGB($data->getAllBorderTopColor());
-            $defaultStyle->getBorders()->getTop()->setBorderStyle($data->getAllBorderTop())->setColor($phpColor);
+            $defaultStyle->getBorders()->getTop()->setBorderStyle($allBorderTop)->setColor($phpColor);
         }
 
         // Set the border on the bottom of all cells on the page
-        if ($data->getAllBorderBottom()) {
+        if ($allBorderBottom = $data->getAllBorderBottom()) {
             $phpColor = new Color();
             $phpColor->setRGB($data->getAllBorderBottomColor());
-            $defaultStyle->getBorders()->getBottom()->setBorderStyle($data->getAllBorderBottom())->setColor($phpColor);
+            $defaultStyle->getBorders()->getBottom()->setBorderStyle($allBorderBottom)->setColor($phpColor);
         }
 
         // Set the border on the left of all cells on the page
-        if ($data->getAllBorderLeft()) {
+        if ($allBorderLeft = $data->getAllBorderLeft()) {
             $phpColor = new Color();
             $phpColor->setRGB($data->getAllBorderLeftColor());
-            $defaultStyle->getBorders()->getLeft()->setBorderStyle($data->getAllBorderLeft())->setColor($phpColor);
+            $defaultStyle->getBorders()->getLeft()->setBorderStyle($allBorderLeft)->setColor($phpColor);
         }
 
         // Set the border on the right of all cells on the page
-        if ($data->getAllBorderRight()) {
+        if ($allBorderRight = $data->getAllBorderRight()) {
             $phpColor = new Color();
             $phpColor->setRGB($data->getAllBorderRightColor());
-            $defaultStyle->getBorders()->getRight()->setBorderStyle($data->getAllBorderRight())->setColor($phpColor);
+            $defaultStyle->getBorders()->getRight()->setBorderStyle($allBorderRight)->setColor($phpColor);
         }
 
         // Cells font color
-        if ($data->getFontColor()) {
+        if ($fontColor = $data->getFontColor()) {
             $phpColor = new Color();
-            $phpColor->setRGB($data->getFontColor());
+            $phpColor->setRGB($fontColor);
             $style->getFont()->setColor($phpColor);
         }
 
         // Cells background
-        if ($data->getFillColor()) {
-            $style->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB($data->getFillColor());
+        if ($fillColor = $data->getFillColor()) {
+            $style->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB($fillColor);
         }
 
         // Is cells value bold
-        if ($data->isBold()) {
-            $style->getFont()->setBold($data->isBold());
+        if ($isBold = $data->isBold()) {
+            $style->getFont()->setBold($isBold);
         }
 
         // Set borders on the top
-        if ($data->getBorderTop()) {
+        if ($borderTop = $data->getBorderTop()) {
             $phpColor = new Color();
             $phpColor->setRGB($data->getBorderTopColor());
-            $style->getBorders()->getTop()->setBorderStyle($data->getBorderTop())->setColor($phpColor);
+            $style->getBorders()->getTop()->setBorderStyle($borderTop)->setColor($phpColor);
         }
 
         // Set borders on the bottom
-        if ($data->getBorderBottom()) {
+        if ($borderBottom = $data->getBorderBottom()) {
             $phpColor = new Color();
             $phpColor->setRGB($data->getBorderBottomColor());
-            $style->getBorders()->getBottom()->setBorderStyle($data->getBorderBottom())->setColor($phpColor);
+            $style->getBorders()->getBottom()->setBorderStyle($borderBottom)->setColor($phpColor);
         }
 
         // Set borders on the left
-        if ($data->getBorderLeft()) {
+        if ($borderLeft = $data->getBorderLeft()) {
             $phpColor = new Color();
             $phpColor->setRGB($data->getBorderLeftColor());
-            $style->getBorders()->getLeft()->setBorderStyle($data->getBorderLeft())->setColor($phpColor);
+            $style->getBorders()->getLeft()->setBorderStyle($borderLeft)->setColor($phpColor);
         }
 
         // Set borders on the right
-        if ($data->getBorderRight()) {
+        if ($borderRight = $data->getBorderRight()) {
             $phpColor = new Color();
             $phpColor->setRGB($data->getBorderRightColor());
-            $style->getBorders()->getRight()->setBorderStyle($data->getBorderRight())->setColor($phpColor);
+            $style->getBorders()->getRight()->setBorderStyle($borderRight)->setColor($phpColor);
         }
 
         // Set vertical borders
-        if ($data->getBorderVertical()) {
+        if ($borderVertical = $data->getBorderVertical()) {
             $phpColor = new Color();
             $phpColor->setRGB($data->getBorderVerticalColor());
-            $style->getBorders()->getVertical()->setBorderStyle($data->getBorderVertical())->setColor($phpColor);
+            $style->getBorders()->getVertical()->setBorderStyle($borderVertical)->setColor($phpColor);
         }
 
         // Set horizontal borders
-        if ($data->getBorderHorizontal()) {
+        if ($borderHorizontal = $data->getBorderHorizontal()) {
             $phpColor = new Color();
             $phpColor->setRGB($data->getBorderHorizontalColor());
-            $style->getBorders()->getHorizontal()->setBorderStyle($data->getBorderHorizontal())->setColor($phpColor);
+            $style->getBorders()->getHorizontal()->setBorderStyle($borderHorizontal)->setColor($phpColor);
         }
 
         // Set font sizes
-        if ($data->getFontSize()) {
-            $style->getFont()->setSize($data->getFontSize());
+        if ($fontSize = $data->getFontSize()) {
+            $style->getFont()->setSize($fontSize);
         }
 
         // Texts wrap
-        if ($data->isWrapText()) {
-            $style->getAlignment()->setWrapText($data->isWrapText());
+        if ($isWrapText = $data->isWrapText()) {
+            $style->getAlignment()->setWrapText($isWrapText);
         }
 
         // Set styles from array
@@ -761,27 +761,43 @@ class ArrayExcelBuilder
         }
 
         // Set columns width
-        if ($data->getColumnWidth()) {
+        if ($columnWidth = $data->getColumnWidth()) {
             for ($columnId = 1; $columnId <= $this->_maxColumn; $columnId++) {
-                $sheet->getColumnDimensionByColumn($columnId)->setWidth($data->getColumnWidth());
+                $sheet->getColumnDimensionByColumn($columnId)->setWidth($columnWidth);
             }
         }
 
         // Set rows height
-        if ($data->getRowHeight()) {
+        if ($rowHeight = $data->getRowHeight()) {
             for ($rowId = 1; $rowId <= $this->_maxRow; $rowId++) {
-                $sheet->getRowDimension($rowId)->setRowHeight($data->getRowHeight());
+                $sheet->getRowDimension($rowId)->setRowHeight($rowHeight);
             }
         }
 
         // Horizontal alignments
-        if ($data->getHAlignment()) {
-            $style->getAlignment()->setHorizontal($data->getHAlignment());
+        if ($hAlignment = $data->getHAlignment()) {
+            $style->getAlignment()->setHorizontal($hAlignment);
         }
 
         // Vertical alignments
-        if ($data->getVAlignment()) {
-            $style->getAlignment()->setVertical($data->getVAlignment());
+        if ($vAlignment = $data->getVAlignment()) {
+            $style->getAlignment()->setVertical($vAlignment);
+        }
+
+        // Runs callback function
+        if ($this->_allowCallback && $callback = $data->getCallback()) {
+            $data = $callback([
+                'spreadsheet' => $this->_spreadsheet,
+                'dataDto' => $data,
+                'paramsDto' => $this->_params,
+                'sheetsNumber' => $this->_sheetCount,
+                'maxRow' => $this->_maxRow,
+                'maxColumn' => $this->_maxColumn,
+                'maxCellCoordinates' => $this->_maxCellCoordinates,
+            ]);
+
+            // Apply callback results
+            $this->_spreadsheet = $data['spreadsheet'];
         }
     }
 
