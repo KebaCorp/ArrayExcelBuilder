@@ -272,6 +272,7 @@ Params:
 | borderTopColor | HEX color string | '000000' | ВНИМАНИЕ! Необходимо установить "borderTop". Цвет заливки рамки у ячейки сверху. HEX без #. Например: 'FFFFFF'. |
 | borderVerticalColor | HEX color string | '000000' | ВНИМАНИЕ! Необходимо установить "borderVertical". Цвет заливки вертикальной рамки у ячейки. HEX без #. Например: 'FFFFFF'. |
 | borderHorizontalColor | HEX color string | '000000' | ВНИМАНИЕ! Необходимо установить "borderHorizontal". Цвет заливки горизонтальной рамки у ячейки. HEX без #. Например: 'FFFFFF'. |
+| callback | function | null | Функция обратного вызова. Вызывается во время формирования ячейки. Принимает один аргумент в виде массивов данных (см. [Global callback arguments](#global-callback-arguments)). Для того, чтобы изменения применились, необходимо вернуть измененный аргумент. |
 | columnWidth | integer | auto | Ширина колонки. Если параметр передан нескольким ячейкам, значение будет использовано из последней ячейки в данной колонке. |
 | fillColor | HEX color string | '' | Цвет заливки ячейки HEX без #. Например: 'FFFFFF'. |
 | fontColor | HEX color string | '' | Цвет текста HEX без #. Например: '000000'. |
@@ -299,7 +300,7 @@ Params:
 | borderRightColor | HEX color string | '000000' | ВНИМАНИЕ! Необходимо установить "borderRight". Цвет заливки рамки у ячейки справа. HEX без #. Например: 'FFFFFF'. |
 | borderLeftColor | HEX color string | '000000' | ВНИМАНИЕ! Необходимо установить "borderLeft". Цвет заливки рамки у ячейки слева. HEX без #. Например: 'FFFFFF'. |
 | borderTopColor | HEX color string | '000000' | ВНИМАНИЕ! Необходимо установить "borderTop". Цвет заливки рамки у ячейки сверху. HEX без #. Например: 'FFFFFF'. |
-| callback | function | null | Функция обратного вызова. Вызывается во время формирования ячейки. Принимает один аргумент в виде массивов данных (см. [Callback arguments](#callback-arguments)). Для того, чтобы изменения применились, необходимо вернуть измененный аргумент. |
+| callback | function | null | Функция обратного вызова. Вызывается во время формирования ячейки. Принимает один аргумент в виде массивов данных (см. [Cell callback arguments](#cell-callback-arguments)). Для того, чтобы изменения применились, необходимо вернуть измененный аргумент. |
 | columnWidth | integer | auto | Ширина колонки. Если параметр передан нескольким ячейкам, значение будет использовано из последней ячейки в данной колонке. |
 | comment | string | '' | Комментарий ячейки. Если передать пустую строку, то комментарий не будет создан. |
 | fillColor | HEX color string | '' | Цвет заливки ячейки HEX без #. Например: 'FFFFFF'. |
@@ -791,7 +792,7 @@ $image = [
 ```
 
 
-### Callback arguments
+### Global callback arguments
 
 > ВАЖНО! Callback-функции не запустятся,
 если в конструктор ArrayExcelBuilder передан параметр "allowCallback" раным *false*
@@ -799,18 +800,61 @@ $image = [
 
 | Значение | Type |  Description |
 | -------- |:----:| ----------- |
-| spreadsheet | Spreadsheet | Объект класса PhpOffice\PhpSpreadsheet\Spreadsheet. Позволяет использовать практически все возможности библиотеки PhpSpreadsheet. |
-| columnId | integer | Индекс текущей колонки. Отсчет начинается с нуля. |
-| rowId | integer | Индекс текущей строки. Отсчет начинается с нуля. |
-| cellData | array | Массив данных текущей ячейки. |
 | dataDto | ArrayExcelBuilderCellDTO | Данные текущей ячейки в виде DTO. |
-| paramsDto | ArrayExcelBuilderCellDTO | Глобальные параметры ячеек в виде DTO. |
-| columnName | string | Буквенное обозначение текущей колонки. Например "C". |
-| cell | string | Координаты текущей ячейки. Например "B7". |
-| sheetsNumber | integer | Общее кол-во страниц. |
-| maxRow | integer | Максимальный индекс строки с данными. |
-| maxColumn | integer | Максимальный индекс колонки с данными. |
 | maxCellCoordinates | string | Максимальные координаты ячейки с данными. Самая нижняя правая ячейка. Например "D10". |
+| maxColumn | integer | Максимальный индекс колонки с данными. |
+| maxRow | integer | Максимальный индекс строки с данными. |
+| paramsDto | ArrayExcelBuilderCellDTO | Глобальные параметры ячеек в виде DTO. |
+| sheetsNumber | integer | Общее кол-во страниц. |
+| spreadsheet | Spreadsheet | Объект класса PhpOffice\PhpSpreadsheet\Spreadsheet. Позволяет использовать практически все возможности библиотеки PhpSpreadsheet. |
+
+> Spreadsheet позволяет использовать практически все возможности,
+которые есть в библиотеке [PHPOffice/PhpSpreadsheet](https://github.com/PHPOffice/PhpSpreadsheet).
+
+```php
+<?php
+
+$callback = function($data) {
+    $spreadsheet = $data['spreadsheet'];
+    $dataDto = $data['dataDto'];
+    $paramsDto = $data['paramsDto'];
+    $sheetsNumber = $data['sheetsNumber'];
+    $maxRow = $data['maxRow'];
+    $maxColumn = $data['maxColumn'];
+    $maxCellCoordinates = $data['maxCellCoordinates'];
+    
+    // Actions with Spreadsheet
+    $spreadsheet->getActiveSheet()->getCell($data['cell'])->setValue('Cell value');
+    $data['spreadsheet'] = $spreadsheet;
+    
+    // IMPORTANT! For the changes to apply, you must return a modified data argument
+    return $data;
+}
+
+?>
+```
+
+
+### Cell callback arguments
+
+> ВАЖНО! Callback-функции не запустятся,
+если в конструктор ArrayExcelBuilder передан параметр "allowCallback" раным *false*
+(см. [ArrayExcelBuilder constructor arguments](#arrayexcelbuilder-constructor-arguments)).
+
+| Значение | Type |  Description |
+| -------- |:----:| ----------- |
+| cell | string | Координаты текущей ячейки. Например "B7". |
+| cellData | array | Массив данных текущей ячейки. |
+| columnId | integer | Индекс текущей колонки. Отсчет начинается с нуля. |
+| columnName | string | Буквенное обозначение текущей колонки. Например "C". |
+| dataDto | ArrayExcelBuilderCellDTO | Данные текущей ячейки в виде DTO. |
+| maxCellCoordinates | string | Максимальные координаты ячейки с данными. Самая нижняя правая ячейка. Например "D10". |
+| maxColumn | integer | Максимальный индекс колонки с данными. |
+| maxRow | integer | Максимальный индекс строки с данными. |
+| paramsDto | ArrayExcelBuilderCellDTO | Глобальные параметры ячеек в виде DTO. |
+| rowId | integer | Индекс текущей строки. Отсчет начинается с нуля. |
+| sheetsNumber | integer | Общее кол-во страниц. |
+| spreadsheet | Spreadsheet | Объект класса PhpOffice\PhpSpreadsheet\Spreadsheet. Позволяет использовать практически все возможности библиотеки PhpSpreadsheet. |
 
 > Spreadsheet позволяет использовать практически все возможности,
 которые есть в библиотеке [PHPOffice/PhpSpreadsheet](https://github.com/PHPOffice/PhpSpreadsheet).
