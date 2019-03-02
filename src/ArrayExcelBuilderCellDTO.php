@@ -210,6 +210,13 @@ class ArrayExcelBuilderCellDTO
     private $_callback = null;
 
     /**
+     * Protect from editing.
+     *
+     * @var bool
+     */
+    private $_protect = false;
+
+    /**
      * Set data from array.
      *
      * @param array $cellData
@@ -440,6 +447,12 @@ class ArrayExcelBuilderCellDTO
         // Callback function
         if (isset($cellData['callback']) && is_callable($cellData['callback'])) {
             $this->_callback = $cellData['callback'];
+            $isChanged = true;
+        }
+
+        // Protect from editing
+        if (isset($cellData['protect'])) {
+            $this->_protect = (bool)$cellData['protect'];
             $isChanged = true;
         }
 
@@ -818,5 +831,15 @@ class ArrayExcelBuilderCellDTO
     public function getCallback()
     {
         return $this->_callback;
+    }
+
+    /**
+     * Get is protected from editing.
+     *
+     * @return bool
+     */
+    public function isProtect()
+    {
+        return $this->_protect;
     }
 }

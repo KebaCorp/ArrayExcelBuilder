@@ -279,6 +279,7 @@ Params:
 | fontSize | integer | excel default size | Размер шрифта. |
 | hAlignment | string | 'general' | Горизонтальное выравнивание текста: general, left, right, center, centerContinuous, justify, fill, distributed - Excel2007 only. |
 | vAlignment | string | 'bottom' | Вертикальное выравнивание текста: bottom, top, center, justify, distributed - Excel2007 only. |
+| protect | bool | false | Защитить страницы от редактирования. |
 | rowHeight | integer | auto | Высота строки. Если параметр передан нескольким ячейкам, значение будет использовано из последней ячейки в данной строке. |
 | styleArray | array | [] | Массив стилей. Смотрите [Style array](#style-array). |
 | value | string, number, bool | NULL | Значение ячейки. Значение может быть строкой, числом, числом с точкой, булевым значением. Остальные типы кодируются в Json. Вы также можете вставить формулу в ячейку. Для этого необходимо вставить формулу в виде строки. Например: '=SUM(B2:C2)' |
@@ -401,18 +402,43 @@ $data = [
                             'italic' => false,
                             'underline' => 'double', // none, double, doubleAccounting, single, singleAccounting
                             'strikethrough' => false,
-                            'size'  => 15,
                             'color' => [
                                 'rgb' => '808080'
-                            ]
+                            ],
+                            'size'  => 15,
+                            'superscript'  => true,
+                            'subscript'  => true,
+                        ],
+                        'fill' => [
+                            'fillType' => 'solid', // none, solid, linear, path, darkDown, darkGray, darkGrid, darkHorizontal, darkTrellis, darkUp, darkVertical, gray0625, gray125, lightDown, lightGray, lightGrid, lightHorizontal, lightTrellis, lightUp, lightVertical, mediumGray
+                            'rotation' => 10.5, // Type: float
+                            'startColor' => [
+                                'rgb' => '000000'
+                            ],
+                            'endColor' => [
+                                'argb' => 'FFFFFFFF'
+                            ],
+                            'color' => [
+                                'rgb' => '000000'
+                            ],
                         ],
                         'alignment' => [
                             'horizontal' => 'center', // general, left, right, center, centerContinuous, justify, fill, distributed - Excel2007 only
                             'vertical' => 'center', // bottom, top, center, justify, distributed - Excel2007 only
+                            'wrapText' => false, // Type: bool
+                            'textRotation' => 0, // Type: integer
+                            'shrinkToFit' => false, // Type: bool
+                            'indent' => 0, // Type: integer
                         ],
                         'borders' => [
-                            'bottom' => [
+                            'allBorders' => [
                                 'borderStyle' => 'dashDot', // none, dashDot, dashDotDot, dashed, dotted, double, hair, medium, mediumDashDot, mediumDashDotDot, mediumDashed, slantDashDot, thick, thin
+                                'color' => [
+                                    'argb' => 'FFFFFFFF'
+                                ]
+                            ],
+                            'bottom' => [
+                                'borderStyle' => 'dashDot',
                                 'color' => [
                                     'rgb' => '808080'
                                 ]
@@ -435,6 +461,12 @@ $data = [
                                     'rgb' => '808080'
                                 ]
                             ],
+                            'diagonal' => [
+                                'borderStyle' => 'mediumDashed',
+                                'color' => [
+                                    'rgb' => '808080'
+                                ]
+                            ],
                             'vertical' => [
                                 'borderStyle' => 'mediumDashed',
                                 'color' => [
@@ -447,6 +479,20 @@ $data = [
                                     'rgb' => '808080'
                                 ]
                             ],
+                            'outline' => [
+                                'borderStyle' => 'mediumDashed',
+                                'color' => [
+                                    'rgb' => '808080'
+                                ]
+                            ],
+                            'diagonalDirection' => 1, // DIAGONAL_NONE: 0, DIAGONAL_UP: 1, DIAGONAL_DOWN: 2, DIAGONAL_BOTH: 3
+                        ],
+                        'numberFormat' => [
+                            'formatCode' => 'General', // see PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_*
+                        ],
+                        'protection' => [
+                            'locked' => 'protected', // inherit, protected, unprotected
+                            'hidden' => 'protected', // inherit, protected, unprotected
                         ],
                         'quotePrefix' => true,
                     ],
@@ -571,18 +617,43 @@ $params = [
             'italic' => false,
             'underline' => 'double', // none, double, doubleAccounting, single, singleAccounting
             'strikethrough' => false,
-            'size'  => 15,
             'color' => [
                 'rgb' => '808080'
-            ]
+            ],
+            'size'  => 15,
+            'superscript'  => true,
+            'subscript'  => true,
+        ],
+        'fill' => [
+            'fillType' => 'solid', // none, solid, linear, path, darkDown, darkGray, darkGrid, darkHorizontal, darkTrellis, darkUp, darkVertical, gray0625, gray125, lightDown, lightGray, lightGrid, lightHorizontal, lightTrellis, lightUp, lightVertical, mediumGray
+            'rotation' => 10.5, // Type: float
+            'startColor' => [
+                'rgb' => '000000'
+            ],
+            'endColor' => [
+                'argb' => 'FFFFFFFF'
+            ],
+            'color' => [
+                'rgb' => '000000'
+            ],
         ],
         'alignment' => [
             'horizontal' => 'center', // general, left, right, center, centerContinuous, justify, fill, distributed - Excel2007 only
             'vertical' => 'center', // bottom, top, center, justify, distributed - Excel2007 only
+            'wrapText' => false, // Type: bool
+            'textRotation' => 0, // Type: integer
+            'shrinkToFit' => false, // Type: bool
+            'indent' => 0, // Type: integer
         ],
         'borders' => [
-            'bottom' => [
+            'allBorders' => [
                 'borderStyle' => 'dashDot', // none, dashDot, dashDotDot, dashed, dotted, double, hair, medium, mediumDashDot, mediumDashDotDot, mediumDashed, slantDashDot, thick, thin
+                'color' => [
+                    'argb' => 'FFFFFFFF'
+                ]
+            ],
+            'bottom' => [
+                'borderStyle' => 'dashDot',
                 'color' => [
                     'rgb' => '808080'
                 ]
@@ -605,6 +676,12 @@ $params = [
                     'rgb' => '808080'
                 ]
             ],
+            'diagonal' => [
+                'borderStyle' => 'mediumDashed',
+                'color' => [
+                    'rgb' => '808080'
+                ]
+            ],
             'vertical' => [
                 'borderStyle' => 'mediumDashed',
                 'color' => [
@@ -617,6 +694,20 @@ $params = [
                     'rgb' => '808080'
                 ]
             ],
+            'outline' => [
+                'borderStyle' => 'mediumDashed',
+                'color' => [
+                    'rgb' => '808080'
+                ]
+            ],
+            'diagonalDirection' => 1, // DIAGONAL_NONE: 0, DIAGONAL_UP: 1, DIAGONAL_DOWN: 2, DIAGONAL_BOTH: 3
+        ],
+        'numberFormat' => [
+            'formatCode' => 'General', // see PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_*
+        ],
+        'protection' => [
+            'locked' => 'protected', // inherit, protected, unprotected
+            'hidden' => 'protected', // inherit, protected, unprotected
         ],
         'quotePrefix' => true,
     ],
@@ -700,18 +791,43 @@ $styleArray = [
         'italic' => false,
         'underline' => 'double', // none, double, doubleAccounting, single, singleAccounting
         'strikethrough' => false,
-        'size'  => 15,
         'color' => [
             'rgb' => '808080'
-        ]
+        ],
+        'size'  => 15,
+        'superscript'  => true,
+        'subscript'  => true,
+    ],
+    'fill' => [
+        'fillType' => 'solid', // none, solid, linear, path, darkDown, darkGray, darkGrid, darkHorizontal, darkTrellis, darkUp, darkVertical, gray0625, gray125, lightDown, lightGray, lightGrid, lightHorizontal, lightTrellis, lightUp, lightVertical, mediumGray
+        'rotation' => 10.5, // Type: float
+        'startColor' => [
+            'rgb' => '000000'
+        ],
+        'endColor' => [
+            'argb' => 'FFFFFFFF'
+        ],
+        'color' => [
+            'rgb' => '000000'
+        ],
     ],
     'alignment' => [
         'horizontal' => 'center', // general, left, right, center, centerContinuous, justify, fill, distributed - Excel2007 only
         'vertical' => 'center', // bottom, top, center, justify, distributed - Excel2007 only
+        'wrapText' => false, // Type: bool
+        'textRotation' => 0, // Type: integer
+        'shrinkToFit' => false, // Type: bool
+        'indent' => 0, // Type: integer
     ],
     'borders' => [
-        'bottom' => [
+        'allBorders' => [
             'borderStyle' => 'dashDot', // none, dashDot, dashDotDot, dashed, dotted, double, hair, medium, mediumDashDot, mediumDashDotDot, mediumDashed, slantDashDot, thick, thin
+            'color' => [
+                'argb' => 'FFFFFFFF'
+            ]
+        ],
+        'bottom' => [
+            'borderStyle' => 'dashDot',
             'color' => [
                 'rgb' => '808080'
             ]
@@ -734,6 +850,12 @@ $styleArray = [
                 'rgb' => '808080'
             ]
         ],
+        'diagonal' => [
+            'borderStyle' => 'mediumDashed',
+            'color' => [
+                'rgb' => '808080'
+            ]
+        ],
         'vertical' => [
             'borderStyle' => 'mediumDashed',
             'color' => [
@@ -746,6 +868,20 @@ $styleArray = [
                 'rgb' => '808080'
             ]
         ],
+        'outline' => [
+            'borderStyle' => 'mediumDashed',
+            'color' => [
+                'rgb' => '808080'
+            ]
+        ],
+        'diagonalDirection' => 1, // DIAGONAL_NONE: 0, DIAGONAL_UP: 1, DIAGONAL_DOWN: 2, DIAGONAL_BOTH: 3
+    ],
+    'numberFormat' => [
+        'formatCode' => 'General', // see PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_*
+    ],
+    'protection' => [
+        'locked' => 'protected', // inherit, protected, unprotected
+        'hidden' => 'protected', // inherit, protected, unprotected
     ],
     'quotePrefix' => true,
 ];
