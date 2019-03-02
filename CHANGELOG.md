@@ -2,6 +2,12 @@
 Array Excel Builder extension Change Log
 ========================================
 
+1.7.0, March 02, 2019
+------------------------
+
+- Feat: Added callback functions.
+- Docs: Updated README file.
+
 1.6.1, March 01, 2019
 ------------------------
 

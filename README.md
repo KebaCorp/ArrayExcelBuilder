@@ -225,6 +225,15 @@ Params:
 -------
 
 
+### ArrayExcelBuilder constructor arguments
+
+| Значение | Type | Default | Description |
+| -------- |:----:| ------- | ----------- |
+| data | array | [] | Данные ячеек. |
+| params | array | [] | Глобальные параметры ячеек. |
+| allowCallback | bool | true | Разрешить запуск callback (см. [Callback arguments](#callback-arguments)). Параметр необходим для того, чтобы обезопасить систему от вызова callback-функций, если данные приходят из сторонних источников. |
+
+
 ### Sheet options
 
 | Значение | Type | Default | Description |
@@ -290,6 +299,7 @@ Params:
 | borderRightColor | HEX color string | '000000' | ВНИМАНИЕ! Необходимо установить "borderRight". Цвет заливки рамки у ячейки справа. HEX без #. Например: 'FFFFFF'. |
 | borderLeftColor | HEX color string | '000000' | ВНИМАНИЕ! Необходимо установить "borderLeft". Цвет заливки рамки у ячейки слева. HEX без #. Например: 'FFFFFF'. |
 | borderTopColor | HEX color string | '000000' | ВНИМАНИЕ! Необходимо установить "borderTop". Цвет заливки рамки у ячейки сверху. HEX без #. Например: 'FFFFFF'. |
+| callback | function | null | Функция обратного вызова. Вызывается во время формирования ячейки. Принимает один аргумент в виде массивов данных (см. [Callback arguments](#callback-arguments)). Для того, чтобы изменения применились, необходимо вернуть измененный аргумент. |
 | columnWidth | integer | auto | Ширина колонки. Если параметр передан нескольким ячейкам, значение будет использовано из последней ячейки в данной колонке. |
 | comment | string | '' | Комментарий ячейки. Если передать пустую строку, то комментарий не будет создан. |
 | fillColor | HEX color string | '' | Цвет заливки ячейки HEX без #. Например: 'FFFFFF'. |
@@ -378,6 +388,11 @@ $data = [
                             'tooltip' => 'Example site',
                         ],                      
                     ],
+                    'callback' => function($data) {
+                        $data['spreadsheet']->getActiveSheet()->getCell($data['cell'])->setValue('Cell value');
+
+                        return $data;
+                    },
                     'styleArray' => [
                         'font' => [
                             'name' => 'Arial',
@@ -771,6 +786,59 @@ $image = [
         'tooltip' => 'Example site',
     ],
 ];
+
+?>
+```
+
+
+### Callback arguments
+
+> ВАЖНО! Callback-функции не запустятся,
+если в конструктор ArrayExcelBuilder передан параметр "allowCallback" раным *false*
+(см. [ArrayExcelBuilder constructor arguments](#arrayexcelbuilder-constructor-arguments)).
+
+| Значение | Type |  Description |
+| -------- |:----:| ----------- |
+| spreadsheet | Spreadsheet | Объект класса PhpOffice\PhpSpreadsheet\Spreadsheet. Позволяет использовать практически все возможности библиотеки PhpSpreadsheet. |
+| columnId | integer | Индекс текущей колонки. Отсчет начинается с нуля. |
+| rowId | integer | Индекс текущей строки. Отсчет начинается с нуля. |
+| cellData | array | Массив данных текущей ячейки. |
+| dataDto | ArrayExcelBuilderCellDTO | Данные текущей ячейки в виде DTO. |
+| paramsDto | ArrayExcelBuilderCellDTO | Глобальные параметры ячеек в виде DTO. |
+| columnName | string | Буквенное обозначение текущей колонки. Например "C". |
+| cell | string | Координаты текущей ячейки. Например "B7". |
+| sheetsNumber | integer | Общее кол-во страниц. |
+| maxRow | integer | Максимальный индекс строки с данными. |
+| maxColumn | integer | Максимальный индекс колонки с данными. |
+| maxCellCoordinates | string | Максимальные координаты ячейки с данными. Самая нижняя правая ячейка. Например "D10". |
+
+> Spreadsheet позволяет использовать практически все возможности,
+которые есть в библиотеке [PHPOffice/PhpSpreadsheet](https://github.com/PHPOffice/PhpSpreadsheet).
+
+```php
+<?php
+
+$callback = function($data) {
+    $spreadsheet = $data['spreadsheet'];
+    $columnId = $data['columnId'];
+    $rowId = $data['rowId'];
+    $cellData = $data['cellData'];
+    $dataDto = $data['dataDto'];
+    $paramsDto = $data['paramsDto'];
+    $columnName = $data['columnName'];
+    $cell = $data['cell'];
+    $sheetsNumber = $data['sheetsNumber'];
+    $maxRow = $data['maxRow'];
+    $maxColumn = $data['maxColumn'];
+    $maxCellCoordinates = $data['maxCellCoordinates'];
+    
+    // Actions with Spreadsheet
+    $spreadsheet->getActiveSheet()->getCell($data['cell'])->setValue('Cell value');
+    $data['spreadsheet'] = $spreadsheet;
+    
+    // IMPORTANT! For the changes to apply, you must return a modified data argument
+    return $data;
+}
 
 ?>
 ```
