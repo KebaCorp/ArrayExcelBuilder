@@ -188,6 +188,7 @@ $arrayExcelBuilder->save();
 Рекомендации:
 -------------
 
+
 - Рекомендуется использовать глобальные параметры, вместо одинаковых параметров у каждой ячейки,
 если необходимо настроить все или большинство ячеек одинаково.
 
@@ -202,6 +203,7 @@ $arrayExcelBuilder->save();
 
 Полезно знать:
 -------------
+
 
 - Позиция ячейки относительно ключа массива:
 > Если массив с данными будет ассоциативным, и ключи будут в виде цифр, то ячейка будет расположена относительно ключа.
@@ -225,18 +227,9 @@ Params:
 -------
 
 
-### ArrayExcelBuilder constructor arguments
-
-| Значение | Type | Default | Description |
-| -------- |:----:| ------- | ----------- |
-| data | array | [] | Данные ячеек. |
-| params | array | [] | Глобальные параметры ячеек. |
-| allowCallback | bool | true | Разрешить запуск callback (см. [Callback arguments](#callback-arguments)). Параметр необходим для того, чтобы обезопасить систему от вызова callback-функций, если данные приходят из сторонних источников. |
-
-
 ### Sheet options
 
-| Значение | Type | Default | Description |
+| Name | Type | Default | Description |
 | -------- |:----:| ------- | ----------- |
 | autoSize | bool | false | Авторазмер ячеек. Если у ячейки задана ширина, то "autoSize" будет проигнорирован. |
 | charts | array | none | Массив данных для создания графиков. Подробнее в [Charts](#charts). |
@@ -247,9 +240,9 @@ Params:
 | showGridLines | bool | true | Отобразить сетку. |
 
 
-### Global cell options (params)
+### Global cell options
 
-| Значение | Type | Default | Description |
+| Name | Type | Default | Description |
 | -------- |:----:| ------- | ----------- |
 | allBorderBottom | string | 'none' | Рамка у всех ячеек снизу: none, dashDot, dashDotDot, dashed, dotted, double, hair, medium, mediumDashDot, mediumDashDotDot, mediumDashed, slantDashDot, thick, thin. |
 | allBorderRight | string | 'none' | Рамка у всех ячеек справа: none, dashDot, dashDotDot, dashed, dotted, double, hair, medium, mediumDashDot, mediumDashDotDot, mediumDashed, slantDashDot, thick, thin. |
@@ -290,7 +283,7 @@ Params:
  
  **Все параметры ячейки:**
 
-| Значение | Type | Default | Description |
+| Name | Type | Default | Description |
 | -------- |:----:| ------- | ----------- |
 | bold | bool | false | Жирный шрифт. |
 | borderBottom | string | 'none' | Рамка у ячейки снизу: none, dashDot, dashDotDot, dashed, dotted, double, hair, medium, mediumDashDot, mediumDashDotDot, mediumDashed, slantDashDot, thick, thin. |
@@ -316,20 +309,6 @@ Params:
 | styleArray | array | [] | Массив стилей. Смотрите [Style array](#style-array). |
 | value | string, number, bool | NULL | Значение ячейки. Значение может быть строкой, числом, числом с точкой, булевым значением. Остальные типы кодируются в Json. Вы также можете вставить формулу в ячейку. Для этого необходимо вставить формулу в виде строки. Например: '=SUM(B2:C2)' |
 | wrapText | bool | false | Перенос строки. |
-
-
-### Save params
-
-```php
-$result = $arrayExcelBuilder->save($pathToFile, $saveOptions, $saveToVariable);
-```
-
-| Значение | Type | Default | Description |
-| -------- |:----:| ------- | ----------- |
-| pathToFile | string | 'Document_<Y-m-d_H-i-s>' | Путь и название файла для сохранения без расширения. |
-| saveOptions | array | [] | Массив параметров сохранения файла. Смотрите [Save options](#save-options). |
-| saveToVariable | bool | false | Не сохранять файл на диск, а вернуть его в переменную. В примере выше файл вернется в переменную $result. |
-
 
 
 **Full example:**
@@ -737,43 +716,6 @@ $result = $arrayExcelBuilder->setData($data)
 ```
 
 
-### Save options
-
-| Значение | Type | Default | Description |
-| -------- |:----:| ------- | ----------- |
-| includeCharts | bool | true | Включить отрисовку графиков. Параметр для форматов: XLSX, XLS, ODS. |
-| office2003Compatibility | bool | false | Включить совместимость с Office 2003. Параметр для форматов: XLSX. |
-| calculateFormulas | bool | true | Рассчитать значения формул. Параметр для форматов: XLSX, XLS, ODS, CSV, HTML, PDF. |
-| useBOM | bool | true | Внести метку BOM кодировки UTF-8. Параметр для форматов: CSV. |
-| enclosure | string (one character only) | '' | Защитный символ, которым будет обрамлена каждая ячейка. Параметр для форматов: CSV. |
-| lineEnding | string | "\r\n" | Символ(ы) окончания строки. Передавать необходимо в двойных кавычках. Параметр для форматов: CSV. |
-| delimiter | string (one character only) | ';' | Разделитель ячеек. Параметр для форматов: CSV. |
-| allSheets | bool | true | Сохранить все страницы. Игнорирует параметр "sheetIndex". Параметр для форматов: PDF. |
-| sheetIndex | integer | 0 | Индекс страницы (отсчет с нуля), который необходимо сохранить. Игнорируется, если параметр "allSheets" равен "true". Параметр для форматов: CSV, PDF. |
-| imagesRoot | string | '' | Корневой путь до изображений. Параметр для форматов: HTML. |
-| pdfBuilder | string | 'mpdf' | Класс генератора PDF-файла. Есть три варианта: mpdf, dompdf, tcpdf. Каждый из них отличается скоростью генерирования, поддержкой различных параметров отображения и размером выходного файла. Параметр для форматов: PDF. |
-
-```php
-<?php
-
-$saveOptions = [
-    'includeCharts' => true,
-    'office2003Compatibility' => false,
-    'calculateFormulas' => true,
-    'useBOM' => true,
-    'enclosure' => '',
-    'lineEnding' => "\r\n",
-    'delimiter' => ';',
-    'sheetIndex' => 0,
-    'imagesRoot' => '',
-    'pdfBuilder' => 'mpdf',
-    'allSheets' => true,
-];
-
-?>
-```
-
-
 ### Style array
 
 > StyleArray - массив стилей ячейки.
@@ -892,7 +834,7 @@ $styleArray = [
 
 ### Image array data
 
-| Значение | Type | Default | Description |
+| Name | Type | Default | Description |
 | -------- |:----:| ------- | ----------- |
 | description | string | '' | Описание изображения. |
 | height | integer | 20 | Высота изображения. |
@@ -934,7 +876,7 @@ $image = [
 если в конструктор ArrayExcelBuilder передан параметр "allowCallback" раным *false*
 (см. [ArrayExcelBuilder constructor arguments](#arrayexcelbuilder-constructor-arguments)).
 
-| Значение | Type |  Description |
+| Name | Type |  Description |
 | -------- |:----:| ----------- |
 | dataDto | ArrayExcelBuilderCellDTO | Данные текущей ячейки в виде DTO. |
 | maxCellCoordinates | string | Максимальные координаты ячейки с данными. Самая нижняя правая ячейка. Например "D10". |
@@ -977,7 +919,7 @@ $callback = function($data) {
 если в конструктор ArrayExcelBuilder передан параметр "allowCallback" раным *false*
 (см. [ArrayExcelBuilder constructor arguments](#arrayexcelbuilder-constructor-arguments)).
 
-| Значение | Type |  Description |
+| Name | Type |  Description |
 | -------- |:----:| ----------- |
 | cell | string | Координаты текущей ячейки. Например "B7". |
 | cellData | array | Массив данных текущей ячейки. |
@@ -1025,14 +967,118 @@ $callback = function($data) {
 
 
 
+ArrayExcelBuilder:
+------------------
+
+
+### ArrayExcelBuilder constructor arguments
+
+| Name | Type | Default | Description |
+| -------- |:----:| ------- | ----------- |
+| data | array | [] | Данные ячеек. |
+| params | array | [] | Глобальные параметры ячеек. |
+| allowCallback | bool | true | Разрешить запуск callback (см. [Global cell options](#global-cell-options) или [Cell options](#cell-options)). Параметр необходим для того, чтобы обезопасить систему от вызова callback-функций, если данные приходят из сторонних источников. |
+
+```php
+<?php
+
+$arrayExcelBuilder = new ArrayExcelBuilder($data, $params, $allowCallback);
+$arrayExcelBuilder->save();
+
+?>
+```
+
+
+### ArrayExcelBuilder methods
+
+| Name | Arguments | Returns | Description |
+| -------- |:----:| ------- | ----------- |
+| build() |  | $this | Вносит переданные переданные данные в Spreadsheet. Метод автоматически вызывается перед сохранением, если до этого не был вызван вручную. |
+| getSpreadsheet() |  | Spreadsheet | Возвращает Spreadsheet. Если необходимо произвести действия над Spreadsheet после build(), то build() необходимо вызвать вручную перед методом: ``` $spreadsheet = $arrayExcelBuilder->build()->getSpreadsheet(); ``` |
+| setAllowCallback() | bool $allowCallback | $this | Разрешить/запретить запуск callback (см. [Global cell options](#global-cell-options) или [Cell options](#cell-options)). |
+| setData() | array $data | $this | Задает данные. Также можно внести данные через конструктор ArrayExcelBuilder (см. [ArrayExcelBuilder constructor arguments](#arrayexcelbuilder-constructor-arguments)). |
+| setParams() | array $params | $this | Задает глобальные параметры. Также можно внести параметры через конструктор ArrayExcelBuilder (см. [ArrayExcelBuilder constructor arguments](#arrayexcelbuilder-constructor-arguments)). |
+| save() | $pathToFile = '', array $options = [], $saveToVariable = false | bool, file, Exception, null | Генерирует файл и сохраняет его в файл/переменную. Подробнее об аргументах метода в [Save arguments](#save-arguments). |
+
+```php
+<?php
+
+$arrayExcelBuilder = new ArrayExcelBuilder();
+
+$arrayExcelBuilder->setData($data)
+    ->setParams($params)
+    ->setAllowCallback($allowCallback)
+    ->build();
+
+$spreadsheet = $arrayExcelBuilder->getSpreadsheet();
+$spreadsheet->getActiveSheet()->setTitle('Sheet title');
+
+$arrayExcelBuilder->save($pathToFile, $saveOptions, $saveToVariable);
+
+?>
+```
+
+
+### Save arguments
+
+```php
+$result = $arrayExcelBuilder->save($pathToFile, $saveOptions, $saveToVariable);
+```
+
+| Name | Type | Default | Description |
+| -------- |:----:| ------- | ----------- |
+| pathToFile | string | 'Document_<Y-m-d_H-i-s>' | Путь и название файла для сохранения без расширения. |
+| saveOptions | array | [] | Массив параметров сохранения файла. Смотрите [Save options](#save-options). |
+| saveToVariable | bool | false | Не сохранять файл на диск, а вернуть его в переменную. В примере выше файл вернется в переменную $result. |
+
+
+### Save options
+
+| Name | Type | Default | Description |
+| -------- |:----:| ------- | ----------- |
+| includeCharts | bool | true | Включить отрисовку графиков. Параметр для форматов: XLSX, XLS, ODS. |
+| office2003Compatibility | bool | false | Включить совместимость с Office 2003. Параметр для форматов: XLSX. |
+| calculateFormulas | bool | true | Рассчитать значения формул. Параметр для форматов: XLSX, XLS, ODS, CSV, HTML, PDF. |
+| useBOM | bool | true | Внести метку BOM кодировки UTF-8. Параметр для форматов: CSV. |
+| enclosure | string (one character only) | '' | Защитный символ, которым будет обрамлена каждая ячейка. Параметр для форматов: CSV. |
+| lineEnding | string | "\r\n" | Символ(ы) окончания строки. Передавать необходимо в двойных кавычках. Параметр для форматов: CSV. |
+| delimiter | string (one character only) | ';' | Разделитель ячеек. Параметр для форматов: CSV. |
+| allSheets | bool | true | Сохранить все страницы. Игнорирует параметр "sheetIndex". Параметр для форматов: PDF. |
+| sheetIndex | integer | 0 | Индекс страницы (отсчет с нуля), который необходимо сохранить. Игнорируется, если параметр "allSheets" равен "true". Параметр для форматов: CSV, PDF. |
+| imagesRoot | string | '' | Корневой путь до изображений. Параметр для форматов: HTML. |
+| pdfBuilder | string | 'mpdf' | Класс генератора PDF-файла. Есть три варианта: mpdf, dompdf, tcpdf. Каждый из них отличается скоростью генерирования, поддержкой различных параметров отображения и размером выходного файла. Параметр для форматов: PDF. |
+
+```php
+<?php
+
+$saveOptions = [
+    'includeCharts' => true,
+    'office2003Compatibility' => false,
+    'calculateFormulas' => true,
+    'useBOM' => true,
+    'enclosure' => '',
+    'lineEnding' => "\r\n",
+    'delimiter' => ';',
+    'sheetIndex' => 0,
+    'imagesRoot' => '',
+    'pdfBuilder' => 'mpdf',
+    'allSheets' => true,
+];
+
+?>
+```
+
+
+
 Charts
 -----
+
 
 <img src="https://github.com/KebaCorp/ArrayExcelBuilder/blob/master/img/ExcelChartExample.png?raw=true" height="250px">
 
 ### Chart options
 
-| Значение | Type | Default | Description |
+| Name | Type | Default | Description |
 | -------- |:----:| ------- | ----------- |
 | name | string | '' | Имя графика. Не отображается. |
 | title | string | none | Заголовок графика. Отображается сверху посередине. |
@@ -1051,7 +1097,7 @@ Charts
 
 ### Chart labels options
 
-| Значение | Type | Default | Description |
+| Name | Type | Default | Description |
 | -------- |:----:| ------- | ----------- |
 | dataType | string | 'Number' | Не обязательный параметр. Тип данных: 'Number', 'String'. |
 | column | string | none | Обязательный параметр. Имя колонки. Именование колонки ведется в латинских буквах начиная от A и далее. Например: 'B'. |
@@ -1061,7 +1107,7 @@ Charts
 
 ### Chart xValues and yValues options
 
-| Значение | Type | Default | Description |
+| Name | Type | Default | Description |
 | -------- |:----:| ------- | ----------- |
 | dataType | string | 'Number' | Не обязательный параметр. Тип данных: 'Number', 'String'. |
 | sheetName | string | none | Обязательный параметр. Название страницы, где находится Label. |

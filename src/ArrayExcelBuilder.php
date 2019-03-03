@@ -38,6 +38,13 @@ class ArrayExcelBuilder
     private $_spreadsheet;
 
     /**
+     * Flag to determine if Spreadsheet is built.
+     *
+     * @var bool
+     */
+    private $_isBuilt = false;
+
+    /**
      * Cells array data.
      *
      * @var array
@@ -182,17 +189,19 @@ class ArrayExcelBuilder
      */
     public function save($pathToFile = '', array $options = [], $saveToVariable = false)
     {
+        // Build the spreadsheet if it is not built before saving
+        if (!$this->_isBuilt) {
+            try {
+                $this->build();
+            } catch (Exception $e) {
+                return $e;
+            } catch (\PhpOffice\PhpSpreadsheet\Exception $e) {
+                return $e;
+            }
+        }
+
         // If the file name is not transferred, then set the default value
         $pathToFile = $pathToFile ? (string)$pathToFile : 'Document_' . date('Y-m-d_H-i-s');
-
-        // Build excel
-        try {
-            $this->_buildExcel();
-        } catch (Exception $e) {
-            return $e;
-        } catch (\PhpOffice\PhpSpreadsheet\Exception $e) {
-            return $e;
-        }
 
         // Creates ArrayExcelBuilderWriter
         $writer = new ArrayExcelBuilderWriter($this->_spreadsheet);
@@ -265,7 +274,7 @@ class ArrayExcelBuilder
      *
      * @return ArrayExcelBuilder
      */
-    private function _buildExcel()
+    public function build()
     {
         // Sheet index
         $sheetIndex = 0;
@@ -326,6 +335,9 @@ class ArrayExcelBuilder
                 $this->_spreadsheet->createSheet();
             }
         }
+
+        // Sets that the excel is built
+        $this->_isBuilt = true;
 
         return $this;
     }
@@ -851,5 +863,15 @@ class ArrayExcelBuilder
 
         // Sets max cell coordinate
         $this->_maxCellCoordinates = Coordinate::stringFromColumnIndex($this->_maxColumn) . $this->_maxRow;
+    }
+
+    /**
+     * Get Spreadsheet.
+     *
+     * @return Spreadsheet
+     */
+    public function getSpreadsheet()
+    {
+        return $this->_spreadsheet;
     }
 }

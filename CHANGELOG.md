@@ -2,6 +2,13 @@
 Array Excel Builder extension Change Log
 ========================================
 
+1.10.0, March 03, 2019
+------------------------
+
+- Feat: Added getter to get a Spreadsheet.
+- Feat: Added method to build Spreadsheet.
+- Docs: Updated README file.
+
 1.9.1, March 03, 2019
 ------------------------
 
