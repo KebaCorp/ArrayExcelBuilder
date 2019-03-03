@@ -613,7 +613,7 @@ class ArrayExcelBuilder
 
         // Runs callback function
         if ($this->_allowCallback && $callback = $data->getCallback()) {
-            $data = $callback([
+            $callbackResult = $callback([
                 'spreadsheet' => $this->_spreadsheet,
                 'columnId' => $columnId,
                 'rowId' => $rowId,
@@ -629,7 +629,7 @@ class ArrayExcelBuilder
             ]);
 
             // Apply callback results
-            $this->_spreadsheet = $data['spreadsheet'];
+            $this->_spreadsheet = $callbackResult['spreadsheet'];
         }
 
         return true;
@@ -784,9 +784,17 @@ class ArrayExcelBuilder
             $style->getAlignment()->setVertical($vAlignment);
         }
 
+        // Protect from editing
+        if ($data->isProtect()) {
+            $sheet->getProtection()->setSheet(true);
+            $sheet->getProtection()->setSort(true);
+            $sheet->getProtection()->setInsertRows(true);
+            $sheet->getProtection()->setFormatCells(true);
+        }
+
         // Runs callback function
         if ($this->_allowCallback && $callback = $data->getCallback()) {
-            $data = $callback([
+            $callbackResult = $callback([
                 'spreadsheet' => $this->_spreadsheet,
                 'dataDto' => $data,
                 'paramsDto' => $this->_params,
@@ -797,15 +805,7 @@ class ArrayExcelBuilder
             ]);
 
             // Apply callback results
-            $this->_spreadsheet = $data['spreadsheet'];
-        }
-
-        // Protect from editing
-        if ($data->isProtect()) {
-            $sheet->getProtection()->setSheet(true);
-            $sheet->getProtection()->setSort(true);
-            $sheet->getProtection()->setInsertRows(true);
-            $sheet->getProtection()->setFormatCells(true);
+            $this->_spreadsheet = $callbackResult['spreadsheet'];
         }
     }
 

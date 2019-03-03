@@ -2,6 +2,11 @@
 Array Excel Builder extension Change Log
 ========================================
 
+1.9.1, March 03, 2019
+------------------------
+
+- Fix: Fixed bug when protecting the sheet from editing.
+
 1.9.0, March 03, 2019
 ------------------------
 
