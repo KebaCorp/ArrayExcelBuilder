@@ -6,7 +6,7 @@
     <br>
 </p>
 
-The component creates an Excel file from the data array.
+The component **CREATES** an Excel file from the data array or **READS** from Excel file to array.
 
 > Based on [PHPOffice/PhpSpreadsheet](https://github.com/PHPOffice/PhpSpreadsheet)
 
@@ -996,7 +996,10 @@ $arrayExcelBuilder->save();
 | Name | Arguments | Returns | Description |
 | -------- |:----:| ------- | ----------- |
 | build() |  | $this | Вносит переданные переданные данные в Spreadsheet. Метод автоматически вызывается перед сохранением, если до этого не был вызван вручную. |
+| getFlatArray() |  | array | Возвращает одномерный массив со значениями ячеек всех страниц. |
+| getMatrixArray() |  | array | Возвращает трехмерный массив (страница > колонка > строка) со значениями ячеек всех страниц. |
 | getSpreadsheet() |  | Spreadsheet | Возвращает Spreadsheet. Если необходимо произвести действия над Spreadsheet после build(), то build() необходимо вызвать вручную перед методом: ``` $spreadsheet = $arrayExcelBuilder->build()->getSpreadsheet(); ``` |
+| load() | string $file | $this | Загружает Spreadsheet из файла. Поддерживаемые форматы: xlsx, xlsm, xltx, xltm, xls, xlt, ods, ots, slk, xml, gnumeric, htm, html, csv. |
 | setAllowCallback() | bool $allowCallback | $this | Разрешить/запретить запуск callback (см. [Global cell options](#global-cell-options) или [Cell options](#cell-options)). |
 | setData() | array $data | $this | Задает данные. Также можно внести данные через конструктор ArrayExcelBuilder (см. [ArrayExcelBuilder constructor arguments](#arrayexcelbuilder-constructor-arguments)). |
 | setParams() | array $params | $this | Задает глобальные параметры. Также можно внести параметры через конструктор ArrayExcelBuilder (см. [ArrayExcelBuilder constructor arguments](#arrayexcelbuilder-constructor-arguments)). |

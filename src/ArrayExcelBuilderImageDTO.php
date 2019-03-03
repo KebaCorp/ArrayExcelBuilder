@@ -3,7 +3,7 @@
  * Created by Abek Narynov.
  * Date: 2019-02-27
  * @link https://github.com/KebaCorp
- * @copyright Copyright (c) 2018 KebaCorp
+ * @copyright Copyright (c) 2019 KebaCorp
  */
 
 namespace KebaCorp\ArrayExcelBuilder;
