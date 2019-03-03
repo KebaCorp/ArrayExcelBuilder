@@ -17,16 +17,16 @@ For license information check the [LICENSE](LICENSE.md)-file.
 
 
 
-Requirements
-------------
+Requirements:
+-------------
 
 
 - PHP 5.3 and higher.
 
 
 
-Installation
-------------
+Installation:
+-------------
 
 
 The preferred way to install this extension is through [composer](http://getcomposer.org/download/).
@@ -47,8 +47,8 @@ to the require section of your composer.json.
 
 
 
-Usage
------
+Usage:
+------
 
 
 ### "Hello world!" example
@@ -1070,8 +1070,8 @@ $saveOptions = [
 
 
 
-Charts
------
+Charts:
+-------
 
 
 <img src="https://github.com/KebaCorp/ArrayExcelBuilder/blob/master/img/ExcelChartExample.png?raw=true" height="250px">
