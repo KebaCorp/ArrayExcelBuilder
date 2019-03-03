@@ -2,6 +2,13 @@
 Array Excel Builder extension Change Log
 ========================================
 
+2.0.0, March 03, 2019
+------------------------
+
+- Feat: Added method to load Spreadsheet from file.
+- Feat: Added methods for getting data arrays.
+- Docs: Updated README file.
+
 1.11.0, March 03, 2019
 ------------------------
 

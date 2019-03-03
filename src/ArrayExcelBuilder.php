@@ -26,9 +26,9 @@ use PhpOffice\PhpSpreadsheet\Writer\Exception;
 class ArrayExcelBuilder
 {
     /**
-     * Default value of "is it row direction"
+     * Uses ArrayExcelBuilderReader to load from file.
      */
-    const IS_ROW_DEFAULT = false;
+    use ArrayExcelBuilderReader;
 
     /**
      * PhpOffice\PhpSpreadsheet\Spreadsheet
@@ -70,7 +70,7 @@ class ArrayExcelBuilder
      *
      * @var bool
      */
-    private $_isRowDirection = self::IS_ROW_DEFAULT;
+    private $_isRowDirection = false;
 
     /**
      * Cell values.
@@ -300,10 +300,8 @@ class ArrayExcelBuilder
             }
 
             // Is it row direction
-            if (isset($sheetData['isRowDirection']) && is_bool($sheetData['isRowDirection'])) {
-                $this->_isRowDirection = $sheetData['isRowDirection'];
-            } else {
-                $this->_isRowDirection = self::IS_ROW_DEFAULT;
+            if (isset($sheetData['isRowDirection'])) {
+                $this->_isRowDirection = (bool)$sheetData['isRowDirection'];
             }
 
             // Is show grid lines
