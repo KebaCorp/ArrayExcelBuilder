@@ -2,6 +2,12 @@
 Array Excel Builder extension Change Log
 ========================================
 
+1.11.0, March 03, 2019
+------------------------
+
+- Feat: Added the ability to insert hyperlinks to an external resource or to another page of a document into cells.
+- Docs: Updated README file.
+
 1.10.0, March 03, 2019
 ------------------------
 

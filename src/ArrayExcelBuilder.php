@@ -489,8 +489,11 @@ class ArrayExcelBuilder
         // Get active sheet
         $sheet = $this->_spreadsheet->getActiveSheet();
 
-        // Get active sheet cell style
-        $style = $sheet->getStyleByColumnAndRow($columnId, $rowId);
+        // Get active sheet cell
+        $cell = $sheet->getCell($columnIndex . $rowId);
+
+        // Get cell style
+        $style = $cell->getStyle();
 
         // Cell comment
         if ($comment = $data->getComment()) {
@@ -594,6 +597,11 @@ class ArrayExcelBuilder
         // Vertical alignment
         if ($vAlignment = $data->getVAlignment()) {
             $style->getAlignment()->setVertical($vAlignment);
+        }
+
+        // Cell hyperlink. For example: 'sheet://"Sheet name"!A1' or 'www.example.com'
+        if ($url = $data->getUrl()) {
+            $cell->getHyperlink()->setUrl($url);
         }
 
         // Sets image

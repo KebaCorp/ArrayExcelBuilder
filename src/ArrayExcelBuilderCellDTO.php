@@ -217,6 +217,13 @@ class ArrayExcelBuilderCellDTO
     private $_protect = false;
 
     /**
+     * Cell hyperlink.
+     *
+     * @var string
+     */
+    private $_url;
+
+    /**
      * Set data from array.
      *
      * @param array $cellData
@@ -453,6 +460,12 @@ class ArrayExcelBuilderCellDTO
         // Protect from editing
         if (isset($cellData['protect'])) {
             $this->_protect = (bool)$cellData['protect'];
+            $isChanged = true;
+        }
+
+        // Cell hyperlink
+        if (isset($cellData['url']) && is_string($cellData['url'])) {
+            $this->_url = $cellData['url'];
             $isChanged = true;
         }
 
@@ -841,5 +854,15 @@ class ArrayExcelBuilderCellDTO
     public function isProtect()
     {
         return $this->_protect;
+    }
+
+    /**
+     * Get cell hyperlink.
+     *
+     * @return string
+     */
+    public function getUrl()
+    {
+        return $this->_url;
     }
 }
