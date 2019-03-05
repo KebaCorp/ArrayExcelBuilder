@@ -854,10 +854,13 @@ class ArrayExcelBuilder
             list($maxRow, $maxColumn) = [$maxColumn, $maxRow];
         }
 
+        ++$maxColumn;
+        ++$maxRow;
+
         // Sets null values
         $values = [];
-        for ($i = 0; $i <= $maxRow; $i++) {
-            $values[] = array_fill(0, $maxColumn + 1, $defaultValue);
+        for ($i = 0; $i < $maxRow; $i++) {
+            $values[] = array_fill(0, $maxColumn, $defaultValue);
         }
         $this->_values = $values;
 
