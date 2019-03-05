@@ -2,6 +2,11 @@
 Array Excel Builder extension Change Log
 ========================================
 
+2.0.1, March 05, 2019
+------------------------
+
+- Fix: Fixed bug with coverage of global parameters.
+
 2.0.0, March 03, 2019
 ------------------------
 
