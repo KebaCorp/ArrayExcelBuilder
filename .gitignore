@@ -31,7 +31,3 @@ tests/_support/_generated
 
 #vagrant folder
 /.vagrant
-
-#Docker
-/docker
-docker-compose.yml

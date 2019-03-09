@@ -185,7 +185,7 @@ class ArrayExcelBuilder
      * @param string $pathToFile
      * @param array $options
      * @param bool $saveToVariable
-     * @return bool|\Exception|null|\PhpOffice\PhpSpreadsheet\Exception|Exception
+     * @return bool|\Exception|\PhpOffice\PhpSpreadsheet\Exception|Exception|string
      */
     public function save($pathToFile = '', array $options = [], $saveToVariable = false)
     {
@@ -261,8 +261,6 @@ class ArrayExcelBuilder
                 return $e;
             }
         }
-
-        return false;
     }
 
     /**
