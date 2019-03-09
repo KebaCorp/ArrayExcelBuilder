@@ -6,3 +6,6 @@
 /phpunit.xml.dist   export-ignore
 /tests              export-ignore
 /docs               export-ignore
+/docker
+docker-compose.yml
+.env
