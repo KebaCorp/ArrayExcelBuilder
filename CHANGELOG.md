@@ -2,6 +2,12 @@
 Array Excel Builder extension Change Log
 ========================================
 
+2.1.0, June 19, 2019
+------------------------
+
+- Feat: Added params to read Spreadsheet from file.
+- Feat: Added methods for getting data arrays with keys.
+
 2.0.1, March 05, 2019
 ------------------------
 
