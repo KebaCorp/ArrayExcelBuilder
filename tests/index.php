@@ -1,16 +1,18 @@
 <?php
 
-require __DIR__ . '/../vendor/autoload.php';
-require __DIR__ . '/examples/BUSExample.php';
-require __DIR__ . '/examples/CallbackExample.php';
-require __DIR__ . '/examples/HelloWorldExample.php';
-require __DIR__ . '/examples/ImageExample.php';
-require __DIR__ . '/examples/MainExample.php';
-require __DIR__ . '/examples/MatrixExample.php';
-require __DIR__ . '/examples/MergeExample.php';
-require __DIR__ . '/examples/StressTestExample.php';
-require __DIR__ . '/examples/ValueTypesExample.php';
+namespace app\tests;
 
+require __DIR__ . '/../vendor/autoload.php';
+
+use app\tests\examples\BUSExample;
+use app\tests\examples\CallbackExample;
+use app\tests\examples\HelloWorldExample;
+use app\tests\examples\ImageExample;
+use app\tests\examples\MainExample;
+use app\tests\examples\MatrixExample;
+use app\tests\examples\MergeExample;
+use app\tests\examples\StressTestExample;
+use app\tests\examples\ValueTypesExample;
 use KebaCorp\ArrayExcelBuilder\ArrayExcelBuilder;
 
 /**
@@ -93,7 +95,7 @@ try {
     $result = $arrayExcelBuilder->save(
         $fileName,
         [
-            'format' => 'xlsx',
+            'format'     => 'xlsx',
             'imagesRoot' => './../',
         ],
         false);

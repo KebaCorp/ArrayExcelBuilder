@@ -36,7 +36,11 @@
   ],
   "autoload": {
     "psr-4": {
-      "KebaCorp\\ArrayExcelBuilder\\": "src"
+      "KebaCorp\\ArrayExcelBuilder\\": "src",
+      "app\\": ""
     }
+  },
+  "config": {
+    "optimize-autoloader": true
   }
 }
