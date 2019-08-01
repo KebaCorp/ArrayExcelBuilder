@@ -29,10 +29,12 @@ class MemoryHelper
     /**
      * Prints memory usage.
      *
+     * @param string $prefix
+     * @param string $postfix
      * @param float|int $unit
      */
-    static public function printMemoryUsage($unit = self::IN_MEGABYTE)
+    static public function printMemoryUsage($prefix = '', $postfix = '', $unit = self::IN_MEGABYTE)
     {
-        echo self::memoryUsage($unit) . ' ' . self::MEGABYTE;
+        echo $prefix . self::memoryUsage($unit) . ' ' . self::MEGABYTE . $postfix;
     }
 }
