@@ -2,10 +2,14 @@
 Array Excel Builder extension Change Log
 ========================================
 
-2.2.0, August 02, 2019
+2.2.1, August 02, 2019
 ------------------------
 
 - Feat: Added files and directories to export-ignore.
+
+2.2.0, August 02, 2019
+------------------------
+
 - Feat: Added caching support.
 
 2.1.0, June 19, 2019
