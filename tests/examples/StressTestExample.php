@@ -2,8 +2,6 @@
 
 namespace app\tests\examples;
 
-use app\helpers\MemoryHelper;
-
 /**
  * Class StressTestExample
  */
@@ -29,25 +27,25 @@ class StressTestExample
 
                 // Row with default params
                 $values[$i][$t] = [
-                    'value' => $value,
-                    'fontColor' => '',
-                    'fillColor' => '',
-                    'bold' => false,
-                    'hAlignment' => 'general',
-                    'vAlignment' => 'bottom',
-                    'wrapText' => false,
-                    'comment' => '',
-                    'mergeColumns' => 0,
-                    'mergeRows' => 0,
-                    'borderBottom' => 'none',
-                    'borderTop' => 'none',
-                    'borderLeft' => 'none',
-                    'borderRight' => 'none',
+                    'value'             => $value,
+                    'fontColor'         => '',
+                    'fillColor'         => '',
+                    'bold'              => false,
+                    'hAlignment'        => 'general',
+                    'vAlignment'        => 'bottom',
+                    'wrapText'          => false,
+                    'comment'           => '',
+                    'mergeColumns'      => 0,
+                    'mergeRows'         => 0,
+                    'borderBottom'      => 'none',
+                    'borderTop'         => 'none',
+                    'borderLeft'        => 'none',
+                    'borderRight'       => 'none',
                     'borderBottomColor' => '000000',
-                    'borderTopColor' => '000000',
-                    'borderLeftColor' => '000000',
-                    'borderRightColor' => '000000',
-                    'styleArray' => [],
+                    'borderTopColor'    => '000000',
+                    'borderLeftColor'   => '000000',
+                    'borderRightColor'  => '000000',
+                    'styleArray'        => [],
                 ];
 
 //                // Row with non default params
@@ -133,43 +131,43 @@ class StressTestExample
         // Sheets
         $data = [
             [
-                'data' => $values,
+                'data'           => $values,
                 'isRowDirection' => false,
-                'autoSize' => false,
-                'showGridLines' => true,
+                'autoSize'       => false,
+                'showGridLines'  => true,
             ],
         ];
 
         // Global default cell options
         $defaultParams = [
-            'allBorderBottom' => 'none',
-            'allBorderTop' => 'none',
-            'allBorderLeft' => 'none',
-            'allBorderRight' => 'none',
-            'allBorderBottomColor' => '000000',
-            'allBorderTopColor' => '000000',
-            'allBorderLeftColor' => '000000',
-            'allBorderRightColor' => '000000',
-            'borderBottomColor' => '000000',
-            'borderTopColor' => '000000',
-            'borderLeftColor' => '000000',
-            'borderRightColor' => '000000',
-            'borderVerticalColor' => '000000',
+            'allBorderBottom'       => 'none',
+            'allBorderTop'          => 'none',
+            'allBorderLeft'         => 'none',
+            'allBorderRight'        => 'none',
+            'allBorderBottomColor'  => '000000',
+            'allBorderTopColor'     => '000000',
+            'allBorderLeftColor'    => '000000',
+            'allBorderRightColor'   => '000000',
+            'borderBottomColor'     => '000000',
+            'borderTopColor'        => '000000',
+            'borderLeftColor'       => '000000',
+            'borderRightColor'      => '000000',
+            'borderVerticalColor'   => '000000',
             'borderHorizontalColor' => '000000',
-            'borderBottom' => 'none',
-            'borderTop' => 'none',
-            'borderLeft' => 'none',
-            'borderRight' => 'none',
-            'borderVertical' => 'none',
-            'borderHorizontal' => 'none',
-            'hAlignment' => 'general',
-            'vAlignment' => 'bottom',
-            'fontColor' => '',
-            'bold' => false,
-            'value' => '',
-            'wrapText' => false,
-            'fillColor' => '',
-            'styleArray' => [],
+            'borderBottom'          => 'none',
+            'borderTop'             => 'none',
+            'borderLeft'            => 'none',
+            'borderRight'           => 'none',
+            'borderVertical'        => 'none',
+            'borderHorizontal'      => 'none',
+            'hAlignment'            => 'general',
+            'vAlignment'            => 'bottom',
+            'fontColor'             => '',
+            'bold'                  => false,
+            'value'                 => '',
+            'wrapText'              => false,
+            'fillColor'             => '',
+            'styleArray'            => [],
         ];
 
 //        // Global non default cell options
@@ -263,7 +261,7 @@ class StressTestExample
 //        ];
 
         return [
-            'data' => $data,
+            'data'          => $data,
             'defaultParams' => $defaultParams,
         ];
     }

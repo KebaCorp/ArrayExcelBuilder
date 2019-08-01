@@ -2,6 +2,12 @@
 Array Excel Builder extension Change Log
 ========================================
 
+2.3.0, August 02, 2019
+------------------------
+
+- Feat: Added option to change page orientation.
+- Feat: Added paper size option.
+
 2.2.1, August 02, 2019
 ------------------------
 

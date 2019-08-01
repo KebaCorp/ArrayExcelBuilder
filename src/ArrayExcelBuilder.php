@@ -315,6 +315,16 @@ class ArrayExcelBuilder
                 $this->_spreadsheet->getActiveSheet()->setShowGridlines($sheetData['showGridLines']);
             }
 
+            // Sets page orientation
+            if (isset($sheetData['orientation']) && is_string($sheetData['orientation'])) {
+                $this->_spreadsheet->getActiveSheet()->getPageSetup()->setOrientation($sheetData['orientation']);
+            }
+
+            // Sets page's paper size
+            if (isset($sheetData['paperSize'])) {
+                $this->_spreadsheet->getActiveSheet()->getPageSetup()->setPaperSize((int)$sheetData['paperSize']);
+            }
+
             // Apply global params
             $this->_setGlobalParams($sheetData['data']);
 
