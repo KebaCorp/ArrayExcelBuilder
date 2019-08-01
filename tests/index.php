@@ -27,7 +27,7 @@ const MATRIX_EXAMPLE = 'matrix';
 const CALLBACK_EXAMPLE = 'callback';
 
 // Change this constant to get other data
-$dataType = MATRIX_EXAMPLE;
+$dataType = STRESS_TEST_EXAMPLE;
 
 switch ($dataType) {
 
