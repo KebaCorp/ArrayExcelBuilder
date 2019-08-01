@@ -1,17 +1,23 @@
 <?php
 
-require __DIR__ . '/../vendor/autoload.php';
-require __DIR__ . '/examples/BUSExample.php';
-require __DIR__ . '/examples/CallbackExample.php';
-require __DIR__ . '/examples/HelloWorldExample.php';
-require __DIR__ . '/examples/ImageExample.php';
-require __DIR__ . '/examples/MainExample.php';
-require __DIR__ . '/examples/MatrixExample.php';
-require __DIR__ . '/examples/MergeExample.php';
-require __DIR__ . '/examples/StressTestExample.php';
-require __DIR__ . '/examples/ValueTypesExample.php';
+namespace app\tests;
 
+require __DIR__ . '/../vendor/autoload.php';
+
+use app\helpers\MemoryHelper;
+use app\tests\examples\BUSExample;
+use app\tests\examples\CallbackExample;
+use app\tests\examples\HelloWorldExample;
+use app\tests\examples\ImageExample;
+use app\tests\examples\MainExample;
+use app\tests\examples\MatrixExample;
+use app\tests\examples\MergeExample;
+use app\tests\examples\StressTestExample;
+use app\tests\examples\ValueTypesExample;
+use Exception;
 use KebaCorp\ArrayExcelBuilder\ArrayExcelBuilder;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\Cache\Psr16Cache;
 
 /**
  * Data types.
@@ -27,7 +33,10 @@ const MATRIX_EXAMPLE = 'matrix';
 const CALLBACK_EXAMPLE = 'callback';
 
 // Change this constant to get other data
-$dataType = MATRIX_EXAMPLE;
+$dataType = STRESS_TEST_EXAMPLE;
+$useCahe = false;
+
+MemoryHelper::printMemoryUsage('Start: ', '<br/>');
 
 switch ($dataType) {
 
@@ -67,16 +76,23 @@ switch ($dataType) {
         $data = MainExample::getData();
 }
 
+MemoryHelper::printMemoryUsage('Data array created: ', '<br/>');
+
 // File path and name
 $fileName = __DIR__ . '/results/Document_' . date('Y-m-d_H-i-s');
 
 $start = microtime(true);
 
+$pool = new FilesystemAdapter();
+$cache = new Psr16Cache($pool);
+
 // Save file
 $startCreateObject = microtime(true);
-$arrayExcelBuilder = new ArrayExcelBuilder();
+$arrayExcelBuilder = new ArrayExcelBuilder([], [], true, $useCahe ? $cache : null);
 $arrayExcelBuilder->setData($data['data']);
 $endCreateObject = microtime(true);
+
+MemoryHelper::printMemoryUsage('Data added to ArrayExcelBuilder: ', '<br/>');
 
 $result = false;
 $startSetDefaultParams = 0;
@@ -89,20 +105,27 @@ try {
     $arrayExcelBuilder->setParams($data['defaultParams']);
     $endSetDefaultParams = microtime(true);
 
+    MemoryHelper::printMemoryUsage('Before save to file: ', '<br/>');
+
     $startSave = microtime(true);
     $result = $arrayExcelBuilder->save(
         $fileName,
         [
-            'format' => 'xlsx',
+            'format'     => 'xlsx',
             'imagesRoot' => './../',
         ],
         false);
+
+    MemoryHelper::printMemoryUsage('After save to file: ', '<br/>');
+
     $endSave = microtime(true);
 } catch (Exception $e) {
     print_r($e);
 }
 
 $end = microtime(true);
+
+MemoryHelper::printMemoryUsage('End: ', '<br/>');
 
 if ($result) {
     echo '<h3>File successfully created on the way "' . $fileName . '".</h3>';

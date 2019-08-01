@@ -9,11 +9,13 @@
 namespace KebaCorp\ArrayExcelBuilder;
 
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
+use PhpOffice\PhpSpreadsheet\Settings;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Color;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use PhpOffice\PhpSpreadsheet\Writer\Exception;
+use Psr\SimpleCache\CacheInterface;
 
 /**
  * Class ArrayExcelBuilder.
@@ -120,9 +122,15 @@ class ArrayExcelBuilder
      * @param array $data - cells array data
      * @param array $params - global params
      * @param bool $allowCallback - allow callback param
+     * @param CacheInterface|null $cache
      */
-    public function __construct(array $data = [], array $params = [], $allowCallback = true)
+    public function __construct(array $data = [], array $params = [], $allowCallback = true, $cache = null)
     {
+        // Sets cache
+        if ($cache instanceof CacheInterface) {
+            Settings::setCache($cache);
+        }
+
         // Sets new Spreadsheet
         $this->_spreadsheet = new Spreadsheet();
 
@@ -331,6 +339,8 @@ class ArrayExcelBuilder
                 $this->_spreadsheet->createSheet();
             }
         }
+
+        unset($this->_values);
 
         // Sets that the excel is built
         $this->_isBuilt = true;
@@ -630,17 +640,17 @@ class ArrayExcelBuilder
         // Runs callback function
         if ($this->_allowCallback && $callback = $data->getCallback()) {
             $callbackResult = $callback([
-                'spreadsheet' => $this->_spreadsheet,
-                'columnId' => $columnId,
-                'rowId' => $rowId,
-                'cellData' => $cellData,
-                'dataDto' => $data,
-                'paramsDto' => $this->_params,
-                'columnName' => $columnIndex,
-                'cell' => $columnIndex . $rowId,
-                'sheetsNumber' => $this->_sheetCount,
-                'maxRow' => $this->_maxRow,
-                'maxColumn' => $this->_maxColumn,
+                'spreadsheet'        => $this->_spreadsheet,
+                'columnId'           => $columnId,
+                'rowId'              => $rowId,
+                'cellData'           => $cellData,
+                'dataDto'            => $data,
+                'paramsDto'          => $this->_params,
+                'columnName'         => $columnIndex,
+                'cell'               => $columnIndex . $rowId,
+                'sheetsNumber'       => $this->_sheetCount,
+                'maxRow'             => $this->_maxRow,
+                'maxColumn'          => $this->_maxColumn,
                 'maxCellCoordinates' => $this->_maxCellCoordinates,
             ]);
 
@@ -811,12 +821,12 @@ class ArrayExcelBuilder
         // Runs callback function
         if ($this->_allowCallback && $callback = $data->getCallback()) {
             $callbackResult = $callback([
-                'spreadsheet' => $this->_spreadsheet,
-                'dataDto' => $data,
-                'paramsDto' => $this->_params,
-                'sheetsNumber' => $this->_sheetCount,
-                'maxRow' => $this->_maxRow,
-                'maxColumn' => $this->_maxColumn,
+                'spreadsheet'        => $this->_spreadsheet,
+                'dataDto'            => $data,
+                'paramsDto'          => $this->_params,
+                'sheetsNumber'       => $this->_sheetCount,
+                'maxRow'             => $this->_maxRow,
+                'maxColumn'          => $this->_maxColumn,
                 'maxCellCoordinates' => $this->_maxCellCoordinates,
             ]);
 

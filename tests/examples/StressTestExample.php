@@ -1,5 +1,9 @@
 <?php
 
+namespace app\tests\examples;
+
+use app\helpers\MemoryHelper;
+
 /**
  * Class StressTestExample
  */

@@ -1,5 +1,7 @@
 <?php
 
+namespace app\tests\examples;
+
 /**
  * Class BUSExample
  */

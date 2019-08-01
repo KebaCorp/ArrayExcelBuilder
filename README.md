@@ -980,6 +980,7 @@ ArrayExcelBuilder:
 | data | array | [] | Данные ячеек. |
 | params | array | [] | Глобальные параметры ячеек. |
 | allowCallback | bool | true | Разрешить запуск callback (см. [Global cell options](#global-cell-options) или [Cell options](#cell-options)). Параметр необходим для того, чтобы обезопасить систему от вызова callback-функций, если данные приходят из сторонних источников. |
+| cache | CacheInterface | null | Кеширование для уменьшения использования оперативной памяти. Если не передать объект, имплементированный от CacheInterface, то кэширование не используется. Внимание, использование кэширования может увеличить время создания файла! |
 
 ```php
 <?php
@@ -1041,6 +1042,7 @@ $result = $arrayExcelBuilder->save($pathToFile, $saveOptions, $saveToVariable);
 
 | Name | Type | Default | Description |
 | -------- |:----:| ------- | ----------- |
+| format | string | 'xlsx' | Формат выходного файла. Поддерживаемые форматы: XLSX, XLS, ODS, CSV, HTML, PDF. |
 | includeCharts | bool | true | Включить отрисовку графиков. Параметр для форматов: XLSX, XLS, ODS. |
 | office2003Compatibility | bool | false | Включить совместимость с Office 2003. Параметр для форматов: XLSX. |
 | calculateFormulas | bool | true | Рассчитать значения формул. Параметр для форматов: XLSX, XLS, ODS, CSV, HTML, PDF. |
@@ -1057,6 +1059,7 @@ $result = $arrayExcelBuilder->save($pathToFile, $saveOptions, $saveToVariable);
 <?php
 
 $saveOptions = [
+    'format' => 'xlsx',
     'includeCharts' => true,
     'office2003Compatibility' => false,
     'calculateFormulas' => true,
