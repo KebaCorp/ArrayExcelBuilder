@@ -16,6 +16,8 @@ use app\tests\examples\StressTestExample;
 use app\tests\examples\ValueTypesExample;
 use Exception;
 use KebaCorp\ArrayExcelBuilder\ArrayExcelBuilder;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\Cache\Psr16Cache;
 
 /**
  * Data types.
@@ -32,6 +34,7 @@ const CALLBACK_EXAMPLE = 'callback';
 
 // Change this constant to get other data
 $dataType = STRESS_TEST_EXAMPLE;
+$useCahe = false;
 
 MemoryHelper::printMemoryUsage('Start: ', '<br/>');
 
@@ -80,9 +83,12 @@ $fileName = __DIR__ . '/results/Document_' . date('Y-m-d_H-i-s');
 
 $start = microtime(true);
 
+$pool = new FilesystemAdapter();
+$cache = new Psr16Cache($pool);
+
 // Save file
 $startCreateObject = microtime(true);
-$arrayExcelBuilder = new ArrayExcelBuilder();
+$arrayExcelBuilder = new ArrayExcelBuilder([], [], true, $useCahe ? $cache : null);
 $arrayExcelBuilder->setData($data['data']);
 $endCreateObject = microtime(true);
 
