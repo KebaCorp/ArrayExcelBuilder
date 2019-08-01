@@ -12,6 +12,7 @@ use app\tests\examples\ImageExample;
 use app\tests\examples\MainExample;
 use app\tests\examples\MatrixExample;
 use app\tests\examples\MergeExample;
+use app\tests\examples\PageOrientationExample;
 use app\tests\examples\StressTestExample;
 use app\tests\examples\ValueTypesExample;
 use Exception;
@@ -31,10 +32,11 @@ const BUS_EXAMPLE = 'bus';
 const IMAGE_EXAMPLE = 'image';
 const MATRIX_EXAMPLE = 'matrix';
 const CALLBACK_EXAMPLE = 'callback';
+const PAGE_ORIENTATION_EXAMPLE = 'pageOrientationExample';
 
 // Change this constant to get other data
-$dataType = STRESS_TEST_EXAMPLE;
-$useCahe = false;
+$dataType = PAGE_ORIENTATION_EXAMPLE;
+$useCache = false;
 
 MemoryHelper::printMemoryUsage('Start: ', '<br/>');
 
@@ -72,6 +74,10 @@ switch ($dataType) {
         $data = CallbackExample::getData();
         break;
 
+    case PAGE_ORIENTATION_EXAMPLE:
+        $data = PageOrientationExample::getData();
+        break;
+
     default:
         $data = MainExample::getData();
 }
@@ -88,7 +94,7 @@ $cache = new Psr16Cache($pool);
 
 // Save file
 $startCreateObject = microtime(true);
-$arrayExcelBuilder = new ArrayExcelBuilder([], [], true, $useCahe ? $cache : null);
+$arrayExcelBuilder = new ArrayExcelBuilder([], [], true, $useCache ? $cache : null);
 $arrayExcelBuilder->setData($data['data']);
 $endCreateObject = microtime(true);
 
