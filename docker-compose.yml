@@ -15,6 +15,6 @@ services:
   composer:
     image: composer:1.6
     volumes:
-      - .:/var/www/html/
+      - ${WEB_PATH}:/var/www/html/
     working_dir: /var/www/html/
     command: composer update --ignore-platform-reqs
