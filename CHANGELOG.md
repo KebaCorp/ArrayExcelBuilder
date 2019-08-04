@@ -2,6 +2,12 @@
 Array Excel Builder extension Change Log
 ========================================
 
+3.0.0, August 04, 2019
+------------------------
+
+- Feat: Now requires php 5.6 version.
+- Feat: Optimized work with cache.
+
 2.3.0, August 02, 2019
 ------------------------
 
