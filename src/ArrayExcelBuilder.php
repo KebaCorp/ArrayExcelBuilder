@@ -16,6 +16,7 @@ use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use PhpOffice\PhpSpreadsheet\Writer\Exception;
 use Psr\SimpleCache\CacheInterface;
+use Psr\SimpleCache\InvalidArgumentException;
 
 /**
  * Class ArrayExcelBuilder.
@@ -49,9 +50,9 @@ class ArrayExcelBuilder
     /**
      * Cells array data.
      *
-     * @var array
+     * @var ArrayExcelBuilderData
      */
-    private $_data;
+    private $_arrayExcelBuilderData;
 
     /**
      * Number of sheets.
@@ -65,7 +66,7 @@ class ArrayExcelBuilder
      *
      * @var ArrayExcelBuilderCellDTO
      */
-    private $_params = array();
+    private $_params = [];
 
     /**
      * Is it row direction.
@@ -79,7 +80,7 @@ class ArrayExcelBuilder
      *
      * @var array
      */
-    private $_values = array();
+    private $_values = [];
 
     /**
      * Max column coordinate.
@@ -107,7 +108,7 @@ class ArrayExcelBuilder
      *
      * @var array
      */
-    private $_notAutoSizeColumns = array();
+    private $_notAutoSizeColumns = [];
 
     /**
      * Allow callback function.
@@ -117,6 +118,14 @@ class ArrayExcelBuilder
     private $_allowCallback = true;
 
     /**
+     * Cache.
+     *
+     * @var CacheInterface|null
+     */
+    private $_cache;
+
+
+    /**
      * ArrayExcelBuilder constructor.
      *
      * @param array $data - cells array data
@@ -124,9 +133,14 @@ class ArrayExcelBuilder
      * @param bool $allowCallback - allow callback param
      * @param CacheInterface|null $cache
      */
-    public function __construct(array $data = [], array $params = [], $allowCallback = true, $cache = null)
-    {
+    public function __construct(
+        array $data = [],
+        array $params = [],
+        $allowCallback = true,
+        CacheInterface $cache = null
+    ) {
         // Sets cache
+        $this->_cache = $cache;
         if ($cache instanceof CacheInterface) {
             Settings::setCache($cache);
         }
@@ -138,7 +152,12 @@ class ArrayExcelBuilder
         $this->setAllowCallback($allowCallback);
 
         // Sets cells array data
-        $this->setData($data);
+        if (!empty($data)) {
+            try {
+                $this->setData($data);
+            } catch (InvalidArgumentException $e) {
+            }
+        }
 
         // Sets global params from array to cell DTO
         $this->setParams($params);
@@ -148,12 +167,24 @@ class ArrayExcelBuilder
      * Sets cells array data.
      *
      * @param array $data
+     * @param bool $unsetData
      * @return $this
+     * @throws InvalidArgumentException
      */
-    public function setData(array $data)
+    public function setData(array &$data, $unsetData = false)
     {
-        $this->_data = $data;
-        $this->_sheetCount = count($data);
+        // Sets data to ArrayExcelBuilderData
+        $this->_arrayExcelBuilderData = new ArrayExcelBuilderData($this->_cache);
+        $this->_arrayExcelBuilderData->setData($data, $unsetData);
+
+        // Sets sheets count
+        $this->_sheetCount = $this->_arrayExcelBuilderData->getDataCount();
+
+        // Unset data
+        if ($unsetData) {
+            $data = [];
+            unset($data);
+        }
 
         return $this;
     }
@@ -285,7 +316,8 @@ class ArrayExcelBuilder
         // Sheet index
         $sheetIndex = 0;
 
-        foreach ($this->_data as $sheetData) {
+        $arrayExcelBuilderData = $this->_arrayExcelBuilderData;
+        foreach ($arrayExcelBuilderData as $sheetData) {
 
             // If $sheetData is not array
             if (!is_array($sheetData) && !isset($sheetData['data']) && !is_array($sheetData['data'])) {
@@ -326,7 +358,7 @@ class ArrayExcelBuilder
             }
 
             // Apply global params
-            $this->_setGlobalParams($sheetData['data']);
+            $this->_setGlobalParams($sheetData['data']->getData());
 
             // Build sheet
             $this->_buildSheet($sheetData['data']);
@@ -407,11 +439,11 @@ class ArrayExcelBuilder
     /**
      * Builds sheet.
      *
-     * @param array $sheetData
+     * @param ArrayExcelBuilderSheetData $sheetData
      * @return $this
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
-    private function _buildSheet(array $sheetData)
+    private function _buildSheet(ArrayExcelBuilderSheetData $sheetData)
     {
         $counter = 0;
 
@@ -580,8 +612,9 @@ class ArrayExcelBuilder
         }
 
         // Set style from array
-        if (!empty($data->getStyleArray())) {
-            $style->applyFromArray($data->getStyleArray());
+        $styleArray = $data->getStyleArray();
+        if (!empty($styleArray)) {
+            $style->applyFromArray($styleArray);
         }
 
         // Set global column width
@@ -674,10 +707,10 @@ class ArrayExcelBuilder
     /**
      * Apply global params.
      *
-     * @param $sheetData
+     * @param array $sheetData
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
-    private function _setGlobalParams($sheetData)
+    private function _setGlobalParams(array $sheetData)
     {
         // Set data from global params DTO
         $data = $this->_params;
@@ -792,8 +825,9 @@ class ArrayExcelBuilder
         }
 
         // Set styles from array
-        if (!empty($data->getStyleArray())) {
-            $style->applyFromArray($data->getStyleArray());
+        $styleArray = $data->getStyleArray();
+        if (!empty($styleArray)) {
+            $style->applyFromArray($styleArray);
         }
 
         // Set columns width

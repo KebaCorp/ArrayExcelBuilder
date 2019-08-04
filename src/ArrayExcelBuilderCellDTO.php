@@ -179,7 +179,7 @@ class ArrayExcelBuilderCellDTO
      *
      * @var array
      */
-    private $_styleArray = array();
+    private $_styleArray = [];
 
     /**
      * Column width.

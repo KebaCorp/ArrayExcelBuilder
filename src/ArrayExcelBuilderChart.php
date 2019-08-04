@@ -216,13 +216,13 @@ class ArrayExcelBuilderChart
     public function createChart()
     {
         // Set chart labels
-        $chartLabels = $this->_labels ? $this->_createDataSeriesValues($this->_labels) : array();
+        $chartLabels = $this->_labels ? $this->_createDataSeriesValues($this->_labels) : [];
 
         // Set the x axis values
-        $xAxisTickValues = $this->_xValues ? $this->_createDataSeriesValues($this->_xValues) : array();
+        $xAxisTickValues = $this->_xValues ? $this->_createDataSeriesValues($this->_xValues) : [];
 
         // Set the y axis values
-        $yAxisTickValues = $this->_yValues ? $this->_createDataSeriesValues($this->_yValues) : array();
+        $yAxisTickValues = $this->_yValues ? $this->_createDataSeriesValues($this->_yValues) : [];
 
         // Build the data series
         $series = new DataSeries(
@@ -235,7 +235,7 @@ class ArrayExcelBuilderChart
         );
 
         // Set the series in the plot area
-        $plotArea = new PlotArea(null, array($series));
+        $plotArea = new PlotArea(null, [$series]);
 
         // Set the chart legend
         $legend = $this->_isLegend ? new Legend($this->_legendPosition, null, false) : null;
@@ -304,7 +304,7 @@ class ArrayExcelBuilderChart
     private function _createDataSeriesValues(array $values)
     {
         // Data series values
-        $dataSeriesValues = array();
+        $dataSeriesValues = [];
 
         foreach ($values as $value) {
             // Create data source by options

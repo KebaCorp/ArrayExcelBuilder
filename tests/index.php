@@ -17,6 +17,7 @@ use app\tests\examples\StressTestExample;
 use app\tests\examples\ValueTypesExample;
 use Exception;
 use KebaCorp\ArrayExcelBuilder\ArrayExcelBuilder;
+use Psr\SimpleCache\InvalidArgumentException;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\Psr16Cache;
 
@@ -35,7 +36,7 @@ const CALLBACK_EXAMPLE = 'callback';
 const PAGE_ORIENTATION_EXAMPLE = 'pageOrientationExample';
 
 // Change this constant to get other data
-$dataType = PAGE_ORIENTATION_EXAMPLE;
+$dataType = STRESS_TEST_EXAMPLE;
 $useCache = false;
 
 MemoryHelper::printMemoryUsage('Start: ', '<br/>');
@@ -82,6 +83,9 @@ switch ($dataType) {
         $data = MainExample::getData();
 }
 
+$defaultParams = $data['defaultParams'];
+$data = $data['data'];
+
 MemoryHelper::printMemoryUsage('Data array created: ', '<br/>');
 
 // File path and name
@@ -92,10 +96,16 @@ $start = microtime(true);
 $pool = new FilesystemAdapter();
 $cache = new Psr16Cache($pool);
 
+MemoryHelper::printMemoryUsage('Before data added to ArrayExcelBuilder: ', '<br/>');
+
 // Save file
 $startCreateObject = microtime(true);
 $arrayExcelBuilder = new ArrayExcelBuilder([], [], true, $useCache ? $cache : null);
-$arrayExcelBuilder->setData($data['data']);
+try {
+    $arrayExcelBuilder->setData($data, true);
+} catch (InvalidArgumentException $e) {
+}
+
 $endCreateObject = microtime(true);
 
 MemoryHelper::printMemoryUsage('Data added to ArrayExcelBuilder: ', '<br/>');
@@ -108,7 +118,7 @@ $endSave = 0;
 
 try {
     $startSetDefaultParams = microtime(true);
-    $arrayExcelBuilder->setParams($data['defaultParams']);
+    $arrayExcelBuilder->setParams($defaultParams);
     $endSetDefaultParams = microtime(true);
 
     MemoryHelper::printMemoryUsage('Before save to file: ', '<br/>');
@@ -151,5 +161,7 @@ if ($result) {
     echo "<h3>Result:</h3><hr/><br/>";
     print_r($result);
 }
+
+MemoryHelper::printPeakMemoryUsage('Memory peak usage: ', '<br/>');
 
 exit;

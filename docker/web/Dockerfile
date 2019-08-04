@@ -34,13 +34,7 @@ RUN apt-get update && apt-get install -y \
         pdo_mysql \
         zip \
     && pecl install \
-        mongodb \
-        xdebug \
-    && docker-php-ext-enable mongodb \
-    && echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.remote_enable=on" >> /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.remote_autostart=off" >> /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.remote_host=172.17.0.1" >> /usr/local/etc/php/conf.d/xdebug.ini
+        apcu_bc
 
 #Composer
 RUN curl -sS https://getcomposer.org/installer | php -- \

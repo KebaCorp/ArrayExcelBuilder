@@ -21,7 +21,7 @@ Requirements:
 -------------
 
 
-- PHP 5.3 and higher.
+- PHP 5.6 and higher.
 
 
 

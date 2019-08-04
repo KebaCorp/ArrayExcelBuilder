@@ -27,6 +27,17 @@ class MemoryHelper
     }
 
     /**
+     * Returns peak memory usage.
+     *
+     * @param float|int $unit
+     * @return float|int
+     */
+    static public function peakMemoryUsage($unit = self::IN_MEGABYTE)
+    {
+        return round(memory_get_peak_usage() / $unit);
+    }
+
+    /**
      * Prints memory usage.
      *
      * @param string $prefix
@@ -36,5 +47,17 @@ class MemoryHelper
     static public function printMemoryUsage($prefix = '', $postfix = '', $unit = self::IN_MEGABYTE)
     {
         echo $prefix . self::memoryUsage($unit) . ' ' . self::MEGABYTE . $postfix;
+    }
+
+    /**
+     * Prints peak memory usage.
+     *
+     * @param string $prefix
+     * @param string $postfix
+     * @param float|int $unit
+     */
+    static public function printPeakMemoryUsage($prefix = '', $postfix = '', $unit = self::IN_MEGABYTE)
+    {
+        echo $prefix . self::peakMemoryUsage($unit) . ' ' . self::MEGABYTE . $postfix;
     }
 }
