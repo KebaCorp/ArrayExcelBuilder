@@ -924,7 +924,6 @@ $callback = function($data) {
 | Name | Type |  Description |
 | -------- |:----:| ----------- |
 | cell | string | Координаты текущей ячейки. Например "B7". |
-| cellData | array | Массив данных текущей ячейки. |
 | columnId | integer | Индекс текущей колонки. Отсчет начинается с нуля. |
 | columnName | string | Буквенное обозначение текущей колонки. Например "C". |
 | dataDto | ArrayExcelBuilderCellDTO | Данные текущей ячейки в виде DTO. |
@@ -946,7 +945,6 @@ $callback = function($data) {
     $spreadsheet = $data['spreadsheet'];
     $columnId = $data['columnId'];
     $rowId = $data['rowId'];
-    $cellData = $data['cellData'];
     $dataDto = $data['dataDto'];
     $paramsDto = $data['paramsDto'];
     $columnName = $data['columnName'];

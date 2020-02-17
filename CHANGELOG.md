@@ -2,6 +2,12 @@
 Array Excel Builder extension Change Log
 ========================================
 
+4.0.0, February 18, 2020
+------------------------
+
+- Feat: Code optimization.
+- Feat: Style options removed, now only "styleArray" is used.
+
 3.0.0, August 04, 2019
 ------------------------
 

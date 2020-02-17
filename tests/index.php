@@ -17,9 +17,6 @@ use app\tests\examples\StressTestExample;
 use app\tests\examples\ValueTypesExample;
 use Exception;
 use KebaCorp\ArrayExcelBuilder\ArrayExcelBuilder;
-use Psr\SimpleCache\InvalidArgumentException;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Symfony\Component\Cache\Psr16Cache;
 
 /**
  * Data types.
@@ -37,7 +34,6 @@ const PAGE_ORIENTATION_EXAMPLE = 'pageOrientationExample';
 
 // Change this constant to get other data
 $dataType = STRESS_TEST_EXAMPLE;
-$useCache = false;
 
 MemoryHelper::printMemoryUsage('Start: ', '<br/>');
 
@@ -52,7 +48,7 @@ switch ($dataType) {
         break;
 
     case STRESS_TEST_EXAMPLE:
-        $data = StressTestExample::getData(10, 7000, 'Lorem ipsum dolor sit amet');
+        $data = StressTestExample::getData();
         break;
 
     case HELLO_WORLD_EXAMPLE:
@@ -93,18 +89,12 @@ $fileName = __DIR__ . '/results/Document_' . date('Y-m-d_H-i-s');
 
 $start = microtime(true);
 
-$pool = new FilesystemAdapter();
-$cache = new Psr16Cache($pool);
-
 MemoryHelper::printMemoryUsage('Before data added to ArrayExcelBuilder: ', '<br/>');
 
 // Save file
 $startCreateObject = microtime(true);
-$arrayExcelBuilder = new ArrayExcelBuilder([], [], true, $useCache ? $cache : null);
-try {
-    $arrayExcelBuilder->setData($data, true);
-} catch (InvalidArgumentException $e) {
-}
+$arrayExcelBuilder = new ArrayExcelBuilder([], [], true);
+$arrayExcelBuilder->setData($data);
 
 $endCreateObject = microtime(true);
 
@@ -122,6 +112,7 @@ try {
     $endSetDefaultParams = microtime(true);
 
     MemoryHelper::printMemoryUsage('Before save to file: ', '<br/>');
+    MemoryHelper::printPeakMemoryUsage('Peak before save to file: ', '<br/>');
 
     $startSave = microtime(true);
     $result = $arrayExcelBuilder->save(
@@ -133,10 +124,12 @@ try {
         false);
 
     MemoryHelper::printMemoryUsage('After save to file: ', '<br/>');
+    MemoryHelper::printPeakMemoryUsage('Peak after save to file: ', '<br/>');
 
     $endSave = microtime(true);
 } catch (Exception $e) {
-    print_r($e);
+    echo $e->getMessage() . "\n";
+    echo $e->getTraceAsString();
 }
 
 $end = microtime(true);

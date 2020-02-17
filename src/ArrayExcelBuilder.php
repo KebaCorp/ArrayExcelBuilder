@@ -9,14 +9,11 @@
 namespace KebaCorp\ArrayExcelBuilder;
 
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
-use PhpOffice\PhpSpreadsheet\Settings;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Color;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use PhpOffice\PhpSpreadsheet\Writer\Exception;
-use Psr\SimpleCache\CacheInterface;
-use Psr\SimpleCache\InvalidArgumentException;
 
 /**
  * Class ArrayExcelBuilder.
@@ -50,9 +47,9 @@ class ArrayExcelBuilder
     /**
      * Cells array data.
      *
-     * @var ArrayExcelBuilderData
+     * @var array
      */
-    private $_arrayExcelBuilderData;
+    private $_data;
 
     /**
      * Number of sheets.
@@ -118,33 +115,14 @@ class ArrayExcelBuilder
     private $_allowCallback = true;
 
     /**
-     * Cache.
-     *
-     * @var CacheInterface|null
-     */
-    private $_cache;
-
-
-    /**
      * ArrayExcelBuilder constructor.
      *
      * @param array $data - cells array data
      * @param array $params - global params
      * @param bool $allowCallback - allow callback param
-     * @param CacheInterface|null $cache
      */
-    public function __construct(
-        array $data = [],
-        array $params = [],
-        $allowCallback = true,
-        CacheInterface $cache = null
-    ) {
-        // Sets cache
-        $this->_cache = $cache;
-        if ($cache instanceof CacheInterface) {
-            Settings::setCache($cache);
-        }
-
+    public function __construct(array $data = [], array $params = [], $allowCallback = true)
+    {
         // Sets new Spreadsheet
         $this->_spreadsheet = new Spreadsheet();
 
@@ -153,10 +131,7 @@ class ArrayExcelBuilder
 
         // Sets cells array data
         if (!empty($data)) {
-            try {
-                $this->setData($data);
-            } catch (InvalidArgumentException $e) {
-            }
+            $this->setData($data);
         }
 
         // Sets global params from array to cell DTO
@@ -167,24 +142,15 @@ class ArrayExcelBuilder
      * Sets cells array data.
      *
      * @param array $data
-     * @param bool $unsetData
      * @return $this
-     * @throws InvalidArgumentException
      */
-    public function setData(array &$data, $unsetData = false)
+    public function setData(array $data)
     {
-        // Sets data to ArrayExcelBuilderData
-        $this->_arrayExcelBuilderData = new ArrayExcelBuilderData($this->_cache);
-        $this->_arrayExcelBuilderData->setData($data, $unsetData);
+        // Sets data
+        $this->_data = $data;
 
         // Sets sheets count
-        $this->_sheetCount = $this->_arrayExcelBuilderData->getDataCount();
-
-        // Unset data
-        if ($unsetData) {
-            $data = [];
-            unset($data);
-        }
+        $this->_sheetCount = count($data);
 
         return $this;
     }
@@ -224,19 +190,14 @@ class ArrayExcelBuilder
      * @param string $pathToFile
      * @param array $options
      * @param bool $saveToVariable
-     * @return bool|\Exception|\PhpOffice\PhpSpreadsheet\Exception|Exception|string
+     * @return bool|false|string
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     public function save($pathToFile = '', array $options = [], $saveToVariable = false)
     {
         // Build the spreadsheet if it is not built before saving
         if (!$this->_isBuilt) {
-            try {
-                $this->build();
-            } catch (Exception $e) {
-                return $e;
-            } catch (\PhpOffice\PhpSpreadsheet\Exception $e) {
-                return $e;
-            }
+            $this->build();
         }
 
         // If the file name is not transferred, then set the default value
@@ -283,41 +244,31 @@ class ArrayExcelBuilder
 
         // Save spreadsheet to file or return to variable
         if ($saveToVariable) {
-            try {
-                ob_start();
-                $writer->save('php://output');
+            ob_start();
+            $writer->save('php://output');
 
-                return ob_get_clean();
-            } catch (Exception $e) {
-                return $e;
-            }
+            return ob_get_clean();
         } else {
-            try {
-                $writer->save($pathToFile . '.' . $extension);
+            $writer->save($pathToFile . '.' . $extension);
 
-                return true;
-            } catch (Exception $e) {
-                return $e;
-            }
+            return true;
         }
     }
 
     /**
      * Build excel.
      *
-     * @throws Exception
-     *
+     * @return ArrayExcelBuilder
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      *
-     * @return ArrayExcelBuilder
+     * @throws Exception
      */
     public function build()
     {
         // Sheet index
         $sheetIndex = 0;
 
-        $arrayExcelBuilderData = $this->_arrayExcelBuilderData;
-        foreach ($arrayExcelBuilderData as $sheetData) {
+        foreach ($this->_data as $sheetData) {
 
             // If $sheetData is not array
             if (!is_array($sheetData) && !isset($sheetData['data']) && !is_array($sheetData['data'])) {
@@ -358,13 +309,10 @@ class ArrayExcelBuilder
             }
 
             // Apply global params
-            $this->_setGlobalParams($sheetData['data']->getData());
+            $this->_setGlobalParams($sheetData['data']);
 
             // Build sheet
             $this->_buildSheet($sheetData['data']);
-
-            // Mass set values from array
-            $this->_spreadsheet->getActiveSheet()->fromArray($this->_values, null, 'A1', true);
 
             // Set current sheet auto size
             if (!$this->_params->getColumnWidth() && isset($sheetData['autoSize']) && $sheetData['autoSize']) {
@@ -439,11 +387,11 @@ class ArrayExcelBuilder
     /**
      * Builds sheet.
      *
-     * @param ArrayExcelBuilderSheetData $sheetData
+     * @param array $sheetData
      * @return $this
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
-    private function _buildSheet(ArrayExcelBuilderSheetData $sheetData)
+    private function _buildSheet(array $sheetData)
     {
         $counter = 0;
 
@@ -507,62 +455,47 @@ class ArrayExcelBuilder
      */
     private function _buildCell($columnId, $rowId, $cellData)
     {
-        $data = new ArrayExcelBuilderCellDTO();
-
-        if (!is_array($cellData)) {
-            // Sets cell value to DTO
-            $data->setValue($cellData);
-
-            // Sets cell value
-            $this->_values[$rowId][$columnId] = $data->getValue();
-
-            return true;
-        }
-
-        // Set data from params and cell data to cell DTO
-        $data->setDataFromArray($cellData);
-
-        // Cell value
-        if ($data->getValue() !== null) {
-            $this->_values[$rowId][$columnId] = $data->getValue();
-        }
-
         // Cell counting starts from one
         ++$columnId;
         ++$rowId;
 
+        // Sets cell value if cell data is not array
+        if (!is_array($cellData)) {
+            $this->_values[$rowId][$columnId] = $this->_normalizeValue($cellData);
+
+            return true;
+        } else {
+
+            // Get active sheet
+            $sheet = $this->_spreadsheet->getActiveSheet();
+
+            // Optimize set value
+            if (!empty($cellData)) {
+                if (count($cellData) == 1 && isset($cellData['value'])) {
+                    $sheet->setCellValueByColumnAndRow($columnId, $rowId, $this->_normalizeValue($cellData['value']));
+
+                    return true;
+                }
+            } else {
+                return false;
+            }
+        }
+
         // Get column index
         $columnIndex = Coordinate::stringFromColumnIndex($columnId);
 
-        // Get active sheet
-        $sheet = $this->_spreadsheet->getActiveSheet();
+        // Set data from params and cell data to cell DTO
+        $data = new ArrayExcelBuilderCellDTO();
+        $data->setDataFromArray($cellData);
 
-        // Get active sheet cell
-        $cell = $sheet->getCell($columnIndex . $rowId);
-
-        // Get cell style
-        $style = $cell->getStyle();
+        // Set value
+        if ($value = $data->getValue()) {
+            $sheet->setCellValueByColumnAndRow($columnId, $rowId, $value);
+        }
 
         // Cell comment
         if ($comment = $data->getComment()) {
             $sheet->getCommentByColumnAndRow($columnId, $rowId)->getText()->createTextRun($comment);
-        }
-
-        // Cell font color
-        if ($fontColor = $data->getFontColor()) {
-            $phpColor = new Color();
-            $phpColor->setRGB($fontColor);
-            $style->getFont()->setColor($phpColor);
-        }
-
-        // Cell background
-        if ($fillColor = $data->getFillColor()) {
-            $style->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB($fillColor);
-        }
-
-        // Is cell value bold
-        if ($isBold = $data->isBold()) {
-            $style->getFont()->setBold($isBold);
         }
 
         // Merge columns and rows
@@ -573,48 +506,74 @@ class ArrayExcelBuilder
             $sheet->mergeCellsByColumnAndRow($columnId, $rowId, $columnDestinationID, $rowDestinationID);
         }
 
-        // Set the border on the top
-        if ($borderTop = $data->getBorderTop()) {
-            $phpColor = new Color();
-            $phpColor->setRGB($data->getBorderTopColor());
-            $style->getBorders()->getTop()->setBorderStyle($borderTop)->setColor($phpColor);
-        }
-
-        // Set the border on the bottom
-        if ($borderBottom = $data->getBorderBottom()) {
-            $phpColor = new Color();
-            $phpColor->setRGB($data->getBorderBottomColor());
-            $style->getBorders()->getBottom()->setBorderStyle($borderBottom)->setColor($phpColor);
-        }
-
-        // Set the border on the left
-        if ($borderLeft = $data->getBorderLeft()) {
-            $phpColor = new Color();
-            $phpColor->setRGB($data->getBorderLeftColor());
-            $style->getBorders()->getLeft()->setBorderStyle($borderLeft)->setColor($phpColor);
-        }
-
-        // Set the border on the right
-        if ($orderRight = $data->getBorderRight()) {
-            $phpColor = new Color();
-            $phpColor->setRGB($data->getBorderRightColor());
-            $style->getBorders()->getRight()->setBorderStyle($orderRight)->setColor($phpColor);
-        }
-
-        // Set font size
-        if ($fontSize = $data->getFontSize()) {
-            $style->getFont()->setSize($fontSize);
-        }
-
-        // Text wrap
-        if ($isWrapText = $data->isWrapText()) {
-            $style->getAlignment()->setWrapText($isWrapText);
-        }
+//        // Cell font color // ToDo: delete
+//        if ($fontColor = $data->getFontColor()) {
+//            $phpColor = new Color();
+//            $phpColor->setRGB($fontColor);
+//            $style->getFont()->setColor($phpColor);
+//        }
+//
+//        // Cell background
+//        if ($fillColor = $data->getFillColor()) {
+//            $style->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB($fillColor);
+//        }
+//
+//        // Is cell value bold
+//        if ($isBold = $data->isBold()) {
+//            $style->getFont()->setBold($isBold);
+//        }
+//
+//        // Set the border on the top
+//        if ($borderTop = $data->getBorderTop()) {
+//            $phpColor = new Color();
+//            $phpColor->setRGB($data->getBorderTopColor());
+//            $style->getBorders()->getTop()->setBorderStyle($borderTop)->setColor($phpColor);
+//        }
+//
+//        // Set the border on the bottom
+//        if ($borderBottom = $data->getBorderBottom()) {
+//            $phpColor = new Color();
+//            $phpColor->setRGB($data->getBorderBottomColor());
+//            $style->getBorders()->getBottom()->setBorderStyle($borderBottom)->setColor($phpColor);
+//        }
+//
+//        // Set the border on the left
+//        if ($borderLeft = $data->getBorderLeft()) {
+//            $phpColor = new Color();
+//            $phpColor->setRGB($data->getBorderLeftColor());
+//            $style->getBorders()->getLeft()->setBorderStyle($borderLeft)->setColor($phpColor);
+//        }
+//
+//        // Set the border on the right
+//        if ($orderRight = $data->getBorderRight()) {
+//            $phpColor = new Color();
+//            $phpColor->setRGB($data->getBorderRightColor());
+//            $style->getBorders()->getRight()->setBorderStyle($orderRight)->setColor($phpColor);
+//        }
+//
+//        // Set font size
+//        if ($fontSize = $data->getFontSize()) {
+//            $style->getFont()->setSize($fontSize);
+//        }
+//
+//        // Text wrap
+//        if ($isWrapText = $data->isWrapText()) {
+//            $style->getAlignment()->setWrapText($isWrapText);
+//        }
+//
+//        // Horizontal alignment
+//        if ($hAlignment = $data->getHAlignment()) {
+//            $style->getAlignment()->setHorizontal($hAlignment);
+//        }
+//
+//        // Vertical alignment
+//        if ($vAlignment = $data->getVAlignment()) {
+//            $style->getAlignment()->setVertical($vAlignment);
+//        }
 
         // Set style from array
-        $styleArray = $data->getStyleArray();
-        if (!empty($styleArray)) {
-            $style->applyFromArray($styleArray);
+        if ($styleArray = $data->getStyleArray()) {
+            $sheet->getCell($columnIndex . $rowId)->getStyle()->applyFromArray($styleArray);
         }
 
         // Set global column width
@@ -638,19 +597,9 @@ class ArrayExcelBuilder
             $sheet->getRowDimension($rowId)->setRowHeight($rowHeight);
         }
 
-        // Horizontal alignment
-        if ($hAlignment = $data->getHAlignment()) {
-            $style->getAlignment()->setHorizontal($hAlignment);
-        }
-
-        // Vertical alignment
-        if ($vAlignment = $data->getVAlignment()) {
-            $style->getAlignment()->setVertical($vAlignment);
-        }
-
         // Cell hyperlink. For example: 'sheet://"Sheet name"!A1' or 'www.example.com'
         if ($url = $data->getUrl()) {
-            $cell->getHyperlink()->setUrl($url);
+            $sheet->getCell($columnIndex . $rowId)->getHyperlink()->setUrl($url);
         }
 
         // Sets image
@@ -686,7 +635,6 @@ class ArrayExcelBuilder
                 'spreadsheet'        => $this->_spreadsheet,
                 'columnId'           => $columnId,
                 'rowId'              => $rowId,
-                'cellData'           => $cellData,
                 'dataDto'            => $data,
                 'paramsDto'          => $this->_params,
                 'columnName'         => $columnIndex,
@@ -934,5 +882,19 @@ class ArrayExcelBuilder
     public function getSpreadsheet()
     {
         return $this->_spreadsheet;
+    }
+
+    /**
+     * Normalize value.
+     *
+     * @param $value
+     * @return bool|false|int|string
+     * @since 4.0.0
+     */
+    private function _normalizeValue($value)
+    {
+        return (is_string($value) || is_numeric($value) || is_bool($value))
+            ? $value
+            : json_encode($value);
     }
 }

@@ -2,15 +2,29 @@ version: '3.1'
 
 services:
 
-  web:
-    build: ${WEB_DOCKER_PATH}
-    environment:
-      - APACHE_RUN_USER=#1000
+  php-fpm:
+    build:
+      context: ${PHP_FPM_DOCKER_PATH}
     volumes:
-      - ${WEB_PATH}:/var/www/html/
+      - ${WEB_PATH}:/var/www
+    environment:
+      APACHE_RUN_USER: "#1000"
+      XDEBUG_CONFIG: "remote_host=192.168.220.1 remote_enable=1"
+      PHP_IDE_CONFIG: "serverName=Docker"
+    networks:
+      - internal
+
+  nginx:
+    build:
+      context: ${NGINX_DOCKER_PATH}
+    volumes:
+      - ${WEB_PATH}:/var/www
     ports:
       - ${WEB_PORT}:80
-    working_dir: /var/www/html/
+    depends_on:
+      - php-fpm
+    networks:
+      - internal
 
   composer:
     image: composer:1.6
@@ -18,3 +32,11 @@ services:
       - ${WEB_PATH}:/var/www/html/
     working_dir: /var/www/html/
     command: composer update --ignore-platform-reqs
+
+networks:
+  internal:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.220.0/28
