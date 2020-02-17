@@ -15,8 +15,11 @@ class StressTestExample
      * @param string $value
      * @return array
      */
-    public static function getData($columns = 10, $rows = 7000, $value = 'Lorem ipsum dolor sit amet')
-    {
+    public static function getData(
+        $columns = 30,
+        $rows = 10000,
+        $value = 'Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt'
+    ) {
         $values = [];
 
         // Sheet data
@@ -27,25 +30,80 @@ class StressTestExample
 
                 // Row with default params
                 $values[$i][$t] = [
-                    'value'             => $value,
-                    'fontColor'         => '',
-                    'fillColor'         => '',
-                    'bold'              => false,
-                    'hAlignment'        => 'general',
-                    'vAlignment'        => 'bottom',
-                    'wrapText'          => false,
-                    'comment'           => '',
-                    'mergeColumns'      => 0,
-                    'mergeRows'         => 0,
-                    'borderBottom'      => 'none',
-                    'borderTop'         => 'none',
-                    'borderLeft'        => 'none',
-                    'borderRight'       => 'none',
-                    'borderBottomColor' => '000000',
-                    'borderTopColor'    => '000000',
-                    'borderLeftColor'   => '000000',
-                    'borderRightColor'  => '000000',
-                    'styleArray'        => [],
+                    'value' => $value,
+//                    'fontColor'         => '',
+//                    'fillColor'         => '',
+//                    'bold'              => false,
+//                    'hAlignment'        => 'general',
+//                    'vAlignment'        => 'bottom',
+//                    'wrapText'          => false,
+//                    'comment'           => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+//                    'mergeColumns'      => 0,
+//                    'mergeRows'         => 0,
+//                    'borderBottom'      => 'none',
+//                    'borderTop'         => 'none',
+//                    'borderLeft'        => 'none',
+//                    'borderRight'       => 'none',
+//                    'borderBottomColor' => '000000',
+//                    'borderTopColor'    => '000000',
+//                    'borderLeftColor'   => '000000',
+//                    'borderRightColor'  => '000000',
+//                    'styleArray' => [
+//                        'font' => [
+//                            'name' => 'Arial',
+//                            'bold' => true,
+//                            'italic' => true,
+//                            'underline' => 'double', // none, double, doubleAccounting, single, singleAccounting
+//                            'strikethrough' => true,
+//                            'size'  => 15,
+//                            'color' => [
+//                                'rgb' => '808080'
+//                            ]
+//                        ],
+//                        'alignment' => [
+//                            'horizontal' => 'center', // general, left, right, center, centerContinuous, justify, fill, distributed - Excel2007 only
+//                            'vertical' => 'center', // bottom, top, center, justify, distributed - Excel2007 only
+//                        ],
+//                        'borders' => [
+//                            'bottom' => [
+//                                'borderStyle' => 'dashDot', // none, dashDot, dashDotDot, dashed, dotted, double, hair, medium, mediumDashDot, mediumDashDotDot, mediumDashed, slantDashDot, thick, thin
+//                                'color' => [
+//                                    'rgb' => '808080'
+//                                ]
+//                            ],
+//                            'top' => [
+//                                'borderStyle' => 'dashed',
+//                                'color' => [
+//                                    'rgb' => '808080'
+//                                ]
+//                            ],
+//                            'left' => [
+//                                'borderStyle' => 'mediumDashDot',
+//                                'color' => [
+//                                    'rgb' => '808080'
+//                                ]
+//                            ],
+//                            'right' => [
+//                                'borderStyle' => 'mediumDashed',
+//                                'color' => [
+//                                    'rgb' => '808080'
+//                                ]
+//                            ],
+//                            'vertical' => [
+//                                'borderStyle' => 'mediumDashed',
+//                                'color' => [
+//                                    'rgb' => '808080'
+//                                ]
+//                            ],
+//                            'horizontal' => [
+//                                'borderStyle' => 'mediumDashed',
+//                                'color' => [
+//                                    'rgb' => '808080'
+//                                ]
+//                            ],
+//                        ],
+//                        'quotePrefix' => true,
+//                    ],
                 ];
 
 //                // Row with non default params
