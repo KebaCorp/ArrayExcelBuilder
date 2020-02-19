@@ -2,6 +2,12 @@
 Array Excel Builder extension Change Log
 ========================================
 
+4.0.1, February 19, 2020
+------------------------
+
+- Feat: Composer dependencies updated.
+- Feat: Updated mPDF version from 7.1.9 to 8.0.4.
+
 4.0.0, February 18, 2020
 ------------------------
 
