@@ -224,6 +224,13 @@ class ArrayExcelBuilderCellDTO
     private $_url;
 
     /**
+     * If there are style params.
+     *
+     * @var bool
+     */
+    private $_isStyleParams = false;
+
+    /**
      * Set data from array.
      *
      * @param array $cellData
@@ -238,42 +245,6 @@ class ArrayExcelBuilderCellDTO
             if ($this->setValue($cellData['value'])) {
                 $isChanged = true;
             }
-        }
-
-        // Set font color
-        if (isset($cellData['fontColor']) && is_string($cellData['fontColor'])) {
-            $this->_fontColor = $cellData['fontColor'];
-            $isChanged = true;
-        }
-
-        // Set fill color
-        if (isset($cellData['fillColor']) && is_string($cellData['fillColor'])) {
-            $this->_fillColor = $cellData['fillColor'];
-            $isChanged = true;
-        }
-
-        // Set is bold text
-        if (isset($cellData['bold']) && is_bool($cellData['bold'])) {
-            $this->_bold = $cellData['bold'];
-            $isChanged = true;
-        }
-
-        // Set horizontal alignment
-        if (isset($cellData['hAlignment']) && is_string($cellData['hAlignment']) && $cellData['hAlignment'] !== 'general') {
-            $this->_hAlignment = $cellData['hAlignment'];
-            $isChanged = true;
-        }
-
-        // Set vertical alignment
-        if (isset($cellData['vAlignment']) && is_string($cellData['vAlignment']) && $cellData['vAlignment'] !== 'bottom') {
-            $this->_vAlignment = $cellData['vAlignment'];
-            $isChanged = true;
-        }
-
-        // Set is wrap text
-        if (isset($cellData['wrapText']) && is_bool($cellData['wrapText'])) {
-            $this->_isWrapText = $cellData['wrapText'];
-            $isChanged = true;
         }
 
         // Set cell comment
@@ -378,27 +349,52 @@ class ArrayExcelBuilderCellDTO
             $isChanged = true;
         }
 
+        // Set font color
+        if (isset($cellData['fontColor']) && is_string($cellData['fontColor'])) {
+            $this->_fontColor = $cellData['fontColor'];
+            $this->_isStyleParams = true;
+            $isChanged = true;
+        }
+
+        // Set fill color
+        if (isset($cellData['fillColor']) && is_string($cellData['fillColor'])) {
+            $this->_fillColor = $cellData['fillColor'];
+            $this->_isStyleParams = true;
+            $isChanged = true;
+        }
+
+        // Set is bold text
+        if (isset($cellData['bold']) && is_bool($cellData['bold'])) {
+            $this->_bold = $cellData['bold'];
+            $this->_isStyleParams = true;
+            $isChanged = true;
+        }
+
         // Border on top of the cell
         if (isset($cellData['borderTop']) && is_string($cellData['borderTop']) && $cellData['borderTop'] !== 'none') {
             $this->_borderTop = $cellData['borderTop'];
+            $this->_isStyleParams = true;
             $isChanged = true;
         }
 
         // Border on bottom of the cell
         if (isset($cellData['borderBottom']) && is_string($cellData['borderBottom']) && $cellData['borderBottom'] !== 'none') {
             $this->_borderBottom = $cellData['borderBottom'];
+            $this->_isStyleParams = true;
             $isChanged = true;
         }
 
         // Border on left of the cell
         if (isset($cellData['borderLeft']) && is_string($cellData['borderLeft']) && $cellData['borderLeft'] !== 'none') {
             $this->_borderLeft = $cellData['borderLeft'];
+            $this->_isStyleParams = true;
             $isChanged = true;
         }
 
         // Border on right of the cell
         if (isset($cellData['borderRight']) && is_string($cellData['borderRight']) && $cellData['borderRight'] !== 'none') {
             $this->_borderRight = $cellData['borderRight'];
+            $this->_isStyleParams = true;
             $isChanged = true;
         }
 
@@ -417,12 +413,35 @@ class ArrayExcelBuilderCellDTO
         // Font size
         if (isset($cellData['fontSize']) && is_int($cellData['fontSize']) && $cellData['fontSize'] > 0) {
             $this->_fontSize = $cellData['fontSize'];
+            $this->_isStyleParams = true;
+            $isChanged = true;
+        }
+
+        // Set is wrap text
+        if (isset($cellData['wrapText']) && is_bool($cellData['wrapText'])) {
+            $this->_isWrapText = $cellData['wrapText'];
+            $this->_isStyleParams = true;
+            $isChanged = true;
+        }
+
+        // Set horizontal alignment
+        if (isset($cellData['hAlignment']) && is_string($cellData['hAlignment'])) {
+            $this->_hAlignment = $cellData['hAlignment'];
+            $this->_isStyleParams = true;
+            $isChanged = true;
+        }
+
+        // Set vertical alignment
+        if (isset($cellData['vAlignment']) && is_string($cellData['vAlignment'])) {
+            $this->_vAlignment = $cellData['vAlignment'];
+            $this->_isStyleParams = true;
             $isChanged = true;
         }
 
         // Style from array
         if (isset($cellData['styleArray']) && is_array($cellData['styleArray'])) {
             $this->_styleArray = $cellData['styleArray'];
+            $this->_isStyleParams = true;
             $isChanged = true;
         }
 
@@ -864,5 +883,15 @@ class ArrayExcelBuilderCellDTO
     public function getUrl()
     {
         return $this->_url;
+    }
+
+    /**
+     * If there are style params.
+     *
+     * @return bool
+     */
+    public function isStyleParams()
+    {
+        return $this->_isStyleParams;
     }
 }

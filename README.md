@@ -22,6 +22,7 @@ Requirements:
 
 
 - PHP 5.6 and higher.
+- PHP 7.4 is supported since ArrayExcelBuilder v4.0.1
 
 
 
@@ -212,7 +213,7 @@ $arrayExcelBuilder->save();
 > Например:
  ```php
  <?php
- 
+
  $data = [
      1 => [
          8 => ['value' => 'Hello, World!']
@@ -280,7 +281,7 @@ Params:
 
 
 ### Cell options
- 
+
  **Все параметры ячейки:**
 
 | Name | Type | Default | Description |
@@ -369,7 +370,7 @@ $data = [
                         'hyperLink' => [ // or 'hyperLink' => 'www.example.com',
                             'url' => 'www.example.com',
                             'tooltip' => 'Example site',
-                        ],                      
+                        ],
                     ],
                     'callback' => function($data) {
                         $data['spreadsheet']->getActiveSheet()->getCell($data['cell'])->setValue('Cell value');
@@ -478,31 +479,31 @@ $data = [
                         'quotePrefix' => true,
                     ],
                 ],
-                
+
                 // Row 2
                 [
                     // Cell options
                     'value' => 100500,
                 ],
-                
+
                 // Row 3
                 [
                     // Cell options
                     'value' => 100.500,
                 ],
-                
+
                 // Row 4
                 [
                     // Cell options
                     'value' => true,
                 ],
-                
+
                 // Row 5
                 [
                     // Cell options
                     'value' => '=SUM(A2:A3)',
                 ],
-                
+
                 // Row n...
             ],
             // Column n...
@@ -902,11 +903,11 @@ $callback = function($data) {
     $maxRow = $data['maxRow'];
     $maxColumn = $data['maxColumn'];
     $maxCellCoordinates = $data['maxCellCoordinates'];
-    
+
     // Actions with Spreadsheet
     $spreadsheet->getActiveSheet()->getCell($data['cell'])->setValue('Cell value');
     $data['spreadsheet'] = $spreadsheet;
-    
+
     // IMPORTANT! For the changes to apply, you must return a modified data argument
     return $data;
 }
@@ -953,11 +954,11 @@ $callback = function($data) {
     $maxRow = $data['maxRow'];
     $maxColumn = $data['maxColumn'];
     $maxCellCoordinates = $data['maxCellCoordinates'];
-    
+
     // Actions with Spreadsheet
     $spreadsheet->getActiveSheet()->getCell($data['cell'])->setValue('Cell value');
     $data['spreadsheet'] = $spreadsheet;
-    
+
     // IMPORTANT! For the changes to apply, you must return a modified data argument
     return $data;
 }
