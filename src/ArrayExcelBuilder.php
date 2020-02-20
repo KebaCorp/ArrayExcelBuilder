@@ -294,7 +294,9 @@ class ArrayExcelBuilder
             }
 
             // Is show grid lines
-            if (isset($sheetData['showGridLines']) && is_bool($sheetData['showGridLines']) && !$sheetData['showGridLines']) {
+            if (isset($sheetData['showGridLines']) && is_bool($sheetData['showGridLines'])
+                && !$sheetData['showGridLines']
+            ) {
                 $this->_spreadsheet->getActiveSheet()->setShowGridlines($sheetData['showGridLines']);
             }
 
@@ -459,22 +461,27 @@ class ArrayExcelBuilder
         ++$columnId;
         ++$rowId;
 
+        // Get active sheet
+        $sheet = $this->_spreadsheet->getActiveSheet();
+
         // Sets cell value if cell data is not array
         if (!is_array($cellData)) {
-            $this->_values[$rowId][$columnId] = $this->_normalizeValue($cellData);
+            if ($cellData === '') {
+                return false;
+            } else {
+                $sheet->setCellValueByColumnAndRow($columnId, $rowId, $this->_normalizeValue($cellData));
 
-            return true;
+                return true;
+            }
         } else {
-
-            // Get active sheet
-            $sheet = $this->_spreadsheet->getActiveSheet();
-
             // Optimize set value
             if (!empty($cellData)) {
                 if (count($cellData) == 1 && isset($cellData['value'])) {
                     $sheet->setCellValueByColumnAndRow($columnId, $rowId, $this->_normalizeValue($cellData['value']));
 
                     return true;
+                } elseif ($cellData['value'] === '') {
+                    return false;
                 }
             } else {
                 return false;
@@ -506,74 +513,79 @@ class ArrayExcelBuilder
             $sheet->mergeCellsByColumnAndRow($columnId, $rowId, $columnDestinationID, $rowDestinationID);
         }
 
-//        // Cell font color // ToDo: delete
-//        if ($fontColor = $data->getFontColor()) {
-//            $phpColor = new Color();
-//            $phpColor->setRGB($fontColor);
-//            $style->getFont()->setColor($phpColor);
-//        }
-//
-//        // Cell background
-//        if ($fillColor = $data->getFillColor()) {
-//            $style->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB($fillColor);
-//        }
-//
-//        // Is cell value bold
-//        if ($isBold = $data->isBold()) {
-//            $style->getFont()->setBold($isBold);
-//        }
-//
-//        // Set the border on the top
-//        if ($borderTop = $data->getBorderTop()) {
-//            $phpColor = new Color();
-//            $phpColor->setRGB($data->getBorderTopColor());
-//            $style->getBorders()->getTop()->setBorderStyle($borderTop)->setColor($phpColor);
-//        }
-//
-//        // Set the border on the bottom
-//        if ($borderBottom = $data->getBorderBottom()) {
-//            $phpColor = new Color();
-//            $phpColor->setRGB($data->getBorderBottomColor());
-//            $style->getBorders()->getBottom()->setBorderStyle($borderBottom)->setColor($phpColor);
-//        }
-//
-//        // Set the border on the left
-//        if ($borderLeft = $data->getBorderLeft()) {
-//            $phpColor = new Color();
-//            $phpColor->setRGB($data->getBorderLeftColor());
-//            $style->getBorders()->getLeft()->setBorderStyle($borderLeft)->setColor($phpColor);
-//        }
-//
-//        // Set the border on the right
-//        if ($orderRight = $data->getBorderRight()) {
-//            $phpColor = new Color();
-//            $phpColor->setRGB($data->getBorderRightColor());
-//            $style->getBorders()->getRight()->setBorderStyle($orderRight)->setColor($phpColor);
-//        }
-//
-//        // Set font size
-//        if ($fontSize = $data->getFontSize()) {
-//            $style->getFont()->setSize($fontSize);
-//        }
-//
-//        // Text wrap
-//        if ($isWrapText = $data->isWrapText()) {
-//            $style->getAlignment()->setWrapText($isWrapText);
-//        }
-//
-//        // Horizontal alignment
-//        if ($hAlignment = $data->getHAlignment()) {
-//            $style->getAlignment()->setHorizontal($hAlignment);
-//        }
-//
-//        // Vertical alignment
-//        if ($vAlignment = $data->getVAlignment()) {
-//            $style->getAlignment()->setVertical($vAlignment);
-//        }
+        // Style params
+        if ($data->isStyleParams()) {
+            $style = $sheet->getCell($columnIndex . $rowId)->getStyle();
 
-        // Set style from array
-        if ($styleArray = $data->getStyleArray()) {
-            $sheet->getCell($columnIndex . $rowId)->getStyle()->applyFromArray($styleArray);
+            // Cell font color
+            if ($fontColor = $data->getFontColor()) {
+                $phpColor = new Color();
+                $phpColor->setRGB($fontColor);
+                $style->getFont()->setColor($phpColor);
+            }
+
+            // Cell background
+            if ($fillColor = $data->getFillColor()) {
+                $style->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB($fillColor);
+            }
+
+            // Is cell value bold
+            if ($isBold = $data->isBold()) {
+                $style->getFont()->setBold($isBold);
+            }
+
+            // Set the border on the top
+            if ($borderTop = $data->getBorderTop()) {
+                $phpColor = new Color();
+                $phpColor->setRGB($data->getBorderTopColor());
+                $style->getBorders()->getTop()->setBorderStyle($borderTop)->setColor($phpColor);
+            }
+
+            // Set the border on the bottom
+            if ($borderBottom = $data->getBorderBottom()) {
+                $phpColor = new Color();
+                $phpColor->setRGB($data->getBorderBottomColor());
+                $style->getBorders()->getBottom()->setBorderStyle($borderBottom)->setColor($phpColor);
+            }
+
+            // Set the border on the left
+            if ($borderLeft = $data->getBorderLeft()) {
+                $phpColor = new Color();
+                $phpColor->setRGB($data->getBorderLeftColor());
+                $style->getBorders()->getLeft()->setBorderStyle($borderLeft)->setColor($phpColor);
+            }
+
+            // Set the border on the right
+            if ($orderRight = $data->getBorderRight()) {
+                $phpColor = new Color();
+                $phpColor->setRGB($data->getBorderRightColor());
+                $style->getBorders()->getRight()->setBorderStyle($orderRight)->setColor($phpColor);
+            }
+
+            // Set font size
+            if ($fontSize = $data->getFontSize()) {
+                $style->getFont()->setSize($fontSize);
+            }
+
+            // Text wrap
+            if ($isWrapText = $data->isWrapText()) {
+                $style->getAlignment()->setWrapText($isWrapText);
+            }
+
+            // Horizontal alignment
+            if ($hAlignment = $data->getHAlignment()) {
+                $style->getAlignment()->setHorizontal($hAlignment);
+            }
+
+            // Vertical alignment
+            if ($vAlignment = $data->getVAlignment()) {
+                $style->getAlignment()->setVertical($vAlignment);
+            }
+
+            // Set style from array
+            if ($styleArray = $data->getStyleArray()) {
+                $style->applyFromArray($styleArray);
+            }
         }
 
         // Set global column width

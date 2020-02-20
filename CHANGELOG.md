@@ -2,6 +2,12 @@
 Array Excel Builder extension Change Log
 ========================================
 
+4.0.2, February 20, 2020
+------------------------
+
+- Feat: Code optimization.
+- Feat: Style options returned.
+
 4.0.1, February 19, 2020
 ------------------------
 
