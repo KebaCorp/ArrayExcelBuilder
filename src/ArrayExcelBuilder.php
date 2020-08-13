@@ -496,9 +496,7 @@ class ArrayExcelBuilder
         $data->setDataFromArray($cellData);
 
         // Set value
-        if ($value = $data->getValue()) {
-            $sheet->setCellValueByColumnAndRow($columnId, $rowId, $value);
-        }
+        $sheet->setCellValueByColumnAndRow($columnId, $rowId, $data->getValue());
 
         // Cell comment
         if ($comment = $data->getComment()) {
