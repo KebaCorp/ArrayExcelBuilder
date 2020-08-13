@@ -2,6 +2,11 @@
 Array Excel Builder extension Change Log
 ========================================
 
+4.0.3, August 13, 2020
+------------------------
+
+- Fix: Fixed display of zero value.
+
 4.0.2, February 20, 2020
 ------------------------
 
