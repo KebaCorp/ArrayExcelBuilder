@@ -2,6 +2,11 @@
 Array Excel Builder extension Change Log
 ========================================
 
+4.0.5, September 29, 2020
+------------------------
+
+- Feat: Updated dependencies.
+
 4.0.4, September 29, 2020
 ------------------------
 
