@@ -13,6 +13,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Color;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Writer\Exception;
 
 /**
@@ -280,7 +281,14 @@ class ArrayExcelBuilder
 
             // Rename sheet
             if (isset($sheetData['sheetName']) && is_string($sheetData['sheetName']) && $sheetData['sheetName']) {
-                $this->_spreadsheet->getActiveSheet()->setTitle($sheetData['sheetName']);
+                $replacement = isset($sheetData['sheetNameInvalidCharactersReplacement']) &&
+                    is_string($sheetData['sheetNameInvalidCharactersReplacement'])
+                        ? $sheetData['sheetNameInvalidCharactersReplacement']
+                        : ' ';
+
+                $this->_spreadsheet->getActiveSheet()->setTitle(
+                    str_replace(Worksheet::getInvalidCharacters(), $replacement, $sheetData['sheetName'])
+                );
             }
 
             // Freeze cell
