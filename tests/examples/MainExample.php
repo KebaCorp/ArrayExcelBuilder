@@ -284,7 +284,8 @@ class MainExample
         // Sheets
         $data = [
             [
-                'sheetName' => 'First page',
+                'sheetName' => 'First page/main *:/\?[] example',
+                'sheetNameInvalidCharactersReplacement' => 'x',
                 'showGridLines' => false,
                 'freezeCell' => 'B2',
                 'data' => [$column1, 3 => $column2, $column2],

@@ -2,6 +2,11 @@
 Array Excel Builder extension Change Log
 ========================================
 
+4.1.0, February 20, 2021
+------------------------
+
+- Feat: Sheet name invalid characters replacement has been added.
+
 4.0.5, September 29, 2020
 ------------------------
 
