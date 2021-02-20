@@ -33,7 +33,7 @@ const CALLBACK_EXAMPLE = 'callback';
 const PAGE_ORIENTATION_EXAMPLE = 'pageOrientationExample';
 
 // Change this constant to get other data
-$dataType = STRESS_TEST_EXAMPLE;
+$dataType = MAIN_EXAMPLE;
 
 MemoryHelper::printMemoryUsage('Start: ', '<br/>');
 
